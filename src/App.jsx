@@ -28,7 +28,7 @@ function App() {
           <Route path="/products" element={<><Navbar /><ProductsPage /></>} />
           <Route path="/product/:id" element={<><Navbar /><ProductDetailPage /></>} />
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
     </CartProvider>
   );
 }
