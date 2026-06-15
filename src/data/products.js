@@ -400,7 +400,7 @@ export const offers = [
     title: 'Monsoon Muse Sale',
     subtitle: 'Up to 40% Off',
     desc: 'Lightweight silks & organzas for the rainy season',
-    image: heroFrame(25),
+    image: bannerFrame('monsoon-muse'),
     cta: 'Shop Monsoon Edit',
     discount: '40%',
   },
@@ -409,7 +409,7 @@ export const offers = [
     title: 'Bridal Edit',
     subtitle: 'The Grand Wedding Collection',
     desc: 'Kanjeevarams & Banarasis for your special day',
-    image: bridalFrame(1080),
+    image: bannerFrame('bridal-edit'),
     cta: 'Explore Bridal',
     discount: null,
   },
@@ -418,7 +418,7 @@ export const offers = [
     title: 'First Purchase',
     subtitle: 'Welcome Offer',
     desc: 'Flat 15% off on your first order. Use code ZARI15',
-    image: heroFrame(120),
+    image: bannerFrame('first-purchase'),
     cta: 'Claim Offer',
     discount: '15%',
   },
@@ -427,7 +427,7 @@ export const offers = [
     title: 'Golden Hour Collection',
     subtitle: 'Zari Masterpieces',
     desc: 'Handwoven with real gold & silver zari threads',
-    image: heroFrame(40),
+    image: bannerFrame('golden-hour'),
     cta: 'Discover Gold',
     discount: null,
   },
@@ -436,7 +436,7 @@ export const offers = [
     title: 'Temple Weave Festival',
     subtitle: 'Sacred Threads',
     desc: 'Temple border sarees starting at ₹18,500',
-    image: bridalFrame(1025),
+    image: bannerFrame('temple-weave'),
     cta: 'View Collection',
     discount: '25%',
   },
@@ -445,7 +445,7 @@ export const offers = [
     title: 'Silk Anniversary Edit',
     subtitle: '25 Years of Craft',
     desc: 'Limited edition heirloom pieces with certificate',
-    image: heroFrame(85),
+    image: bannerFrame('silk-anniversary'),
     cta: 'Shop Anniversary',
     discount: null,
   },
@@ -454,7 +454,7 @@ export const offers = [
     title: 'Heritage Revival',
     subtitle: 'Rare Weaves',
     desc: 'Patola, Baluchari & Muga — back in stock',
-    image: bridalFrame(1055),
+    image: bannerFrame('heritage-revival'),
     cta: 'Explore Heritage',
     discount: '30%',
   },
@@ -463,7 +463,7 @@ export const offers = [
     title: 'Zari Luxe Drop',
     subtitle: 'Pure Zari Border Edit',
     desc: 'Heavy zari work sarees at exclusive prices',
-    image: heroFrame(170),
+    image: bannerFrame('zari-luxe'),
     cta: 'Shop Luxe',
     discount: '20%',
   },
@@ -475,6 +475,10 @@ export const onSaleProducts = products.filter((p) => p.originalPrice);
 
 export function getProductById(id) {
   return products.find((p) => p.id === Number(id));
+}
+
+function bannerFrame(name) {
+  return `${BASE}images/banners/${name}.png`;
 }
 
 export function formatPrice(price) {
