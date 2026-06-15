@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useInView } from 'framer-motion';
 import { ShoppingBag, Star, Clock, ArrowRight } from 'lucide-react';
@@ -84,14 +84,80 @@ export default function ShoppingSection() {
       </motion.div>
     ));
 
+  const marqueeRef = useRef(null);
+  const [isHovered, setIsHovered] = useState(false);
+  const autoScrollRef = useRef(null);
+  const dragRef = useRef({ isDragging: false, startX: 0, scrollLeft: 0 });
+
+  useEffect(() => {
+    const track = marqueeRef.current;
+    if (!track) return;
+
+    const onWheel = (e) => {
+      if (e.deltaY !== 0) {
+        e.preventDefault();
+        track.scrollLeft += e.deltaY;
+      }
+    };
+    track.addEventListener('wheel', onWheel, { passive: false });
+
+    const onMouseDown = (e) => {
+      dragRef.current.isDragging = true;
+      dragRef.current.startX = e.pageX - track.offsetLeft;
+      dragRef.current.scrollLeft = track.scrollLeft;
+      track.style.cursor = 'grabbing';
+    };
+
+    const onMouseMove = (e) => {
+      if (!dragRef.current.isDragging) return;
+      e.preventDefault();
+      const x = e.pageX - track.offsetLeft;
+      const walk = (dragRef.current.startX - x) * 1.5;
+      track.scrollLeft = dragRef.current.scrollLeft + walk;
+    };
+
+    const onMouseUp = () => {
+      dragRef.current.isDragging = false;
+      track.style.cursor = 'grab';
+    };
+
+    track.addEventListener('mousedown', onMouseDown);
+    track.addEventListener('mousemove', onMouseMove);
+    track.addEventListener('mouseup', onMouseUp);
+    track.addEventListener('mouseleave', onMouseUp);
+
+    const step = () => {
+      if (isHovered) return;
+      track.scrollLeft += 2;
+      if (track.scrollLeft >= track.scrollWidth - track.clientWidth) {
+        track.scrollLeft = 0;
+      }
+    };
+
+    autoScrollRef.current = setInterval(step, 16);
+    return () => {
+      track.removeEventListener('wheel', onWheel);
+      track.removeEventListener('mousedown', onMouseDown);
+      track.removeEventListener('mousemove', onMouseMove);
+      track.removeEventListener('mouseup', onMouseUp);
+      track.removeEventListener('mouseleave', onMouseUp);
+      clearInterval(autoScrollRef.current);
+    };
+  }, [isHovered]);
+
   return (
     <section className="shopping-section">
       {/* ─── Offer Marquee (full-width) ─── */}
       <div className="offer-marquee">
-        <div className="offer-marquee-track">
-          {[...offers, ...offers].map((offer, i) => (
+        <div
+          ref={marqueeRef}
+          className="offer-marquee-track"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
+          {offers.map((offer, i) => (
             <div key={`${offer.id}-${i}`} className="offer-marquee-slide">
-              <img src={offer.image} alt={offer.title} className="offer-marquee-img" />
+              <img src={offer.image} alt={offer.title} className="offer-marquee-img" draggable="false" />
               <div className="offer-overlay" />
               <div className="offer-badge-row">
                 {offer.discount && (

@@ -400,7 +400,7 @@ export const offers = [
     title: 'Monsoon Muse Sale',
     subtitle: 'Up to 40% Off',
     desc: 'Lightweight silks & organzas for the rainy season',
-    image: bannerFrame('monsoon-muse'),
+    image: bannerFrame('ChatGPT Image Jun 15, 2026, 11_20_27 AM'),
     cta: 'Shop Monsoon Edit',
     discount: '40%',
   },
@@ -409,7 +409,7 @@ export const offers = [
     title: 'Bridal Edit',
     subtitle: 'The Grand Wedding Collection',
     desc: 'Kanjeevarams & Banarasis for your special day',
-    image: bannerFrame('bridal-edit'),
+    image: bannerFrame('ChatGPT Image Jun 15, 2026, 11_21_13 AM'),
     cta: 'Explore Bridal',
     discount: null,
   },
@@ -418,7 +418,7 @@ export const offers = [
     title: 'First Purchase',
     subtitle: 'Welcome Offer',
     desc: 'Flat 15% off on your first order. Use code ZARI15',
-    image: bannerFrame('first-purchase'),
+    image: bannerFrame('ChatGPT Image Jun 15, 2026, 11_22_13 AM'),
     cta: 'Claim Offer',
     discount: '15%',
   },
@@ -427,7 +427,7 @@ export const offers = [
     title: 'Golden Hour Collection',
     subtitle: 'Zari Masterpieces',
     desc: 'Handwoven with real gold & silver zari threads',
-    image: bannerFrame('golden-hour'),
+    image: bannerFrame('ChatGPT Image Jun 15, 2026, 11_25_33 AM'),
     cta: 'Discover Gold',
     discount: null,
   },
@@ -436,7 +436,7 @@ export const offers = [
     title: 'Temple Weave Festival',
     subtitle: 'Sacred Threads',
     desc: 'Temple border sarees starting at ₹18,500',
-    image: bannerFrame('temple-weave'),
+    image: bannerFrame('ChatGPT Image Jun 15, 2026, 11_27_09 AM'),
     cta: 'View Collection',
     discount: '25%',
   },
@@ -445,7 +445,7 @@ export const offers = [
     title: 'Silk Anniversary Edit',
     subtitle: '25 Years of Craft',
     desc: 'Limited edition heirloom pieces with certificate',
-    image: bannerFrame('silk-anniversary'),
+    image: bannerFrame('ChatGPT Image Jun 15, 2026, 11_28_18 AM'),
     cta: 'Shop Anniversary',
     discount: null,
   },
@@ -454,7 +454,7 @@ export const offers = [
     title: 'Heritage Revival',
     subtitle: 'Rare Weaves',
     desc: 'Patola, Baluchari & Muga — back in stock',
-    image: bannerFrame('heritage-revival'),
+    image: bannerFrame('ChatGPT Image Jun 15, 2026, 11_35_21 AM'),
     cta: 'Explore Heritage',
     discount: '30%',
   },
@@ -463,7 +463,7 @@ export const offers = [
     title: 'Zari Luxe Drop',
     subtitle: 'Pure Zari Border Edit',
     desc: 'Heavy zari work sarees at exclusive prices',
-    image: bannerFrame('zari-luxe'),
+    image: bannerFrame('ChatGPT Image Jun 15, 2026, 11_20_27 AM'),
     cta: 'Shop Luxe',
     discount: '20%',
   },
@@ -478,7 +478,7 @@ export function getProductById(id) {
 }
 
 function bannerFrame(name) {
-  return `${BASE}images/banners/${name}.png`;
+  return `${BASE}images/banners/${encodeURI(name)}.png`;
 }
 
 export function formatPrice(price) {
