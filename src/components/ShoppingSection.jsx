@@ -92,7 +92,18 @@ export default function ShoppingSection() {
           {[...offers, ...offers].map((offer, i) => (
             <div key={`${offer.id}-${i}`} className="offer-marquee-slide">
               <img src={offer.image} alt={offer.title} className="offer-marquee-img" />
-              <div className="offer-marquee-label">{offer.title}</div>
+              <div className="offer-overlay" />
+              <div className="offer-badge-row">
+                {offer.discount && (
+                  <span className="offer-discount-badge">-{offer.discount}</span>
+                )}
+                <span className="offer-subtitle">{offer.subtitle}</span>
+              </div>
+              <div className="offer-banner-content">
+                <h3 className="offer-banner-title">{offer.title}</h3>
+                <p className="offer-banner-desc">{offer.desc}</p>
+                <button className="offer-banner-cta">{offer.cta}</button>
+              </div>
             </div>
           ))}
         </div>

@@ -30,8 +30,8 @@
 
 .offer-marquee-slide {
   flex: 0 0 auto;
-  width: 380px;
-  height: 260px;
+  width: 420px;
+  height: 320px;
   position: relative;
   overflow: hidden;
   background: #120105;
@@ -41,21 +41,102 @@
   width: 100%;
   height: 100%;
   display: block;
-  object-fit: contain;
+  object-fit: cover;
+  transition: transform 0.6s ease;
 }
 
-.offer-marquee-label {
+.offer-marquee-slide:hover .offer-marquee-img {
+  transform: scale(1.06);
+}
+
+.offer-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(transparent 20%, rgba(0, 0, 0, 0.6) 70%, rgba(0, 0, 0, 0.9)),
+              linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, transparent 50%);
+}
+
+.offer-badge-row {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  right: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  z-index: 2;
+}
+
+.offer-discount-badge {
+  background: linear-gradient(135deg, var(--color-crimson-light), #a01030);
+  color: white;
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 0.3rem 0.7rem;
+  border-radius: 6px;
+  letter-spacing: 0.05em;
+}
+
+.offer-subtitle {
+  font-family: var(--font-sans);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.8);
+  background: rgba(0, 0, 0, 0.4);
+  padding: 0.3rem 0.7rem;
+  border-radius: 6px;
+  backdrop-filter: blur(4px);
+}
+
+.offer-banner-content {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 1rem 1rem 1.25rem;
-  background: linear-gradient(transparent 20%, rgba(0, 0, 0, 0.75));
-  color: white;
+  padding: 1.5rem 1.25rem 1.5rem;
+  z-index: 2;
+}
+
+.offer-banner-title {
   font-family: var(--font-serif);
-  font-size: 1rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 0.3rem;
+  line-height: 1.2;
+}
+
+.offer-banner-desc {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 300;
+  line-height: 1.4;
+  margin-bottom: 0.8rem;
+}
+
+.offer-banner-cta {
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, #d4af37 0%, #a48010 100%);
+  color: var(--bg-obsidian);
+  border: none;
+  padding: 0.5rem 1.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.offer-banner-cta:hover {
+  background: linear-gradient(135deg, #e5c158 0%, #b89218 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.25);
 }
 
 @keyframes marqueeOffer {
