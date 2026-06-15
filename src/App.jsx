@@ -3,8 +3,16 @@ import { HashRouter, Routes, Route } from 'react-router-dom';
 import { CartProvider } from './context/CartContext';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
-import ShoppingSection from './components/ShoppingSection';
+import TrustBenefits from './components/TrustBenefits';
+import FeaturedCollections from './components/FeaturedCollections';
 import StorySection from './components/StorySection';
+import BestSellers from './components/BestSellers';
+import BridalBanner from './components/BridalBanner';
+import WhyChooseSutra from './components/WhyChooseSutra';
+import Testimonials from './components/Testimonials';
+import GallerySection from './components/GallerySection';
+import Newsletter from './components/Newsletter';
+import Footer from './components/Footer';
 import ProductsPage from './components/ProductsPage';
 import ProductDetailPage from './components/ProductDetailPage';
 
@@ -13,8 +21,16 @@ function HomePage() {
     <>
       <Navbar />
       <Hero />
-      <ShoppingSection />
+      <TrustBenefits />
+      <FeaturedCollections />
       <StorySection />
+      <BestSellers />
+      <BridalBanner />
+      <WhyChooseSutra />
+      <Testimonials />
+      <GallerySection />
+      <Newsletter />
+      <Footer />
     </>
   );
 }

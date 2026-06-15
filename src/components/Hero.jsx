@@ -270,8 +270,12 @@ export default function Hero() {
           {/* Phase 1: Brand Introduction */}
           <div className="hero-text-overlay phase-center phase-1">
             <span className="hero-tagline">THE CRAFT OF SILK</span>
-            <h1 className="hero-title">SUTRA</h1>
-            <p className="hero-subtext">A scroll-driven cinematic weave.</p>
+            <h1 className="hero-title">Where Heritage<br/>Meets Weave</h1>
+            <p className="hero-subtext">Discover timeless Banarasi, Kanjeevaram, and Organza masterpieces, handwoven by India's finest artisans.</p>
+            <div className="hero-buttons">
+              <a href="#collections" className="hero-btn hero-btn-primary">Explore Collections</a>
+              <a href="#story" className="hero-btn hero-btn-secondary">Our Story</a>
+            </div>
           </div>
 
           {/* Phase 2: Feature 1 - Mulberry Warp */}

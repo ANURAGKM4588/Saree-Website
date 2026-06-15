@@ -5,11 +5,11 @@ import { useCart } from '../context/CartContext';
 import './Navbar.css';
 
 const navItems = [
-  { name: 'Banarasi', href: '#banarasi' },
-  { name: 'Kanjeevaram', href: '#kanjeevaram' },
-  { name: 'Chanderi', href: '#chanderi' },
-  { name: 'Organza', href: '#organza' },
-  { name: 'Heritage Story', href: '#heritage' }
+  { name: 'Collections', href: '#collections' },
+  { name: 'Bestsellers', href: '#bestsellers' },
+  { name: 'Our Story', href: '#story' },
+  { name: 'Gallery', href: '#gallery' },
+  { name: 'Contact', href: '#contact' }
 ];
 
 function formatPrice(price) {
