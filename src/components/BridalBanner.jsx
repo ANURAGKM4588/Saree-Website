@@ -104,11 +104,14 @@ export default function BridalBanner() {
     const rect = wrapper.getBoundingClientRect();
     canvas.width = rect.width;
     canvas.height = rect.height;
-    drawFrame(frameStart);
 
     const frameObj = { val: frameStart };
+    const mm = gsap.matchMedia();
 
-    const ctx = gsap.context(() => {
+    mm.add("(min-width: 769px)", () => {
+      // DESKTOP: Full ScrollTrigger sequence
+      drawFrame(frameStart);
+
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: container,
@@ -143,7 +146,13 @@ export default function BridalBanner() {
       // Fades in, stays visible till end
       gsap.set('.bb-phase-3', { opacity: 0, y: 40 });
       tl.to('.bb-phase-3', { opacity: 1, y: 0, duration: 0.15 }, 0.62);
-    }, container);
+    });
+
+    mm.add("(max-width: 768px)", () => {
+      // MOBILE: Static single banner (no scroll-timeline)
+      // Render frame 1060 showing the bride centered in the frame
+      drawFrame(frameStart + 60);
+    });
 
     const handleResize = () => {
       if (!canvas || !wrapper) return;
@@ -151,18 +160,22 @@ export default function BridalBanner() {
       canvas.width = r.width;
       canvas.height = r.height;
 
-      const idx = Math.min(
-        frameStart + totalFrames - 1,
-        Math.max(frameStart, Math.round(frameObj.val))
-      );
-      drawFrame(idx);
+      if (window.innerWidth <= 768) {
+        drawFrame(frameStart + 60);
+      } else {
+        const idx = Math.min(
+          frameStart + totalFrames - 1,
+          Math.max(frameStart, Math.round(frameObj.val))
+        );
+        drawFrame(idx);
+      }
     };
 
     window.addEventListener('resize', handleResize);
 
     return () => {
       window.removeEventListener('resize', handleResize);
-      ctx.revert();
+      mm.revert();
     };
   }, [isReady]);
 
@@ -204,6 +217,22 @@ export default function BridalBanner() {
           <div className="bb-text-overlay bb-phase-3">
             <p className="bb-desc-tagline">
               Each piece is handpicked for the discerning bride.
+            </p>
+            <div className="bb-cta-wrapper">
+              <Link to="/products" className="bb-cta">
+                Explore Bridal Collection <ArrowRight size={16} />
+              </Link>
+            </div>
+          </div>
+
+          {/* Mobile Unified Overlay (Only visible on mobile) */}
+          <div className="bb-text-overlay bb-mobile-unified">
+            <span className="bb-tag">THE BRIDAL EDIT</span>
+            <h2 className="bb-heading">
+              For the Day Your<br />Story Begins
+            </h2>
+            <p className="bb-desc">
+              Discover our exclusive collection of bridal silks, where tradition meets timeless elegance.
             </p>
             <div className="bb-cta-wrapper">
               <Link to="/products" className="bb-cta">

@@ -183,6 +183,10 @@
   background: linear-gradient(135deg, #e5c158 0%, #c8a428 100%);
 }
 
+.bb-mobile-unified {
+  display: none;
+}
+
 /* Responsiveness */
 @media (max-width: 1024px) {
   .bb-heading {
@@ -195,26 +199,52 @@
 
 @media (max-width: 768px) {
   .bridal-banner-scroll-container {
-    height: 250vh; /* Slightly shorter scroll track on mobile */
+    height: 100vh;
   }
 
-  .bb-heading {
-    font-size: 2.5rem;
+  .bb-sticky-wrapper {
+    position: relative;
+    height: 100vh;
   }
 
-  .bb-desc {
-    font-size: 1.4rem;
-    line-height: 1.6;
-    max-width: 90%;
+  .bb-phase-1,
+  .bb-phase-2,
+  .bb-phase-3 {
+    display: none !important;
   }
 
-  .bb-desc-tagline {
-    font-size: 0.95rem;
-    margin-bottom: 1.5rem;
+  .bb-mobile-unified {
+    display: flex !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 1rem;
+    padding: 0 1.5rem;
   }
 
-  .bb-cta {
-    padding: 0.85rem 2rem;
+  .bb-mobile-unified .bb-tag {
+    font-size: 0.75rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .bb-mobile-unified .bb-heading {
+    font-size: 2rem;
+    line-height: 1.2;
+    margin-bottom: 0.5rem;
+  }
+
+  .bb-mobile-unified .bb-desc {
+    font-size: 1.1rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+    max-width: 100%;
+  }
+
+  .bb-mobile-unified .bb-cta {
+    padding: 0.8rem 1.8rem;
     font-size: 0.8rem;
   }
 }
