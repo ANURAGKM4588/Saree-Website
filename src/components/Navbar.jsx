@@ -46,8 +46,15 @@ export default function Navbar() {
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
       >
         <div className="navbar-container">
-          {/* Menu Items (Left) */}
-          <ul className="nav-links">
+          {/* Left Side: Brand + Nav */}
+          <div className="navbar-left">
+            <div className="navbar-brand-left">
+              <a href="/" className="brand-logo-link">
+                <span className="brand-emblem">◈</span>
+                <span className="brand-text">ZARI</span>
+              </a>
+            </div>
+            <ul className="nav-links">
             {navItems.map((item, idx) => (
               <li 
                 key={item.name}
@@ -69,10 +76,6 @@ export default function Navbar() {
               </li>
             ))}
           </ul>
-
-          {/* Logo (Center) */}
-          <div className="navbar-logo">
-            <a href="/">ZARI</a>
           </div>
 
           {/* Right Actions */}

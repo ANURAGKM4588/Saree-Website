@@ -27,7 +27,7 @@ const reasons = [
 
 const containerVariants = {
   hidden: { opacity: 0 },
-  visible: { transition: { staggerChildren: 0.12 } },
+  visible: { opacity: 1, transition: { staggerChildren: 0.12 } },
 };
 
 const itemVariants = {
@@ -38,6 +38,7 @@ const itemVariants = {
 export default function WhyChooseSutra() {
   return (
     <section className="whychoose-section">
+      <div className="wc-bg-glow" />
       <div className="wc-inner">
         <motion.span
           className="wc-tag"

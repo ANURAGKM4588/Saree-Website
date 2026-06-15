@@ -25,9 +25,45 @@
   max-width: 1400px;
   width: 90%;
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  display: flex;
   align-items: center;
+  justify-content: space-between;
+}
+
+/* Left Side Wrapper */
+.navbar-left {
+  display: flex;
+  align-items: center;
+}
+
+/* Brand Logo (Left) */
+.navbar-brand-left {
+  display: flex;
+  align-items: center;
+}
+
+.brand-logo-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  margin-right: 2.5rem;
+}
+
+.brand-emblem {
+  font-size: 1.4rem;
+  color: var(--color-gold);
+}
+
+.brand-text {
+  font-family: var(--font-serif);
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--color-gold);
+  background: linear-gradient(135deg, #f1d279 0%, #d4af37 50%, #8e6c13 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 /* Nav Links (Left) */
@@ -64,22 +100,6 @@
   width: 100%;
   height: 1px;
   background-color: var(--color-gold);
-}
-
-/* Logo (Center) */
-.navbar-logo {
-  text-align: center;
-}
-
-.navbar-logo a {
-  font-family: var(--font-serif);
-  font-size: 2.2rem;
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  color: var(--color-gold);
-  background: linear-gradient(135deg, #f1d279 0%, #d4af37 50%, #8e6c13 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
 }
 
 /* Right Actions */
@@ -377,9 +397,6 @@
 }
 @media (max-width: 768px) {
   .nav-links {
-    display: none; /* In a real app we would build a mobile menu, but for this demo let's keep it tidy or focused */
-  }
-  .navbar-container {
-    grid-template-columns: auto 1fr;
+    display: none;
   }
 }

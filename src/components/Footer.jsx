@@ -60,9 +60,9 @@ export default function Footer() {
               Heritage weaves crafted by India's finest master weavers. Every thread tells a story of tradition, patience, and unparalleled artistry.
             </p>
             <div className="footer-social">
-              {socialLinks.map((s) => (
+              {socialLinks.map((s, index) => (
                 <a
-                  key={s.href}
+                  key={index}
                   href={s.href}
                   target="_blank"
                   rel="noopener noreferrer"

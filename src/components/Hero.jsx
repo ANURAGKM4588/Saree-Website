@@ -45,6 +45,7 @@ export default function Hero() {
   const wrapperRef = useRef(null);
   const canvasRef = useRef(null);
   const imagesRef = useRef({});
+  const isIntroPlaying = useRef(true);
 
   const [loadedCount, setLoadedCount] = useState(0);
   const [isReady, setIsReady] = useState(false);
@@ -124,48 +125,11 @@ export default function Hero() {
     const introFrames = 50;
 
     const ctx = gsap.context(() => {
-      // ---- Auto entry animation ----
-      entryTl = gsap.timeline({ ease: 'none', paused: true });
+      // 1. Initialize Scroll Timeline immediately on mount
+      // This sets up the pinning wrapper and spacer, avoiding layout jumps
+      const frameObj2 = { val: introFrames };
 
-      // Frame animation: pallu floats upward (frames 1 → 50)
-      entryTl.to(frObj, {
-        val: introFrames,
-        duration: 3.5,
-        ease: 'power2.out',
-        onUpdate: () => drawFrame(Math.round(frObj.val)),
-      }, 0);
-
-      // Phase 1 text appears together after a brief pause
-      entryTl.fromTo('.phase-1', { opacity: 0, y: 40 }, {
-        opacity: 1, y: 0, duration: 1.4, ease: 'power2.out',
-      }, 0.8);
-
-      // Scroll indicator fades in at the end of the entry animation
-      entryTl.fromTo('.scroll-indicator', { opacity: 0 }, {
-        opacity: 1, duration: 0.8, ease: 'power2.out',
-      }, 2.5);
-
-      // Hold at end of entry
-      entryTl.to({}, { duration: 0.5 });
-
-      entryTl.eventCallback('onComplete', () => {
-        // Unlock scroll and initialize scroll timeline
-        document.documentElement.style.overflow = '';
-        document.body.style.overflow = '';
-        window.removeEventListener('wheel', preventScroll);
-        window.removeEventListener('touchmove', preventScroll);
-        if (!scrollTl) initScrollTl();
-      });
-
-      // Play intro animation
-      entryTl.play();
-    }, container);
-
-    function initScrollTl() {
-      const currentStartFrame = Math.round(frObj.val);
-      const frameObj2 = { val: currentStartFrame };
-
-      // Ensure phase-1 is at its active state at the start of scroll Trigger
+      // Ensure phase-1 is set up appropriately for intro animations first
       gsap.set('.phase-1', { opacity: 1, y: 0 });
 
       scrollTl = gsap.timeline({
@@ -174,45 +138,147 @@ export default function Hero() {
           pin: wrapper,
           start: 'top top',
           end: 'bottom bottom',
-          scrub: 1,
+          scrub: 1.5, // Apple-style momentum lag
           invalidateOnRefresh: true,
         },
-        defaults: { ease: 'none' },
       });
 
       scrollTl.to(frameObj2, {
         val: totalFrames,
+        ease: 'none',
         duration: 1,
-        onUpdate: () => drawFrame(Math.round(frameObj2.val)),
+        onUpdate: () => {
+          if (!isIntroPlaying.current) {
+            drawFrame(Math.round(frameObj2.val));
+          }
+        },
       }, 0);
 
       // Phase 1: hold briefly, then fade out (Phase 2 starts fading in during this time)
-      scrollTl.to('.phase-1', { opacity: 0, y: -30, duration: 0.12 }, 0.03);
+      scrollTl.to('.phase-1', {
+        opacity: 0,
+        y: -40,
+        duration: 0.15,
+        ease: 'power2.inOut', // Eased fade out
+      }, 0.04);
 
-      // Phase 2: fade in overlapping with Phase 1 fade out
-      scrollTl.fromTo('.phase-2', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.12 }, 0);
-      scrollTl.to('.phase-2', { opacity: 0, y: -30, duration: 0.08 }, 0.25);
+      // Phase 2: fade in and out with smooth momentum easing
+      scrollTl.fromTo('.phase-2', 
+        { opacity: 0, y: 40 },
+        { opacity: 1, y: 0, duration: 0.15, ease: 'power2.inOut' },
+        0.08
+      );
+      scrollTl.to('.phase-2', {
+        opacity: 0,
+        y: -40,
+        duration: 0.12,
+        ease: 'power2.inOut'
+      }, 0.28);
 
       // Phase 3
-      scrollTl.fromTo('.phase-3', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.12 }, 0.30);
-      scrollTl.to('.phase-3', { opacity: 0, y: -30, duration: 0.08 }, 0.50);
+      scrollTl.fromTo('.phase-3',
+        { opacity: 0, y: 40 },
+        { opacity: 1, y: 0, duration: 0.15, ease: 'power2.inOut' },
+        0.33
+      );
+      scrollTl.to('.phase-3', {
+        opacity: 0,
+        y: -40,
+        duration: 0.12,
+        ease: 'power2.inOut'
+      }, 0.53);
 
       // Phase 4
-      scrollTl.fromTo('.phase-4', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.12 }, 0.55);
-      scrollTl.to('.phase-4', { opacity: 0, y: -30, duration: 0.08 }, 0.75);
+      scrollTl.fromTo('.phase-4',
+        { opacity: 0, y: 40 },
+        { opacity: 1, y: 0, duration: 0.15, ease: 'power2.inOut' },
+        0.58
+      );
+      scrollTl.to('.phase-4', {
+        opacity: 0,
+        y: -40,
+        duration: 0.12,
+        ease: 'power2.inOut'
+      }, 0.78);
 
-      // Phase 5
-      scrollTl.fromTo(
-        '.phase-5',
-        { opacity: 0, scale: 0.95, letterSpacing: '0.1em' },
-        { opacity: 1, scale: 1.05, letterSpacing: '0.3em', duration: 0.20 },
-        0.80
+      // Phase 5: final reveal
+      scrollTl.fromTo('.phase-5',
+        { opacity: 0, scale: 0.95, letterSpacing: '0.05em' },
+        { opacity: 1, scale: 1.02, letterSpacing: '0.2em', duration: 0.18, ease: 'power2.out' },
+        0.82
       );
 
-      scrollTl.to('.scroll-indicator', { opacity: 0, duration: 0.03 }, 0);
+      scrollTl.to('.scroll-indicator', { opacity: 0, duration: 0.05, ease: 'power1.in' }, 0);
 
-      ScrollTrigger.refresh();
-    }
+      // 2. Setup Auto entry animation
+      entryTl = gsap.timeline({ ease: 'none', paused: true });
+
+      // Frame animation: pallu floats upward (frames 1 → 50)
+      // Eases beautifully to a stop at frame 50 using power3.out
+      entryTl.to(frObj, {
+        val: introFrames,
+        duration: 3.2,
+        ease: 'power3.out',
+        onUpdate: () => {
+          if (isIntroPlaying.current) {
+            drawFrame(Math.round(frObj.val));
+          }
+        },
+      }, 0);
+
+      // Staggered text entry for Phase 1 elements (Apple presentation style)
+      entryTl.fromTo('.phase-1 .hero-tagline', 
+        { opacity: 0, y: 30 },
+        { opacity: 1, y: 0, duration: 1.2, ease: 'power4.out' },
+        0.6
+      );
+
+      entryTl.fromTo('.phase-1 .hero-title', 
+        { opacity: 0, y: 30 },
+        { opacity: 1, y: 0, duration: 1.2, ease: 'power4.out' },
+        0.75
+      );
+
+      entryTl.fromTo('.phase-1 .hero-subtext', 
+        { opacity: 0, y: 30 },
+        { opacity: 1, y: 0, duration: 1.2, ease: 'power4.out' },
+        0.9
+      );
+
+      entryTl.fromTo('.phase-1 .hero-buttons', 
+        { opacity: 0, y: 30 },
+        { opacity: 1, y: 0, duration: 1.2, ease: 'power4.out' },
+        1.05
+      );
+
+      // Scroll indicator fades/slides up at the end of the entry animation
+      entryTl.fromTo('.scroll-indicator', 
+        { opacity: 0, y: 15 },
+        { opacity: 1, y: 0, duration: 1.0, ease: 'power3.out' },
+        2.2
+      );
+
+      // Hold briefly at end of entry
+      entryTl.to({}, { duration: 0.3 });
+
+      entryTl.eventCallback('onComplete', () => {
+        isIntroPlaying.current = false;
+        // Unlock scroll
+        document.documentElement.style.overflow = '';
+        document.body.style.overflow = '';
+        window.removeEventListener('wheel', preventScroll);
+        window.removeEventListener('touchmove', preventScroll);
+        
+        // Align and draw final frame
+        drawFrame(50);
+        
+        // Refresh ScrollTrigger to sync measurements
+        ScrollTrigger.refresh();
+      });
+
+      // Play intro animation
+      entryTl.play();
+    }, container);
 
     const handleResize = () => {
       const canvas = canvasRef.current;
@@ -221,10 +287,9 @@ export default function Hero() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
 
-      if (scrollTl) {
-        const progress = scrollTl.progress();
-        const startFrame = Math.round(frObj.val);
-        const fi = startFrame + Math.floor(progress * (totalFrames - startFrame));
+      if (!isIntroPlaying.current && scrollTl) {
+        const progress = scrollTl.scrollTrigger ? scrollTl.scrollTrigger.progress : 0;
+        const fi = introFrames + Math.floor(progress * (totalFrames - introFrames));
         drawFrame(Math.min(totalFrames, fi));
       } else {
         const fi = Math.min(introFrames, Math.round(frObj.val));
@@ -243,7 +308,7 @@ export default function Hero() {
       if ('scrollRestoration' in window.history) {
         window.history.scrollRestoration = 'auto';
       }
-      entryTl.kill();
+      if (entryTl) entryTl.kill();
       ctx.revert();
     };
   }, [isReady]);

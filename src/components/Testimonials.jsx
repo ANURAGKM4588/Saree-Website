@@ -31,7 +31,7 @@ const testimonials = [
 
 const containerVariants = {
   hidden: { opacity: 0 },
-  visible: { transition: { staggerChildren: 0.12 } },
+  visible: { opacity: 1, transition: { staggerChildren: 0.12 } },
 };
 
 const cardVariants = {
@@ -42,6 +42,7 @@ const cardVariants = {
 export default function Testimonials() {
   return (
     <section className="testimonials-section">
+      <div className="tm-bg-glow" />
       <div className="tm-inner">
         <motion.span
           className="tm-tag"

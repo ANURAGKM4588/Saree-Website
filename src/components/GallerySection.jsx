@@ -5,17 +5,17 @@ import './GallerySection.css';
 const BASE = import.meta.env.BASE_URL || '/';
 
 const galleryImages = [
-  `${BASE}images/herosection/ChatGPT%20Image%20Jun%2014%2C%202026%2C%2002_54_17%20PM050.jpg`,
+  `${BASE}images/herosection/ChatGPT Image Jun 14, 2026, 02_54_17 PM050.jpg`,
   `${BASE}images/bridalsaree/Woman_walking_with_lotus_flower_202606150000_1020.jpg`,
-  `${BASE}images/herosection/ChatGPT%20Image%20Jun%2014%2C%202026%2C%2002_54_17%20PM100.jpg`,
+  `${BASE}images/herosection/ChatGPT Image Jun 14, 2026, 02_54_17 PM100.jpg`,
   `${BASE}images/bridalsaree/Woman_walking_with_lotus_flower_202606150000_1050.jpg`,
-  `${BASE}images/herosection/ChatGPT%20Image%20Jun%2014%2C%202026%2C%2002_54_17%20PM005.jpg`,
+  `${BASE}images/herosection/ChatGPT Image Jun 14, 2026, 02_54_17 PM005.jpg`,
   `${BASE}images/bridalsaree/Woman_walking_with_lotus_flower_202606150000_1100.jpg`,
 ];
 
 const containerVariants = {
   hidden: { opacity: 0 },
-  visible: { transition: { staggerChildren: 0.08 } },
+  visible: { opacity: 1, transition: { staggerChildren: 0.08 } },
 };
 
 const itemVariants = {
@@ -26,6 +26,7 @@ const itemVariants = {
 export default function GallerySection() {
   return (
     <section className="gallery-section" id="gallery">
+      <div className="gl-bg-glow" />
       <div className="gl-inner">
         <motion.span
           className="gl-tag"
@@ -66,7 +67,8 @@ export default function GallerySection() {
             <motion.div key={i} className="gl-item" variants={itemVariants}>
               <img src={src} alt={`Zari gallery ${i + 1}`} className="gl-img" loading="lazy" />
               <div className="gl-item-overlay">
-                <Image size={20} />
+                <Image size={22} className="gl-overlay-icon" />
+                <span className="gl-overlay-text">View Handloom</span>
               </div>
             </motion.div>
           ))}

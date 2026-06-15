@@ -6,6 +6,7 @@ import Hero from './components/Hero';
 import TrustBenefits from './components/TrustBenefits';
 import FeaturedCollections from './components/FeaturedCollections';
 import StorySection from './components/StorySection';
+import ShoppingSection from './components/ShoppingSection';
 import BestSellers from './components/BestSellers';
 import BridalBanner from './components/BridalBanner';
 import WhyChooseSutra from './components/WhyChooseSutra';
@@ -23,8 +24,9 @@ function HomePage() {
       <Hero />
       <TrustBenefits />
       <FeaturedCollections />
-      <StorySection />
-      <BestSellers />
+        <StorySection />
+        <ShoppingSection />
+        <BestSellers />
       <BridalBanner />
       <WhyChooseSutra />
       <Testimonials />

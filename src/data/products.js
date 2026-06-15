@@ -1,7 +1,7 @@
 const BASE = import.meta.env.BASE_URL || '/';
 
 function heroFrame(n) {
-  return `${BASE}images/herosection/ChatGPT%20Image%20Jun%2014%2C%202026%2C%2002_54_17%20PM${String(n).padStart(3, '0')}.jpg`;
+  return `${BASE}images/herosection/ChatGPT Image Jun 14, 2026, 02_54_17 PM${String(n).padStart(3, '0')}.jpg`;
 }
 
 function bridalFrame(n) {

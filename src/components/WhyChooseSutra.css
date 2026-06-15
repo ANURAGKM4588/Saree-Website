@@ -1,9 +1,22 @@
 .whychoose-section {
   background: linear-gradient(180deg, #0a0001 0%, var(--bg-obsidian) 100%);
-  padding: 6rem 0;
+  padding: 4rem 0;
   position: relative;
   z-index: 3;
   border-top: 1px solid rgba(212, 175, 55, 0.06);
+  overflow: hidden;
+}
+
+.wc-bg-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.04) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 1;
 }
 
 .wc-inner {
@@ -11,6 +24,8 @@
   width: 90%;
   margin: 0 auto;
   text-align: center;
+  position: relative;
+  z-index: 2;
 }
 
 .wc-tag {
@@ -19,17 +34,17 @@
   font-weight: 700;
   letter-spacing: 0.25em;
   color: var(--color-gold);
-  margin-bottom: 1.2rem;
+  margin-bottom: 1rem;
   display: block;
 }
 
 .wc-heading {
   font-family: var(--font-serif);
-  font-size: 3.5rem;
+  font-size: 3.2rem;
   font-weight: 600;
   line-height: 1.15;
   color: white;
-  margin-bottom: 4rem;
+  margin-bottom: 3rem;
 }
 
 .wc-grid {
@@ -42,29 +57,32 @@
   text-align: center;
   padding: 2.5rem 1.5rem;
   border-radius: 20px;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(212, 175, 55, 0.08);
   transition: var(--transition-smooth);
 }
 
 .wc-card:hover {
-  background: rgba(212, 175, 55, 0.04);
-  border-color: rgba(212, 175, 55, 0.15);
+  background: rgba(212, 175, 55, 0.05);
+  border-color: rgba(212, 175, 55, 0.25);
   transform: translateY(-6px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 15px 35px rgba(212, 175, 55, 0.08);
 }
 
 .wc-icon-wrap {
   width: 64px;
   height: 64px;
   border-radius: 50%;
-  background: linear-gradient(135deg, rgba(212, 175, 55, 0.12) 0%, rgba(212, 175, 55, 0.05) 100%);
-  border: 1px solid rgba(212, 175, 55, 0.15);
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(212, 175, 55, 0.05) 100%);
+  border: 1px solid rgba(212, 175, 55, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto 1.5rem;
   color: var(--color-gold);
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.08);
 }
 
 .wc-card-title {

@@ -1,6 +1,5 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import BridalSection from './BridalSection';
 import './StorySection.css';
 
 const BASE = import.meta.env.BASE_URL || '/';
@@ -71,8 +70,6 @@ export default function StorySection() {
           </div>
         </div>
       </div>
-
-      <BridalSection />
 
       {/* Quote Banner */}
       <div className="story-quote">
