@@ -1,11 +1,11 @@
 const BASE = import.meta.env.BASE_URL || '/';
 
 function heroFrame(n) {
-  return `${BASE}images/herosection/ChatGPT%20Image%20Jun%2014%2C%202026%2C%2002_54_17%20PM${String(n).padStart(3, '0')}.png`;
+  return `${BASE}images/herosection/ChatGPT%20Image%20Jun%2014%2C%202026%2C%2002_54_17%20PM${String(n).padStart(3, '0')}.jpg`;
 }
 
 function bridalFrame(n) {
-  return `${BASE}images/bridalsaree/Woman_walking_with_lotus_flower_202606150000_${n}.png`;
+  return `${BASE}images/bridalsaree/Woman_walking_with_lotus_flower_202606150000_${n}.jpg`;
 }
 
 export const products = [

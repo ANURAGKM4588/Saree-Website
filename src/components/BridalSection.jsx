@@ -11,7 +11,7 @@ const frameStart = 1000;
 const BASE = import.meta.env.BASE_URL || '/';
 
 const getFramePath = (index) =>
-  `${BASE}images/bridalsaree/Woman_walking_with_lotus_flower_202606150000_${index}.png`;
+  `${BASE}images/bridalsaree/Woman_walking_with_lotus_flower_202606150000_${index}.jpg`;
 
 const drawImageProp = (ctx, img, x, y, w, h, offsetX = 0.5, offsetY = 0) => {
   const iw = img.width;

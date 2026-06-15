@@ -10,7 +10,7 @@ const totalFrames = 224;
 const getFramePath = (index) => {
   const BASE = import.meta.env.BASE_URL || '/';
   const paddedIndex = String(index).padStart(3, '0');
-  return `${BASE}images/herosection/ChatGPT Image Jun 14, 2026, 02_54_17 PM${paddedIndex}.png`;
+  return `${BASE}images/herosection/ChatGPT Image Jun 14, 2026, 02_54_17 PM${paddedIndex}.jpg`;
 };
 
 const drawImageProp = (ctx, img, x, y, w, h, offsetX = 0.5, offsetY = 0) => {

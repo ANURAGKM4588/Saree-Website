@@ -109,7 +109,7 @@ export default function StorySection() {
               transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
             >
               <img 
-                src="/loom_detail.png" 
+                src={`${import.meta.env.BASE_URL || '/'}loom_detail.png`} 
                 alt="Weaver handloom detail" 
                 className="legacy-img" 
               />
