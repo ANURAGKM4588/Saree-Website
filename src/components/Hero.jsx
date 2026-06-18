@@ -46,6 +46,7 @@ export default function Hero() {
   const canvasRef = useRef(null);
   const imagesRef = useRef({});
   const isIntroPlaying = useRef(true);
+  const lastDrawnFrameRef = useRef(null);
 
   const [loadedCount, setLoadedCount] = useState(0);
   const [isReady, setIsReady] = useState(false);
@@ -82,6 +83,7 @@ export default function Hero() {
   }, []);
 
   const drawFrame = (frameIndex) => {
+    if (lastDrawnFrameRef.current === frameIndex) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -89,6 +91,7 @@ export default function Hero() {
     if (img && img.complete) {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       drawImageProp(ctx, img, 0, 0, canvas.width, canvas.height);
+      lastDrawnFrameRef.current = frameIndex;
     }
   };
 
@@ -102,6 +105,7 @@ export default function Hero() {
 
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+    lastDrawnFrameRef.current = null;
     drawFrame(1);
 
     // Hard block user manual scroll events during intro
@@ -214,11 +218,11 @@ export default function Hero() {
       entryTl = gsap.timeline({ ease: 'none', paused: true });
 
       // Frame animation: pallu floats upward (frames 1 → 50)
-      // Eases beautifully to a stop at frame 50 using power3.out
+      // Eases beautifully to a stop at frame 50 using sine.inOut for a fluid floating feel
       entryTl.to(frObj, {
         val: introFrames,
         duration: 3.2,
-        ease: 'power3.out',
+        ease: 'sine.inOut',
         onUpdate: () => {
           if (isIntroPlaying.current) {
             drawFrame(Math.round(frObj.val));
@@ -286,6 +290,8 @@ export default function Hero() {
       if (!canvas || !wrapper) return;
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
+
+      lastDrawnFrameRef.current = null; // Force redraw on resize
 
       if (!isIntroPlaying.current && scrollTl) {
         const progress = scrollTl.scrollTrigger ? scrollTl.scrollTrigger.progress : 0;

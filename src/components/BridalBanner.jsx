@@ -46,6 +46,7 @@ export default function BridalBanner() {
   const wrapperRef = useRef(null);
   const canvasRef = useRef(null);
   const imagesRef = useRef({});
+  const lastDrawnFrameRef = useRef(null);
 
   const [loadedCount, setLoadedCount] = useState(0);
   const [isReady, setIsReady] = useState(false);
@@ -82,6 +83,7 @@ export default function BridalBanner() {
   }, []);
 
   const drawFrame = (frameIndex) => {
+    if (lastDrawnFrameRef.current === frameIndex) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -89,6 +91,7 @@ export default function BridalBanner() {
     if (img && img.complete) {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       drawImageProp(ctx, img, 0, 0, canvas.width, canvas.height);
+      lastDrawnFrameRef.current = frameIndex;
     }
   };
 
@@ -104,6 +107,7 @@ export default function BridalBanner() {
     const rect = wrapper.getBoundingClientRect();
     canvas.width = rect.width;
     canvas.height = rect.height;
+    lastDrawnFrameRef.current = null;
 
     const frameObj = { val: frameStart };
     const mm = gsap.matchMedia();
@@ -159,6 +163,8 @@ export default function BridalBanner() {
       const r = wrapper.getBoundingClientRect();
       canvas.width = r.width;
       canvas.height = r.height;
+
+      lastDrawnFrameRef.current = null; // Force redraw on resize
 
       if (window.innerWidth <= 768) {
         drawFrame(frameStart + 60);
