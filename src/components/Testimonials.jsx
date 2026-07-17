@@ -24,7 +24,7 @@ const testimonials = [
   {
     name: 'Neha Verma',
     location: 'Bangalore, India',
-    text: 'Zari has become my go-to for festive wear. The Patola Heritage Weave I purchased is a conversation starter at every gathering. Pure craftsmanship at its finest.',
+    text: 'Kadha has become my go-to for festive wear. The Patola Heritage Weave I purchased is a conversation starter at every gathering. Pure craftsmanship at its finest.',
     rating: 5,
   },
 ];

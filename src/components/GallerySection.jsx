@@ -65,7 +65,7 @@ export default function GallerySection() {
         >
           {galleryImages.map((src, i) => (
             <motion.div key={i} className="gl-item" variants={itemVariants}>
-              <img src={src} alt={`Zari gallery ${i + 1}`} className="gl-img" loading="lazy" />
+              <img src={src} alt={`Kadha gallery ${i + 1}`} className="gl-img" loading="lazy" />
               <div className="gl-item-overlay">
                 <Image size={22} className="gl-overlay-icon" />
                 <span className="gl-overlay-text">View Handloom</span>

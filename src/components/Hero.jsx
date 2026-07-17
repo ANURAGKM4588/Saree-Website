@@ -324,7 +324,7 @@ export default function Hero() {
       {!isReady && (
         <div className="hero-preloader">
           <div className="preloader-content">
-            <span className="preloader-logo">ZARI</span>
+            <span className="preloader-logo">KADHA</span>
             <div className="preloader-bar-wrapper">
               <div className="preloader-bar" style={{ width: `${loadPercentage}%` }} />
             </div>
@@ -355,7 +355,7 @@ export default function Hero() {
             <h3 className="feature-title">The Mulberry Warp</h3>
             <p className="feature-body">
               Hand-selected Mulberry silk filaments are twisted together to create
-              a warp of high tensile strength and deep dye affinity, giving Zari sarees
+              a warp of high tensile strength and deep dye affinity, giving Kadha sarees
               their fluid drape.
             </p>
           </div>
@@ -382,7 +382,7 @@ export default function Hero() {
 
           {/* Phase 5: Final Brand Reveal */}
           <div className="hero-text-overlay phase-center phase-5">
-            <h2 className="hero-brand-name">ZARI</h2>
+            <h2 className="hero-brand-name">KADHA</h2>
             <p className="hero-subtext">Heritage Weaves. Tailored for Eternity.</p>
           </div>
 

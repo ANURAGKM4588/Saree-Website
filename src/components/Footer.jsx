@@ -55,7 +55,7 @@ export default function Footer() {
         <div className="footer-top">
           {/* Brand Column */}
           <div className="footer-brand">
-            <h2 className="footer-logo">ZARI</h2>
+            <h2 className="footer-logo">KADHA</h2>
             <p className="footer-brand-desc">
               Heritage weaves crafted by India's finest master weavers. Every thread tells a story of tradition, patience, and unparalleled artistry.
             </p>
@@ -105,7 +105,7 @@ export default function Footer() {
         </div>
 
         <div className="footer-bottom">
-          <p>&copy; 2026 Zari Heritage Loom. All rights reserved.</p>
+          <p>&copy; 2026 Kadha Heritage Loom. All rights reserved.</p>
           <p className="footer-bottom-tagline">Handwoven with devotion. Draped with pride.</p>
         </div>
       </div>

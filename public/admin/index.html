@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="refresh" content="0; url=https://kadha.shop/#/admin" />
+    <script type="text/javascript">
+      // Check if we are running locally or on custom domain
+      const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      const redirectUrl = isLocal 
+        ? `${window.location.protocol}//${window.location.host}/#/admin`
+        : 'https://kadha.shop/#/admin';
+      
+      window.location.href = redirectUrl;
+    </script>
+    <title>Redirecting to Admin Panel...</title>
+  </head>
+  <body>
+    <p>Redirecting to <a href="https://kadha.shop/#/admin">Admin Panel</a>...</p>
+  </body>
+</html>

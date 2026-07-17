@@ -47,7 +47,7 @@ export default function WhyChooseSutra() {
           viewport={{ once: false, margin: '-80px' }}
           transition={{ duration: 0.5 }}
         >
-          WHY ZARI
+          WHY KADHA
         </motion.span>
         <motion.h2
           className="wc-heading"

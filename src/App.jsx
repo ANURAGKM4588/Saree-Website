@@ -1,6 +1,7 @@
 import React from 'react';
 import { HashRouter, Routes, Route } from 'react-router-dom';
 import { CartProvider } from './context/CartContext';
+import { DatabaseProvider } from './context/DatabaseContext';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import TrustBenefits from './components/TrustBenefits';
@@ -37,17 +38,22 @@ function HomePage() {
   );
 }
 
+import AdminPanel from './components/AdminPanel';
+
 function App() {
   return (
-    <CartProvider>
-      <HashRouter>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/products" element={<><Navbar /><ProductsPage /></>} />
-          <Route path="/product/:id" element={<><Navbar /><ProductDetailPage /></>} />
-        </Routes>
-      </HashRouter>
-    </CartProvider>
+    <DatabaseProvider>
+      <CartProvider>
+        <HashRouter>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/products" element={<><Navbar /><ProductsPage /></>} />
+            <Route path="/product/:id" element={<><Navbar /><ProductDetailPage /></>} />
+            <Route path="/admin" element={<AdminPanel />} />
+          </Routes>
+        </HashRouter>
+      </CartProvider>
+    </DatabaseProvider>
   );
 }
 

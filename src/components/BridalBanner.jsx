@@ -190,7 +190,7 @@ export default function BridalBanner() {
       {!isReady && (
         <div className="bb-preloader">
           <div className="bb-preloader-content">
-            <span className="bb-preloader-logo">ZARI</span>
+            <span className="bb-preloader-logo">KADHA</span>
             <div className="bb-preloader-bar-wrapper">
               <div className="bb-preloader-bar" style={{ width: `${loadPercentage}%` }} />
             </div>

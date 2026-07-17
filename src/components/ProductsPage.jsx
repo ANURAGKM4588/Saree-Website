@@ -3,15 +3,63 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ShoppingBag, Star, ArrowLeft, Search, X, ChevronDown } from 'lucide-react';
 import { useCart } from '../context/CartContext';
-import { products, categories, formatPrice } from '../data/products';
+import { formatPrice } from '../data/products';
+import { useDatabase } from '../context/DatabaseContext';
 import './ProductsPage.css';
 
 export default function ProductsPage() {
   const { addToCart, setIsCartOpen } = useCart();
+  const { products, categories, loading } = useDatabase();
   const [activeCategory, setActiveCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('default');
   const [showSort, setShowSort] = useState(false);
+
+  if (loading) {
+    return (
+      <div className="products-page">
+        <div className="pp-top">
+          <Link to="/" className="pp-back">
+            <ArrowLeft size={20} /> Back to Home
+          </Link>
+          <h1 className="pp-title">All Sarees</h1>
+          <span className="pp-count">Loading...</span>
+        </div>
+        <div className="pp-grid">
+          {[1, 2, 3, 4, 5, 6].map((i) => (
+            <div key={i} className="pp-card skeleton-card" style={{ opacity: 0.6 }}>
+              <div className="pp-card-image-wrapper" style={{ height: '350px', background: '#222', borderRadius: '8px', position: 'relative', overflow: 'hidden' }}>
+                <div className="shimmer" style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '100%',
+                  background: 'linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.1), transparent)',
+                  animation: 'shimmer 1.5s infinite'
+                }} />
+              </div>
+              <div className="pp-card-info" style={{ marginTop: '15px' }}>
+                <div style={{ height: '14px', width: '40%', background: '#333', borderRadius: '4px', marginBottom: '8px' }} />
+                <div style={{ height: '20px', width: '80%', background: '#333', borderRadius: '4px', marginBottom: '8px' }} />
+                <div style={{ height: '12px', width: '30%', background: '#333', borderRadius: '4px', marginBottom: '12px' }} />
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div style={{ height: '18px', width: '50%', background: '#333', borderRadius: '4px' }} />
+                  <div style={{ height: '28px', width: '28px', background: '#333', borderRadius: '50%' }} />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <style>{`
+          @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+          }
+        `}</style>
+      </div>
+    );
+  }
 
   const filtered = products
     .filter((p) => activeCategory === 'All' || p.category === activeCategory)

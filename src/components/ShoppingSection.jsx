@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 import { motion, useInView } from 'framer-motion';
 import { ShoppingBag, Star, Clock, ArrowRight } from 'lucide-react';
 import { useCart } from '../context/CartContext';
-import { featuredProducts, comingSoonProducts, offers, formatPrice } from '../data/products';
+import { formatPrice } from '../data/products';
+import { useDatabase } from '../context/DatabaseContext';
 import './ShoppingSection.css';
 
 const fadeUp = {
@@ -15,7 +16,18 @@ const fadeUp = {
 
 export default function ShoppingSection() {
   const { addToCart, setIsCartOpen } = useCart();
+  const { 
+    featuredProducts, 
+    comingSoonProducts, 
+    offers, 
+    registerNotification 
+  } = useDatabase();
+
   const [activeOffer, setActiveOffer] = useState(0);
+  const [notifyProductId, setNotifyProductId] = useState(null);
+  const [notifyEmail, setNotifyEmail] = useState('');
+  const [notifyLoading, setNotifyLoading] = useState(false);
+  const [notifySuccess, setNotifySuccess] = useState(null);
   const headingRef = useRef(null);
   const headingInView = useInView(headingRef, { once: false, margin: '-80px' });
 
@@ -277,7 +289,77 @@ export default function ShoppingSection() {
                     <span className="coming-material">{product.material}</span>
                     <h4 className="coming-name">{product.name}</h4>
                     <span className="coming-price">{formatPrice(product.price)}</span>
-                    <button className="btn-notify">Notify Me</button>
+                    {notifyProductId === product.id ? (
+                      <form 
+                        className="coming-notify-form" 
+                        onSubmit={async (e) => {
+                          e.preventDefault();
+                          if (notifyEmail) {
+                            setNotifyLoading(true);
+                            const res = await registerNotification(product.id, notifyEmail);
+                            setNotifyLoading(false);
+                            if (res.success) {
+                              setNotifySuccess(product.id);
+                              setTimeout(() => {
+                                setNotifyProductId(null);
+                                setNotifySuccess(null);
+                                setNotifyEmail('');
+                              }, 3000);
+                            }
+                          }
+                        }}
+                      >
+                        {notifySuccess === product.id ? (
+                          <span className="notify-success-msg" style={{ color: '#d4af37', fontSize: '0.85rem', display: 'block', marginTop: '8px', fontWeight: '500' }}>✓ Alert Set!</span>
+                        ) : (
+                          <div className="notify-input-group" style={{ display: 'flex', gap: '4px', marginTop: '8px' }}>
+                            <input
+                              type="email"
+                              placeholder="Your email"
+                              value={notifyEmail}
+                              onChange={(e) => setNotifyEmail(e.target.value)}
+                              required
+                              disabled={notifyLoading}
+                              style={{ 
+                                flex: 1, 
+                                padding: '6px 8px', 
+                                border: '1px solid #d4af37', 
+                                borderRadius: '4px',
+                                background: 'transparent',
+                                color: '#fff',
+                                fontSize: '0.8rem'
+                              }}
+                            />
+                            <button 
+                              type="submit" 
+                              disabled={notifyLoading}
+                              style={{
+                                padding: '6px 10px',
+                                background: '#d4af37',
+                                color: '#111',
+                                border: 'none',
+                                borderRadius: '4px',
+                                cursor: 'pointer',
+                                fontSize: '0.8rem',
+                                fontWeight: 'bold'
+                              }}
+                            >
+                              Go
+                            </button>
+                          </div>
+                        )}
+                      </form>
+                    ) : (
+                      <button 
+                        className="btn-notify"
+                        onClick={() => {
+                          setNotifyProductId(product.id);
+                          setNotifySuccess(null);
+                        }}
+                      >
+                        Notify Me
+                      </button>
+                    )}
                   </div>
                 </motion.div>
               ))}

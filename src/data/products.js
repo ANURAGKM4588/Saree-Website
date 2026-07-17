@@ -417,7 +417,7 @@ export const offers = [
     id: 'o3',
     title: 'First Purchase',
     subtitle: 'Welcome Offer',
-    desc: 'Flat 15% off on your first order. Use code ZARI15',
+    desc: 'Flat 15% off on your first order. Use code KADHA15',
     image: bannerFrame('ChatGPT Image Jun 15, 2026, 11_22_13 AM'),
     cta: 'Claim Offer',
     discount: '15%',
@@ -425,7 +425,7 @@ export const offers = [
   {
     id: 'o4',
     title: 'Golden Hour Collection',
-    subtitle: 'Zari Masterpieces',
+    subtitle: 'Kadha Masterpieces',
     desc: 'Handwoven with real gold & silver zari threads',
     image: bannerFrame('ChatGPT Image Jun 15, 2026, 11_25_33 AM'),
     cta: 'Discover Gold',
@@ -460,8 +460,8 @@ export const offers = [
   },
   {
     id: 'o8',
-    title: 'Zari Luxe Drop',
-    subtitle: 'Pure Zari Border Edit',
+    title: 'Kadha Luxe Drop',
+    subtitle: 'Pure Kadha Border Edit',
     desc: 'Heavy zari work sarees at exclusive prices',
     image: bannerFrame('ChatGPT Image Jun 15, 2026, 11_20_27 AM'),
     cta: 'Shop Luxe',

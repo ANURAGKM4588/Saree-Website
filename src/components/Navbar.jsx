@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Heart, ShoppingBag, X, ChevronRight, Trash2 } from 'lucide-react';
 import { useCart } from '../context/CartContext';
@@ -17,12 +18,35 @@ function formatPrice(price) {
 }
 
 export default function Navbar() {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
   const { cartItems, isCartOpen, setIsCartOpen, removeFromCart, cartTotal, cartCount } = useCart();
+
+  const handleNavClick = (e, href) => {
+    e.preventDefault();
+    const targetId = href.replace('#', '');
+    
+    // Check if we are on the homepage
+    if (location.pathname !== '/') {
+      navigate('/');
+      setTimeout(() => {
+        const element = document.getElementById(targetId);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    } else {
+      const element = document.getElementById(targetId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -49,10 +73,10 @@ export default function Navbar() {
           {/* Left Side: Brand + Nav */}
           <div className="navbar-left">
             <div className="navbar-brand-left">
-              <a href="/" className="brand-logo-link">
+              <Link to="/" className="brand-logo-link">
                 <span className="brand-emblem">◈</span>
-                <span className="brand-text">ZARI</span>
-              </a>
+                <span className="brand-text">KADHA</span>
+              </Link>
             </div>
             <ul className="nav-links">
             {navItems.map((item, idx) => (
@@ -61,7 +85,7 @@ export default function Navbar() {
                 onMouseEnter={() => setHoveredIndex(idx)}
                 onMouseLeave={() => setHoveredIndex(null)}
               >
-                <a href={item.href}>
+                <a href={item.href} onClick={(e) => handleNavClick(e, item.href)}>
                   {item.name}
                   {hoveredIndex === idx && (
                     <motion.div 
@@ -161,7 +185,7 @@ export default function Navbar() {
                   <div className="empty-cart">
                     <ShoppingBag size={48} className="empty-icon" />
                     <p>Your shopping bag is empty</p>
-                    <p className="empty-sub">Explore Zari Masterpieces to fill your collection.</p>
+                    <p className="empty-sub">Explore Kadha Masterpieces to fill your collection.</p>
                   </div>
                 ) : (
                   <div className="cart-items-list">

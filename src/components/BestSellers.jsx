@@ -2,10 +2,12 @@ import { motion } from 'framer-motion';
 import { ShoppingBag, Star, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
-import { featuredProducts, formatPrice } from '../data/products';
+import { formatPrice } from '../data/products';
+import { useDatabase } from '../context/DatabaseContext';
 import './BestSellers.css';
 
 export default function BestSellers() {
+  const { featuredProducts } = useDatabase();
   const { addToCart, setIsCartOpen } = useCart();
 
   const handleBuyNow = (product) => {
