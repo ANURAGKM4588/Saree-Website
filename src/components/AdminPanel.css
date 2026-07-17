@@ -1016,3 +1016,57 @@
     max-width: 100%;
   }
 }
+
+/* Image Upload UI Styling */
+.image-input-container {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  width: 100%;
+}
+
+.hidden-file-input {
+  display: none !important;
+}
+
+.upload-file-label-btn {
+  background: var(--admin-bg-tertiary);
+  border: 1px solid var(--admin-border-color);
+  color: var(--admin-accent-gold);
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 38px;
+}
+
+.upload-file-label-btn:hover {
+  background: rgba(197, 160, 89, 0.08);
+  border-color: var(--admin-accent-gold);
+  color: var(--admin-text-primary);
+}
+
+.image-input-container input[type="text"] {
+  flex: 1;
+  height: 38px;
+}
+
+.input-field-error-msg {
+  color: #ff8a80;
+  font-size: 11px;
+  margin-top: 4px;
+  display: block;
+}
+
+.input-field-success-msg {
+  color: var(--admin-color-success);
+  font-size: 11px;
+  margin-top: 4px;
+  display: block;
+}

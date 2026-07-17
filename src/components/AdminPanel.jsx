@@ -58,6 +58,10 @@ export default function AdminPanel() {
   const [loadingSubscribers, setLoadingSubscribers] = useState(false);
   const [loadingAlerts, setLoadingAlerts] = useState(false);
 
+  // Image Uploading States
+  const [imageUploading, setImageUploading] = useState(false);
+  const [imageUploadError, setImageUploadError] = useState('');
+
   // Authenticate listener
   useEffect(() => {
     if (supabase) {
@@ -176,6 +180,62 @@ export default function AdminPanel() {
       comingSoon: false
     });
     setIsModalOpen(true);
+  };
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setImageUploading(true);
+    setImageUploadError('');
+
+    if (!supabase || demoMode) {
+      // Demo Mode / Offline: Read as Base64 Data URL so it shows up in UI preview locally
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData(prev => ({ ...prev, image: reader.result }));
+        setImageUploading(false);
+      };
+      reader.onerror = () => {
+        setImageUploadError('Failed to read local file.');
+        setImageUploading(false);
+      };
+      reader.readAsDataURL(file);
+      return;
+    }
+
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
+      const filePath = `product-images/${fileName}`;
+
+      // Upload to 'sarees' storage bucket in Supabase
+      const { data, error } = await supabase.storage
+        .from('sarees')
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: false
+        });
+
+      if (error) {
+        if (error.message.includes('Bucket not found') || error.message.includes('does not exist')) {
+          throw new Error('Storage bucket "sarees" not found. Please create a public bucket named "sarees" in your Supabase Dashboard under Storage.');
+        }
+        throw error;
+      }
+
+      // Get public URL
+      const { data: { publicUrl } } = supabase.storage
+        .from('sarees')
+        .getPublicUrl(filePath);
+
+      setFormData(prev => ({ ...prev, image: publicUrl }));
+    } catch (err) {
+      console.error('Image upload failed:', err);
+      setImageUploadError(err.message || 'Image upload failed. Please verify storage permissions.');
+    } finally {
+      setImageUploading(false);
+    }
   };
 
   const handleOpenEdit = (product) => {
@@ -799,15 +859,33 @@ export default function AdminPanel() {
 
               <div className="form-row-2">
                 <div className="form-group">
-                  <label htmlFor="prodImage">Image Path / URL*</label>
-                  <input 
-                    type="text" 
-                    id="prodImage"
-                    value={formData.image}
-                    onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                    placeholder="images/herosection/imagename.jpg"
-                    required
-                  />
+                  <label>Saree Image*</label>
+                  <div className="image-input-container">
+                    <input 
+                      type="file" 
+                      accept="image/*" 
+                      onChange={handleImageUpload}
+                      id="imageFileSelect"
+                      className="hidden-file-input"
+                    />
+                    <label htmlFor="imageFileSelect" className="upload-file-label-btn">
+                      {imageUploading ? 'Uploading...' : 'Choose File'}
+                    </label>
+                    <input 
+                      type="text" 
+                      value={formData.image}
+                      onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+                      placeholder="Or enter path e.g. images/herosection/pic.jpg"
+                      required
+                    />
+                  </div>
+                  {imageUploadError && <span className="input-field-error-msg">{imageUploadError}</span>}
+                  {formData.image && formData.image.startsWith('data:') && (
+                    <span className="input-field-success-msg">✓ Image loaded locally (Base64)</span>
+                  )}
+                  {formData.image && formData.image.startsWith('http') && (
+                    <span className="input-field-success-msg">✓ Uploaded to Supabase Storage</span>
+                  )}
                 </div>
                 <div className="form-group">
                   <label htmlFor="prodTag">Label Badge Tag (Optional)</label>
