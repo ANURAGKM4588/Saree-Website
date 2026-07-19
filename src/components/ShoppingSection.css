@@ -466,7 +466,7 @@
 
 .btn-buy-now {
   background: linear-gradient(135deg, #d4af37 0%, #a48010 100%);
-  color: var(--bg-obsidian);
+  color: #ffffff;
   font-weight: 700;
   border: none;
 }

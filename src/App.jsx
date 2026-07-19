@@ -4,41 +4,32 @@ import { CartProvider } from './context/CartContext';
 import { DatabaseProvider } from './context/DatabaseContext';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
-import TrustBenefits from './components/TrustBenefits';
+import CelebrateOccasion from './components/CelebrateOccasion';
+import ShopByOccasion from './components/ShopByOccasion';
+import NewArrivals from './components/NewArrivals';
 import FeaturedCollections from './components/FeaturedCollections';
-import StorySection from './components/StorySection';
-import ShoppingSection from './components/ShoppingSection';
-import BestSellers from './components/BestSellers';
-import BridalBanner from './components/BridalBanner';
-import WhyChooseSutra from './components/WhyChooseSutra';
 import Testimonials from './components/Testimonials';
-import GallerySection from './components/GallerySection';
-import Newsletter from './components/Newsletter';
+import TrustBenefits from './components/TrustBenefits';
 import Footer from './components/Footer';
 import ProductsPage from './components/ProductsPage';
 import ProductDetailPage from './components/ProductDetailPage';
+import AdminPanel from './components/AdminPanel';
 
 function HomePage() {
   return (
     <>
       <Navbar />
       <Hero />
-      <TrustBenefits />
+      <CelebrateOccasion />
+      <ShopByOccasion />
+      <NewArrivals />
       <FeaturedCollections />
-        <StorySection />
-        <ShoppingSection />
-        <BestSellers />
-      <BridalBanner />
-      <WhyChooseSutra />
       <Testimonials />
-      <GallerySection />
-      <Newsletter />
+      <TrustBenefits />
       <Footer />
     </>
   );
 }
-
-import AdminPanel from './components/AdminPanel';
 
 function App() {
   return (

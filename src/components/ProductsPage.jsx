@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ShoppingBag, Star, ArrowLeft, Search, X, ChevronDown } from 'lucide-react';
 import { useCart } from '../context/CartContext';
@@ -14,6 +14,31 @@ export default function ProductsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('default');
   const [showSort, setShowSort] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const cat = params.get('category');
+    const search = params.get('search');
+    
+    if (cat) {
+      // Find case-insensitive match for category in available list
+      const matchedCat = categories.find(c => c.toLowerCase() === cat.toLowerCase());
+      if (matchedCat) {
+        setActiveCategory(matchedCat);
+      } else {
+        setActiveCategory('All');
+      }
+    } else {
+      setActiveCategory('All');
+    }
+
+    if (search) {
+      setSearchQuery(decodeURIComponent(search));
+    } else {
+      setSearchQuery('');
+    }
+  }, [location.search, categories]);
 
   if (loading) {
     return (
@@ -157,58 +182,88 @@ export default function ProductsPage() {
         </div>
       ) : (
         <div className="pp-grid">
-          {filtered.map((product, i) => (
-            <motion.div
-              key={product.id}
-              className="pp-card"
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-40px' }}
-              transition={{ duration: 0.5, delay: i * 0.04 }}
-            >
-              <Link to={`/product/${product.id}`} className="pp-card-image-link">
-                <div className="pp-card-image-wrapper">
-                  <div className="product-tag">{product.tag}</div>
-                  <img src={product.image} alt={product.name} className="pp-card-image" loading="lazy" />
-                  {product.originalPrice && (
-                    <div className="product-discount">
-                      -{Math.round((1 - product.price / product.originalPrice) * 100)}%
-                    </div>
-                  )}
-                  {!product.inStock && (
-                    <div className="pp-out-of-stock">Out of Stock</div>
-                  )}
-                </div>
-              </Link>
+          {filtered.map((product, i) => {
+            const discount = product.originalPrice 
+              ? Math.round((1 - product.price / product.originalPrice) * 100)
+              : null;
 
-              <div className="pp-card-info">
-                <Link to={`/product/${product.id}`} className="pp-card-name-link">
-                  <span className="pp-card-material">{product.material}</span>
-                  <h3 className="pp-card-name">{product.name}</h3>
-                </Link>
-                <div className="pp-card-rating">
-                  <Star size={12} fill="#d4af37" color="#d4af37" />
-                  <span>{product.rating}</span>
-                  <span className="pp-review-count">({product.reviews})</span>
-                </div>
-                <div className="pp-card-bottom">
-                  <div className="pp-card-prices">
-                    <span className="pp-price-current">{formatPrice(product.price)}</span>
-                    {product.originalPrice && (
-                      <span className="pp-price-original">{formatPrice(product.originalPrice)}</span>
+            return (
+              <motion.div
+                key={product.id}
+                className="pp-card"
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ duration: 0.5, delay: i * 0.04 }}
+              >
+                <Link to={`/product/${product.id}`} className="pp-card-image-link">
+                  <div className="pp-card-image-wrapper">
+                    {product.tag && (
+                      <div className={`product-tag tag-${product.tag.toLowerCase()}`}>
+                        {product.tag}
+                      </div>
+                    )}
+                    <img src={product.image} alt={product.name} className="pp-card-image" loading="lazy" />
+                    {discount && (
+                      <div className="product-discount">
+                        -{discount}%
+                      </div>
+                    )}
+                    {!product.inStock && (
+                      <div className="pp-out-of-stock">Out of Stock</div>
                     )}
                   </div>
-                  <button
-                    className="pp-add-cart"
-                    onClick={() => product.inStock && addToCart(product)}
-                    disabled={!product.inStock}
-                  >
-                    <ShoppingBag size={14} />
-                  </button>
+                </Link>
+
+                <div className="pp-card-info">
+                  <Link to={`/product/${product.id}`} className="pp-card-name-link">
+                    <span className="pp-card-material">{product.material}</span>
+                    <h3 className="pp-card-name">{product.name}</h3>
+                  </Link>
+                  <div className="pp-card-rating">
+                    <Star size={12} fill="var(--color-gold)" color="var(--color-gold)" />
+                    <span>{product.rating}</span>
+                    <span className="pp-review-count">({product.reviews})</span>
+                  </div>
+                  <div className="pp-card-bottom">
+                    <div className="pp-card-prices">
+                      <span className="pp-price-current">{formatPrice(product.price)}</span>
+                      {product.originalPrice && (
+                        <span className="pp-price-original">{formatPrice(product.originalPrice)}</span>
+                      )}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </motion.div>
-          ))}
+
+                {/* Sliding Action Buttons on Hover */}
+                {product.inStock && (
+                  <div className="product-actions-hover">
+                    <button 
+                      className="add-to-bag-btn"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        addToCart(product);
+                      }}
+                    >
+                      <ShoppingBag size={14} /> Add to Bag
+                    </button>
+                    <button 
+                      className="buy-now-btn"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        addToCart(product);
+                        setIsCartOpen(true);
+                      }}
+                    >
+                      Buy Now
+                    </button>
+                  </div>
+                )}
+              </motion.div>
+            );
+          })}
         </div>
       )}
     </div>

@@ -5,12 +5,14 @@ import './Hero.css';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const totalFrames = 224;
+const totalFrames = 241;
+const startFrameNum = 5;
+const endFrameNum = startFrameNum + totalFrames - 1; // 245
 
 const getFramePath = (index) => {
   const BASE = import.meta.env.BASE_URL || '/';
   const paddedIndex = String(index).padStart(3, '0');
-  return `${BASE}images/herosection/ChatGPT Image Jun 14, 2026, 02_54_17 PM${paddedIndex}.jpg`;
+  return `${BASE}image/herosection/new/hf_20260718_194543_38905dcd-3226-421c-a8f2-a4fdd40e1b9f${paddedIndex}.png`;
 };
 
 const drawImageProp = (ctx, img, x, y, w, h, offsetX = 0.5, offsetY = 0) => {
@@ -45,8 +47,6 @@ export default function Hero() {
   const wrapperRef = useRef(null);
   const canvasRef = useRef(null);
   const imagesRef = useRef({});
-  const isIntroPlaying = useRef(true);
-  const lastDrawnFrameRef = useRef(null);
 
   const [loadedCount, setLoadedCount] = useState(0);
   const [isReady, setIsReady] = useState(false);
@@ -58,13 +58,14 @@ export default function Hero() {
 
     const preloadImages = async () => {
       const promises = Array.from({ length: totalFrames }, (_, i) => {
+        const frameNum = startFrameNum + i;
         return new Promise((resolve) => {
           const img = new Image();
-          img.src = getFramePath(i + 1);
+          img.src = getFramePath(frameNum);
           img.onload = () => {
             loaded++;
             setLoadedCount(loaded);
-            imagesRef.current[i + 1] = img;
+            imagesRef.current[frameNum] = img;
             resolve();
           };
           img.onerror = () => {
@@ -83,7 +84,6 @@ export default function Hero() {
   }, []);
 
   const drawFrame = (frameIndex) => {
-    if (lastDrawnFrameRef.current === frameIndex) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -91,7 +91,6 @@ export default function Hero() {
     if (img && img.complete) {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       drawImageProp(ctx, img, 0, 0, canvas.width, canvas.height);
-      lastDrawnFrameRef.current = frameIndex;
     }
   };
 
@@ -105,8 +104,7 @@ export default function Hero() {
 
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-    lastDrawnFrameRef.current = null;
-    drawFrame(1);
+    drawFrame(startFrameNum);
 
     // Hard block user manual scroll events during intro
     const preventScroll = (e) => {
@@ -125,15 +123,52 @@ export default function Hero() {
 
     let scrollTl = null;
     let entryTl = null;
-    const frObj = { val: 1 };
+    const frObj = { val: startFrameNum };
     const introFrames = 50;
 
     const ctx = gsap.context(() => {
-      // 1. Initialize Scroll Timeline immediately on mount
-      // This sets up the pinning wrapper and spacer, avoiding layout jumps
-      const frameObj2 = { val: introFrames };
+      // ---- Auto entry animation ----
+      entryTl = gsap.timeline({ ease: 'none', paused: true });
 
-      // Ensure phase-1 is set up appropriately for intro animations first
+      // Frame animation: pallu floats upward (frames 5 → 50)
+      entryTl.to(frObj, {
+        val: introFrames,
+        duration: 3.5,
+        ease: 'power2.out',
+        onUpdate: () => drawFrame(Math.round(frObj.val)),
+      }, 0);
+
+      // Phase 1 text appears together after a brief pause
+      entryTl.fromTo('.phase-1', { opacity: 0, y: 40 }, {
+        opacity: 1, y: 0, duration: 1.4, ease: 'power2.out',
+      }, 0.8);
+
+      // Scroll indicator fades in at the end of the entry animation
+      entryTl.fromTo('.scroll-indicator', { opacity: 0 }, {
+        opacity: 1, duration: 0.8, ease: 'power2.out',
+      }, 2.5);
+
+      // Hold at end of entry
+      entryTl.to({}, { duration: 0.5 });
+
+      entryTl.eventCallback('onComplete', () => {
+        // Unlock scroll and initialize scroll timeline
+        document.documentElement.style.overflow = '';
+        document.body.style.overflow = '';
+        window.removeEventListener('wheel', preventScroll);
+        window.removeEventListener('touchmove', preventScroll);
+        if (!scrollTl) initScrollTl();
+      });
+
+      // Play intro animation
+      entryTl.play();
+    }, container);
+
+    function initScrollTl() {
+      const currentStartFrame = Math.round(frObj.val);
+      const frameObj2 = { val: currentStartFrame };
+
+      // Ensure phase-1 is at its active state at the start of scroll Trigger
       gsap.set('.phase-1', { opacity: 1, y: 0 });
 
       scrollTl = gsap.timeline({
@@ -142,147 +177,45 @@ export default function Hero() {
           pin: wrapper,
           start: 'top top',
           end: 'bottom bottom',
-          scrub: 1.5, // Apple-style momentum lag
+          scrub: 1,
           invalidateOnRefresh: true,
         },
+        defaults: { ease: 'none' },
       });
 
       scrollTl.to(frameObj2, {
-        val: totalFrames,
-        ease: 'none',
+        val: endFrameNum,
         duration: 1,
-        onUpdate: () => {
-          if (!isIntroPlaying.current) {
-            drawFrame(Math.round(frameObj2.val));
-          }
-        },
+        onUpdate: () => drawFrame(Math.round(frameObj2.val)),
       }, 0);
 
       // Phase 1: hold briefly, then fade out (Phase 2 starts fading in during this time)
-      scrollTl.to('.phase-1', {
-        opacity: 0,
-        y: -40,
-        duration: 0.15,
-        ease: 'power2.inOut', // Eased fade out
-      }, 0.04);
+      scrollTl.to('.phase-1', { opacity: 0, y: -30, duration: 0.12 }, 0.03);
 
-      // Phase 2: fade in and out with smooth momentum easing
-      scrollTl.fromTo('.phase-2', 
-        { opacity: 0, y: 40 },
-        { opacity: 1, y: 0, duration: 0.15, ease: 'power2.inOut' },
-        0.08
-      );
-      scrollTl.to('.phase-2', {
-        opacity: 0,
-        y: -40,
-        duration: 0.12,
-        ease: 'power2.inOut'
-      }, 0.28);
+      // Phase 2: fade in overlapping with Phase 1 fade out
+      scrollTl.fromTo('.phase-2', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.12 }, 0);
+      scrollTl.to('.phase-2', { opacity: 0, y: -30, duration: 0.08 }, 0.25);
 
       // Phase 3
-      scrollTl.fromTo('.phase-3',
-        { opacity: 0, y: 40 },
-        { opacity: 1, y: 0, duration: 0.15, ease: 'power2.inOut' },
-        0.33
-      );
-      scrollTl.to('.phase-3', {
-        opacity: 0,
-        y: -40,
-        duration: 0.12,
-        ease: 'power2.inOut'
-      }, 0.53);
+      scrollTl.fromTo('.phase-3', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.12 }, 0.30);
+      scrollTl.to('.phase-3', { opacity: 0, y: -30, duration: 0.08 }, 0.50);
 
       // Phase 4
-      scrollTl.fromTo('.phase-4',
-        { opacity: 0, y: 40 },
-        { opacity: 1, y: 0, duration: 0.15, ease: 'power2.inOut' },
-        0.58
-      );
-      scrollTl.to('.phase-4', {
-        opacity: 0,
-        y: -40,
-        duration: 0.12,
-        ease: 'power2.inOut'
-      }, 0.78);
+      scrollTl.fromTo('.phase-4', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.12 }, 0.55);
+      scrollTl.to('.phase-4', { opacity: 0, y: -30, duration: 0.08 }, 0.75);
 
-      // Phase 5: final reveal
-      scrollTl.fromTo('.phase-5',
-        { opacity: 0, scale: 0.95, letterSpacing: '0.05em' },
-        { opacity: 1, scale: 1.02, letterSpacing: '0.2em', duration: 0.18, ease: 'power2.out' },
-        0.82
+      // Phase 5
+      scrollTl.fromTo(
+        '.phase-5',
+        { opacity: 0 },
+        { opacity: 1, duration: 0.18, ease: 'power2.out' },
+        0.80
       );
 
-      scrollTl.to('.scroll-indicator', { opacity: 0, duration: 0.05, ease: 'power1.in' }, 0);
+      scrollTl.to('.scroll-indicator', { opacity: 0, duration: 0.03 }, 0);
 
-      // 2. Setup Auto entry animation
-      entryTl = gsap.timeline({ ease: 'none', paused: true });
-
-      // Frame animation: pallu floats upward (frames 1 → 50)
-      // Eases beautifully to a stop at frame 50 using sine.inOut for a fluid floating feel
-      entryTl.to(frObj, {
-        val: introFrames,
-        duration: 3.2,
-        ease: 'sine.inOut',
-        onUpdate: () => {
-          if (isIntroPlaying.current) {
-            drawFrame(Math.round(frObj.val));
-          }
-        },
-      }, 0);
-
-      // Staggered text entry for Phase 1 elements (Apple presentation style)
-      entryTl.fromTo('.phase-1 .hero-tagline', 
-        { opacity: 0, y: 30 },
-        { opacity: 1, y: 0, duration: 1.2, ease: 'power4.out' },
-        0.6
-      );
-
-      entryTl.fromTo('.phase-1 .hero-title', 
-        { opacity: 0, y: 30 },
-        { opacity: 1, y: 0, duration: 1.2, ease: 'power4.out' },
-        0.75
-      );
-
-      entryTl.fromTo('.phase-1 .hero-subtext', 
-        { opacity: 0, y: 30 },
-        { opacity: 1, y: 0, duration: 1.2, ease: 'power4.out' },
-        0.9
-      );
-
-      entryTl.fromTo('.phase-1 .hero-buttons', 
-        { opacity: 0, y: 30 },
-        { opacity: 1, y: 0, duration: 1.2, ease: 'power4.out' },
-        1.05
-      );
-
-      // Scroll indicator fades/slides up at the end of the entry animation
-      entryTl.fromTo('.scroll-indicator', 
-        { opacity: 0, y: 15 },
-        { opacity: 1, y: 0, duration: 1.0, ease: 'power3.out' },
-        2.2
-      );
-
-      // Hold briefly at end of entry
-      entryTl.to({}, { duration: 0.3 });
-
-      entryTl.eventCallback('onComplete', () => {
-        isIntroPlaying.current = false;
-        // Unlock scroll
-        document.documentElement.style.overflow = '';
-        document.body.style.overflow = '';
-        window.removeEventListener('wheel', preventScroll);
-        window.removeEventListener('touchmove', preventScroll);
-        
-        // Align and draw final frame
-        drawFrame(50);
-        
-        // Refresh ScrollTrigger to sync measurements
-        ScrollTrigger.refresh();
-      });
-
-      // Play intro animation
-      entryTl.play();
-    }, container);
+      ScrollTrigger.refresh();
+    }
 
     const handleResize = () => {
       const canvas = canvasRef.current;
@@ -291,12 +224,11 @@ export default function Hero() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
 
-      lastDrawnFrameRef.current = null; // Force redraw on resize
-
-      if (!isIntroPlaying.current && scrollTl) {
-        const progress = scrollTl.scrollTrigger ? scrollTl.scrollTrigger.progress : 0;
-        const fi = introFrames + Math.floor(progress * (totalFrames - introFrames));
-        drawFrame(Math.min(totalFrames, fi));
+      if (scrollTl) {
+        const progress = scrollTl.progress();
+        const startFrame = Math.round(frObj.val);
+        const fi = startFrame + Math.floor(progress * (endFrameNum - startFrame));
+        drawFrame(Math.min(endFrameNum, fi));
       } else {
         const fi = Math.min(introFrames, Math.round(frObj.val));
         drawFrame(fi);
@@ -324,7 +256,7 @@ export default function Hero() {
       {!isReady && (
         <div className="hero-preloader">
           <div className="preloader-content">
-            <span className="preloader-logo">KADHA</span>
+            <img src="/logo/loading page logo.png" alt="Kadha Logo" className="preloader-logo-img" />
             <div className="preloader-bar-wrapper">
               <div className="preloader-bar" style={{ width: `${loadPercentage}%` }} />
             </div>
@@ -339,12 +271,15 @@ export default function Hero() {
           <div className="hero-overlay-gradient" />
 
           {/* Phase 1: Brand Introduction */}
-          <div className="hero-text-overlay phase-center phase-1">
+          <div className="hero-text-overlay phase-left phase-1">
             <span className="hero-tagline">THE CRAFT OF SILK</span>
             <h1 className="hero-title">Where Heritage<br/>Meets Weave</h1>
-            <p className="hero-subtext">Discover timeless Banarasi, Kanjeevaram, and Organza masterpieces, handwoven by India's finest artisans.</p>
+            <div className="hero-divider">
+              <span className="hero-divider-diamond">◆</span>
+            </div>
+            <p className="hero-subtext">Discover timeless Banarasi, Organza and Silk Sarees crafted by skilled artisans for every celebration.</p>
             <div className="hero-buttons">
-              <a href="#collections" className="hero-btn hero-btn-primary">Explore Collections</a>
+              <a href="#collections" className="hero-btn hero-btn-primary">Explore Collections ›</a>
               <a href="#story" className="hero-btn hero-btn-secondary">Our Story</a>
             </div>
           </div>
@@ -373,7 +308,7 @@ export default function Hero() {
           {/* Phase 4: Feature 3 - 300 Hours */}
           <div className="hero-text-overlay feature-card left-callout phase-4">
             <span className="feature-num">03</span>
-            <h3 className="feature-title">300 Hours of Devotion</h3>
+            <h3 className="feature-title">300 Devoted Hours</h3>
             <p className="feature-body">
               Every millimeter is woven manually on traditional pit looms. A slow,
               deliberate heartbeat of heritage and muscular memory.
@@ -382,8 +317,7 @@ export default function Hero() {
 
           {/* Phase 5: Final Brand Reveal */}
           <div className="hero-text-overlay phase-center phase-5">
-            <h2 className="hero-brand-name">KADHA</h2>
-            <p className="hero-subtext">Heritage Weaves. Tailored for Eternity.</p>
+            <img src="/logo/herologo.png" alt="Kadha Logo" className="hero-brand-logo-img" />
           </div>
 
           {/* Scroll down indicator */}

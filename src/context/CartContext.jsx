@@ -5,6 +5,7 @@ const CartContext = createContext(null);
 export function CartProvider({ children }) {
   const [cartItems, setCartItems] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [wishlist, setWishlist] = useState([]);
 
   const addToCart = useCallback((product, qty = 1) => {
     setCartItems((prev) => {
@@ -16,7 +17,6 @@ export function CartProvider({ children }) {
       }
       return [...prev, { ...product, qty }];
     });
-    setIsCartOpen(true);
   }, []);
 
   const removeFromCart = useCallback((id) => {
@@ -37,6 +37,14 @@ export function CartProvider({ children }) {
     setCartItems([]);
   }, []);
 
+  const toggleWishlist = useCallback((productId) => {
+    setWishlist((prev) =>
+      prev.includes(productId)
+        ? prev.filter((id) => id !== productId)
+        : [...prev, productId]
+    );
+  }, []);
+
   const cartCount = useMemo(
     () => cartItems.reduce((acc, item) => acc + item.qty, 0),
     [cartItems]
@@ -46,6 +54,8 @@ export function CartProvider({ children }) {
     () => cartItems.reduce((acc, item) => acc + item.price * item.qty, 0),
     [cartItems]
   );
+
+  const wishlistCount = useMemo(() => wishlist.length, [wishlist]);
 
   const value = useMemo(
     () => ({
@@ -58,8 +68,11 @@ export function CartProvider({ children }) {
       clearCart,
       cartCount,
       cartTotal,
+      wishlist,
+      toggleWishlist,
+      wishlistCount,
     }),
-    [cartItems, isCartOpen, addToCart, removeFromCart, updateQty, clearCart, cartCount, cartTotal]
+    [cartItems, isCartOpen, addToCart, removeFromCart, updateQty, clearCart, cartCount, cartTotal, wishlist, toggleWishlist, wishlistCount]
   );
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

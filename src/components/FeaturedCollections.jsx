@@ -1,106 +1,134 @@
-import { motion } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import React, { useRef, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Heart, ShoppingBag, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useDatabase } from '../context/DatabaseContext';
+import { useCart } from '../context/CartContext';
+import { formatPrice } from '../data/products';
 import './FeaturedCollections.css';
 
-const BASE = import.meta.env.BASE_URL || '/';
-
-const collections = [
-  {
-    title: 'Banarasi',
-    desc: 'Handwoven in Varanasi with real gold and silver zari — a symbol of timeless opulence.',
-    image: `${BASE}images/herosection/ChatGPT Image Jun 14, 2026, 02_54_17 PM050.jpg`,
-    link: '/products',
-    accent: '#d4af37',
-  },
-  {
-    title: 'Kanjeevaram',
-    desc: 'Temple-woven silks from Tamil Nadu with intricate borders and a heritage that spans centuries.',
-    image: `${BASE}images/herosection/ChatGPT Image Jun 14, 2026, 02_54_17 PM005.jpg`,
-    link: '/products',
-    accent: '#c9833e',
-  },
-  {
-    title: 'Organza',
-    desc: 'Delicate, translucent weaves for those who appreciate ethereal elegance and modern grace.',
-    image: `${BASE}images/herosection/ChatGPT Image Jun 14, 2026, 02_54_17 PM100.jpg`,
-    link: '/products',
-    accent: '#7a9a7e',
-  },
-  {
-    title: 'Bridal Edit',
-    desc: 'Our curated collection of bridal masterpieces — for the most cherished day of your life.',
-    image: `${BASE}images/bridalsaree/Woman_walking_with_lotus_flower_202606150000_1020.jpg`,
-    link: '/products',
-    accent: '#c0392b',
-  },
-];
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 60 },
-  visible: (i) => ({
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.8, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] },
-  }),
-};
-
 export default function FeaturedCollections() {
-  return (
-    <section className="featured-collections" id="collections">
-      <div className="fc-inner">
-        <motion.span
-          className="fc-tag"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, margin: '-80px' }}
-          transition={{ duration: 0.5 }}
-        >
-          CURATED COLLECTIONS
-        </motion.span>
-        <motion.h2
-          className="fc-heading"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, margin: '-80px' }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-        >
-          Explore Our World of Silk
-        </motion.h2>
-        <motion.p
-          className="fc-desc"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, margin: '-80px' }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-        >
-          From the sacred looms of Varanasi to the temple towns of Tamil Nadu, each weave tells a story.
-        </motion.p>
+  const navigate = useNavigate();
+  const { featuredProducts } = useDatabase();
+  const { addToCart, setIsCartOpen, wishlist, toggleWishlist } = useCart();
+  const sliderRef = useRef(null);
 
-        <div className="fc-grid">
-          {collections.map((col, i) => (
-            <motion.div
-              key={col.title}
-              className="fc-card"
-              custom={i}
-              variants={cardVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: false, margin: '-50px' }}
-            >
-              <div className="fc-card-img-wrap">
-                <img src={col.image} alt={col.title} className="fc-card-img" loading="lazy" />
-                <div className="fc-card-overlay" />
-              </div>
-              <div className="fc-card-body">
-                <h3 className="fc-card-title" style={{ borderColor: col.accent }}>{col.title}</h3>
-                <p className="fc-card-desc">{col.desc}</p>
-                <Link to={col.link} className="fc-card-link">
-                  Explore <ArrowRight size={14} />
-                </Link>
-              </div>
-            </motion.div>
-          ))}
+  const scroll = (direction) => {
+    if (sliderRef.current) {
+      const scrollAmount = 300;
+      sliderRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth',
+      });
+    }
+  };
+
+  const handleToggleWishlist = (id, e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleWishlist(id);
+  };
+
+  const handleBuyNow = (product, e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    addToCart(product);
+    setIsCartOpen(true);
+  };
+
+  return (
+    <section className="featured-section" id="collections">
+      <div className="featured-container">
+        <div className="section-header">
+          <div>
+            <span className="section-subtitle">HANDPICKED MASTERPIECES</span>
+            <h2 className="section-title">Our Featured Collection</h2>
+          </div>
+          <Link to="/products" className="view-all-link">
+            VIEW ALL PRODUCTS
+          </Link>
+        </div>
+
+        <div className="slider-container">
+          <button 
+            className="slider-arrow left" 
+            onClick={() => scroll('left')}
+            aria-label="Scroll Left"
+          >
+            <ChevronLeft size={22} />
+          </button>
+
+          <div className="products-slider" ref={sliderRef}>
+            {featuredProducts.map((product) => {
+              const discount = product.originalPrice 
+                ? Math.round((1 - product.price / product.originalPrice) * 100)
+                : null;
+
+              return (
+                <div key={product.id} className="featured-product-card-wrap">
+                  <Link to={`/product/${product.id}`} className="featured-product-card">
+                    {/* Image Area */}
+                    <div className="product-image-container">
+                      <img src={product.image} alt={product.name} className="product-img" />
+                      
+                      <button 
+                        className={`wishlist-toggle ${wishlist.includes(product.id) ? 'active' : ''}`}
+                        onClick={(e) => handleToggleWishlist(product.id, e)}
+                        aria-label="Add to Wishlist"
+                      >
+                        <Heart size={18} fill={wishlist.includes(product.id) ? "var(--color-gold)" : "none"} color={wishlist.includes(product.id) ? "var(--color-gold)" : "currentColor"} />
+                      </button>
+
+                      {discount && (
+                        <div className="discount-badge">-{discount}%</div>
+                      )}
+                    </div>
+
+                    {/* Details */}
+                    <div className="product-info-wrap">
+                      <span className="product-brand">KADHA HERITAGE</span>
+                      <h3 className="product-title-text">{product.name}</h3>
+                      <div className="product-price-block">
+                        <span className="current-price">{formatPrice(product.price)}</span>
+                        {product.originalPrice && (
+                          <>
+                            <span className="original-price">{formatPrice(product.originalPrice)}</span>
+                            <span className="discount-pct">({discount}% OFF)</span>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </Link>
+                  
+                  {/* Actions */}
+                  <div className="product-actions-hover">
+                    <button 
+                      className="add-to-bag-btn"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        addToCart(product);
+                      }}
+                    >
+                      <ShoppingBag size={14} /> Add to Bag
+                    </button>
+                    <button 
+                      className="buy-now-btn"
+                      onClick={(e) => handleBuyNow(product, e)}
+                    >
+                      Buy Now
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          <button 
+            className="slider-arrow right" 
+            onClick={() => scroll('right')}
+            aria-label="Scroll Right"
+          >
+            <ChevronRight size={22} />
+          </button>
         </div>
       </div>
     </section>

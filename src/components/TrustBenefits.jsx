@@ -1,43 +1,51 @@
-import { ShieldCheck, Truck, RotateCcw } from 'lucide-react';
-import { motion } from 'framer-motion';
+import React from 'react';
+import { Award, Sparkles, Truck, RotateCcw, Lock } from 'lucide-react';
 import './TrustBenefits.css';
 
 const benefits = [
-  { icon: ShieldCheck, title: 'Authentic Handloom', desc: 'Every saree is verified by our craft council for genuine handloom origin.' },
-  { icon: Truck, title: 'Free Shipping', desc: 'Complimentary delivery across India on all orders above ₹5,000.' },
-  { icon: RotateCcw, title: 'Easy Returns', desc: 'Hassle-free 14-day exchange policy. If it doesn\'t drape right, swap it.' },
+  {
+    icon: Award,
+    title: 'AUTHENTIC QUALITY',
+    desc: 'Handpicked premium fabrics and trusted craftsmanship you can rely on.'
+  },
+  {
+    icon: Sparkles,
+    title: 'MODERN TRADITION',
+    desc: 'Designs that blend timeless Indian heritage with contemporary elegance.'
+  },
+  {
+    icon: Truck,
+    title: 'EXPRESS DELIVERY',
+    desc: 'Fast shipping across India with secure packaging and tracking.'
+  },
+  {
+    icon: RotateCcw,
+    title: 'EASY RETURNS',
+    desc: '7-day hassle-free returns and exchange policy for your peace of mind.'
+  },
+  {
+    icon: Lock,
+    title: '100% SECURE PAYMENT',
+    desc: 'Safe payment gateways ensuring your data privacy.'
+  }
 ];
-
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.15 } },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } },
-};
 
 export default function TrustBenefits() {
   return (
-    <section className="trust-section">
-      <motion.div
-        className="trust-grid"
-        variants={containerVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: false, margin: '-60px' }}
-      >
-        {benefits.map((b) => (
-          <motion.div key={b.title} className="trust-card" variants={itemVariants}>
-            <div className="trust-icon-wrap">
-              <b.icon size={24} />
+    <section className="trust-benefits-section">
+      <div className="trust-benefits-container">
+        <div className="benefits-row">
+          {benefits.map((b, index) => (
+            <div key={index} className="benefit-col">
+              <div className="benefit-icon-wrapper">
+                <b.icon size={22} className="benefit-icon" />
+              </div>
+              <h3 className="benefit-title">{b.title}</h3>
+              <p className="benefit-desc">{b.desc}</p>
             </div>
-            <h3 className="trust-title">{b.title}</h3>
-            <p className="trust-desc">{b.desc}</p>
-          </motion.div>
-        ))}
-      </motion.div>
+          ))}
+        </div>
+      </div>
     </section>
   );
 }

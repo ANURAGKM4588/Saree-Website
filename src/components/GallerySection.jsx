@@ -5,12 +5,12 @@ import './GallerySection.css';
 const BASE = import.meta.env.BASE_URL || '/';
 
 const galleryImages = [
-  `${BASE}images/herosection/ChatGPT Image Jun 14, 2026, 02_54_17 PM050.jpg`,
-  `${BASE}images/bridalsaree/Woman_walking_with_lotus_flower_202606150000_1020.jpg`,
-  `${BASE}images/herosection/ChatGPT Image Jun 14, 2026, 02_54_17 PM100.jpg`,
-  `${BASE}images/bridalsaree/Woman_walking_with_lotus_flower_202606150000_1050.jpg`,
-  `${BASE}images/herosection/ChatGPT Image Jun 14, 2026, 02_54_17 PM005.jpg`,
-  `${BASE}images/bridalsaree/Woman_walking_with_lotus_flower_202606150000_1100.jpg`,
+  `${BASE}image/saree/images (11).jpeg`,
+  `${BASE}image/saree/images (8).jpeg`,
+  `${BASE}image/saree/images (7).jpeg`,
+  `${BASE}image/saree/images (6).jpeg`,
+  `${BASE}image/saree/images (5).jpeg`,
+  `${BASE}image/saree/5_73_7415436e-9226-4442-9a42-d47387d04730.webp`,
 ];
 
 const containerVariants = {

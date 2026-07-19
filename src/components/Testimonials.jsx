@@ -1,96 +1,101 @@
-import { motion } from 'framer-motion';
-import { Star, Quote } from 'lucide-react';
+import React, { useRef } from 'react';
+import { Star, ChevronLeft, ChevronRight } from 'lucide-react';
 import './Testimonials.css';
 
-const testimonials = [
+const reviews = [
+  {
+    name: 'Hetal Shah',
+    location: 'Delhi, India',
+    rating: 5.0,
+    text: '"Beautiful dress, perfect size. I ordered for my sister\'s wedding and it arrived on time. The fabric quality is exceptional."'
+  },
+  {
+    name: 'Indu Vasavala',
+    location: 'Mumbai, India',
+    rating: 5.0,
+    text: '"This is my second jewelry order from GG Fashion. I loved them both. They arrived well packed and exactly as shown in pictures."'
+  },
+  {
+    name: 'Rayn',
+    location: 'Delhi, India',
+    rating: 5.0,
+    text: '"Beautiful necklace. Good experience shopping here. The customer support was very helpful with size customization."'
+  },
   {
     name: 'Ananya Sharma',
     location: 'Mumbai, India',
-    text: 'I ordered the Kanjeevaram Divine Lotus for my wedding, and it was absolutely breathtaking. The quality of the silk and the precision of the zari work exceeded every expectation.',
-    rating: 5,
-  },
-  {
-    name: 'Priya Kapoor',
-    location: 'Dubai, UAE',
-    text: 'The Banarasi Royal Velvet is a masterpiece. The gold zari catches the light beautifully, and the drape is impeccable. My family heirloom collection just got richer.',
-    rating: 5,
-  },
-  {
-    name: 'Rhea Mehta',
-    location: 'New York, USA',
-    text: 'Shipping to the US was seamless, and the saree arrived in pristine condition. The Organza Floral Dream is even more stunning in person — lightweight, elegant, and truly unique.',
-    rating: 5,
-  },
-  {
-    name: 'Neha Verma',
-    location: 'Bangalore, India',
-    text: 'Kadha has become my go-to for festive wear. The Patola Heritage Weave I purchased is a conversation starter at every gathering. Pure craftsmanship at its finest.',
-    rating: 5,
-  },
+    rating: 5.0,
+    text: '"The Banarasi Royal Velvet is an absolute masterpiece. The zari work is stunning and catches the light perfectly."'
+  }
 ];
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.12 } },
-};
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 40 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } },
-};
-
 export default function Testimonials() {
-  return (
-    <section className="testimonials-section">
-      <div className="tm-bg-glow" />
-      <div className="tm-inner">
-        <motion.span
-          className="tm-tag"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, margin: '-80px' }}
-          transition={{ duration: 0.5 }}
-        >
-          FROM OUR COMMUNITY
-        </motion.span>
-        <motion.h2
-          className="tm-heading"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, margin: '-80px' }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-        >
-          Loved by Connoisseurs<br />of Craft
-        </motion.h2>
+  const sliderRef = useRef(null);
 
-        <motion.div
-          className="tm-grid"
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: false, margin: '-60px' }}
-        >
-          {testimonials.map((t) => (
-            <motion.div key={t.name} className="tm-card" variants={cardVariants}>
-              <Quote size={24} className="tm-quote-icon" />
-              <div className="tm-stars">
-                {Array.from({ length: t.rating }).map((_, i) => (
-                  <Star key={i} size={14} fill="#d4af37" color="#d4af37" />
-                ))}
-              </div>
-              <p className="tm-text">{t.text}</p>
-              <div className="tm-author">
-                <div className="tm-avatar">
-                  {t.name.split(' ').map((n) => n[0]).join('')}
+  const scroll = (direction) => {
+    if (sliderRef.current) {
+      const scrollAmount = 340;
+      sliderRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth',
+      });
+    }
+  };
+
+  return (
+    <section className="reviews-section">
+      <div className="reviews-container">
+        <div className="reviews-header">
+          <h2 className="reviews-title">
+            Reviews & <span className="gold-text">Ratings</span>
+          </h2>
+          <button className="view-all-reviews">VIEW ALL</button>
+        </div>
+
+        <div className="reviews-slider-wrapper">
+          <button 
+            className="slider-btn left" 
+            onClick={() => scroll('left')}
+            aria-label="Scroll Left"
+          >
+            <ChevronLeft size={20} />
+          </button>
+
+          <div className="reviews-slider" ref={sliderRef}>
+            {reviews.map((r, index) => (
+              <div key={index} className="review-card">
+                <div className="review-stars-row">
+                  <span className="rating-num">{r.rating.toFixed(1)}</span>
+                  <div className="stars-wrap">
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <Star key={i} size={14} fill="var(--color-gold)" color="var(--color-gold)" />
+                    ))}
+                  </div>
                 </div>
-                <div>
-                  <p className="tm-name">{t.name}</p>
-                  <p className="tm-location">{t.location}</p>
+                
+                <p className="review-text">{r.text}</p>
+                
+                <div className="reviewer-info">
+                  <div className="reviewer-avatar">
+                    {r.name.split(' ').map((n) => n[0]).join('')}
+                  </div>
+                  <div className="reviewer-details">
+                    <h4 className="reviewer-name">{r.name}</h4>
+                    <span className="reviewer-loc">{r.location}</span>
+                  </div>
                 </div>
               </div>
-            </motion.div>
-          ))}
-        </motion.div>
+            ))}
+          </div>
+
+          <button 
+            className="slider-btn right" 
+            onClick={() => scroll('right')}
+            aria-label="Scroll Right"
+          >
+            <ChevronRight size={20} />
+          </button>
+        </div>
       </div>
     </section>
   );

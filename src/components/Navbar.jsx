@@ -25,7 +25,7 @@ export default function Navbar() {
   const [searchQuery, setSearchQuery] = useState('');
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
-  const { cartItems, isCartOpen, setIsCartOpen, removeFromCart, cartTotal, cartCount } = useCart();
+  const { cartItems, isCartOpen, setIsCartOpen, removeFromCart, cartTotal, cartCount, wishlistCount } = useCart();
 
   const handleNavClick = (e, href) => {
     e.preventDefault();
@@ -48,7 +48,14 @@ export default function Navbar() {
     }
   };
 
+  const isHomepage = location.pathname === '/';
+
   useEffect(() => {
+    if (!isHomepage) {
+      setIsScrolled(true);
+      return;
+    }
+
     const handleScroll = () => {
       const heroEnd = window.innerHeight * 3;
       if (window.scrollY > heroEnd) {
@@ -57,9 +64,11 @@ export default function Navbar() {
         setIsScrolled(false);
       }
     };
+    
+    setIsScrolled(window.scrollY > window.innerHeight * 3);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [isHomepage]);
 
   return (
     <>
@@ -74,8 +83,7 @@ export default function Navbar() {
           <div className="navbar-left">
             <div className="navbar-brand-left">
               <Link to="/" className="brand-logo-link">
-                <span className="brand-emblem">◈</span>
-                <span className="brand-text">KADHA</span>
+                <img src="/logo/logo vertical white.png" alt="Kadha Logo" className="brand-logo-img" />
               </Link>
             </div>
             <ul className="nav-links">
@@ -133,8 +141,10 @@ export default function Navbar() {
 
             {/* Wishlist */}
             <button className="action-btn wishlist-btn" aria-label="Wishlist">
-              <Heart size={20} />
-              <span className="badge">2</span>
+              <Heart size={20} fill={wishlistCount > 0 ? "var(--color-gold)" : "none"} color={wishlistCount > 0 ? "var(--color-gold)" : "currentColor"} />
+              {wishlistCount > 0 && (
+                <span className="badge">{wishlistCount}</span>
+              )}
             </button>
 
             {/* Shopping Bag */}

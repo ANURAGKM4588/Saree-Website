@@ -26,7 +26,7 @@ export default function StorySection() {
               transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
             >
               <img
-                src={`${BASE}images/herosection/ChatGPT%20Image%20Jun%2014%2C%202026%2C%2002_54_17%20PM001.jpg`}
+                src={`${BASE}loom_detail.png`}
                 alt="Handwoven silk saree detail"
                 className="legacy-img"
               />

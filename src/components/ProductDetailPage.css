@@ -77,8 +77,8 @@
   position: absolute;
   top: 1.25rem;
   left: 1.25rem;
-  background: rgba(212, 175, 55, 0.9);
-  color: var(--bg-obsidian);
+  background: rgba(12, 115, 86, 0.95);
+  color: white;
   font-family: var(--font-sans);
   font-size: 0.7rem;
   font-weight: 700;
@@ -278,15 +278,15 @@
 }
 
 .pdp-buy-now {
-  background: linear-gradient(135deg, #d4af37 0%, #a48010 100%);
-  color: var(--bg-obsidian);
+  background: var(--gradient-gold);
+  color: white;
   border: none;
 }
 
 .pdp-buy-now:hover:not(:disabled) {
-  background: linear-gradient(135deg, #e5c158 0%, #b89218 100%);
+  background: var(--gradient-gold-hover);
   transform: translateY(-1px);
-  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.25);
+  box-shadow: 0 4px 15px rgba(12, 115, 86, 0.25);
 }
 
 .pdp-add-cart:disabled,

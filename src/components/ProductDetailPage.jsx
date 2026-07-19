@@ -15,11 +15,11 @@ export default function ProductDetailPage() {
   if (loading) {
     return (
       <div className="pdp-page" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '60vh' }}>
-        <div style={{ color: '#d4af37', fontSize: '1.2rem', display: 'flex', gap: '8px', alignItems: 'center' }}>
+        <div style={{ color: 'var(--color-gold)', fontSize: '1.2rem', display: 'flex', gap: '8px', alignItems: 'center' }}>
           <div className="spinner" style={{
             width: '24px',
             height: '24px',
-            border: '2px solid #d4af37',
+            border: '2px solid var(--color-gold)',
             borderTopColor: 'transparent',
             borderRadius: '50%',
             animation: 'spin 1s linear infinite'
