@@ -4,7 +4,7 @@
   padding: calc(var(--navbar-height) + 2rem) 5% 6rem;
   max-width: 1400px;
   margin: 0 auto;
-  color: white;
+  color: var(--text-light-primary);
 }
 
 .pp-top {
@@ -33,6 +33,7 @@
   font-family: var(--font-serif);
   font-size: 2.2rem;
   font-weight: 600;
+  color: var(--text-light-primary);
 }
 
 .pp-count {
@@ -53,8 +54,8 @@
   position: relative;
   display: flex;
   align-items: center;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 12px;
   padding: 0 1rem;
 }
@@ -69,7 +70,7 @@
   background: transparent;
   border: none;
   outline: none;
-  color: white;
+  color: var(--text-light-primary);
   padding: 0.8rem 0.75rem;
   font-family: var(--font-sans);
   font-size: 0.9rem;
@@ -85,7 +86,7 @@
 }
 
 .pp-search-clear:hover {
-  color: white;
+  color: var(--text-light-primary);
 }
 
 .pp-sort-wrapper {
@@ -98,8 +99,8 @@
   gap: 0.5rem;
   height: 100%;
   padding: 0 1.25rem;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 12px;
   color: var(--text-light-secondary);
   font-family: var(--font-sans);
@@ -108,7 +109,7 @@
 }
 
 .pp-sort-btn strong {
-  color: white;
+  color: var(--text-light-primary);
   text-transform: capitalize;
 }
 
@@ -116,13 +117,13 @@
   position: absolute;
   top: calc(100% + 6px);
   right: 0;
-  background: #08241b;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 12px;
   padding: 0.5rem;
   z-index: 20;
   min-width: 200px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
 }
 
 .pp-sort-option {
@@ -138,8 +139,8 @@
 }
 
 .pp-sort-option:hover {
-  background: rgba(255, 255, 255, 0.06);
-  color: white;
+  background: rgba(0, 0, 0, 0.04);
+  color: var(--text-light-primary);
 }
 
 .pp-sort-option.active {
@@ -158,8 +159,8 @@
 .pp-cat-btn {
   padding: 0.4rem 1rem;
   border-radius: 20px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.06);
   color: var(--text-light-secondary);
   font-family: var(--font-sans);
   font-size: 0.8rem;
@@ -187,8 +188,8 @@
 }
 
 .pp-card {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(0, 0, 0, 0.02);
+  border: 1px solid rgba(0, 0, 0, 0.06);
   border-radius: 16px;
   overflow: hidden;
   transition: transform 0.4s ease, border-color 0.4s ease;
@@ -196,7 +197,7 @@
 
 .pp-card:hover {
   transform: translateY(-4px);
-  border-color: rgba(12, 115, 86, 0.25);
+  border-color: rgba(12, 115, 86, 0.3);
 }
 
 .pp-card-image-link {
@@ -208,7 +209,7 @@
   position: relative;
   aspect-ratio: 3 / 4;
   overflow: hidden;
-  background: #1a0f12;
+  background: #f5f0eb;
 }
 
 .pp-card-image {
@@ -260,7 +261,7 @@
   font-family: var(--font-serif);
   font-size: 1.05rem;
   font-weight: 600;
-  color: white;
+  color: var(--text-light-primary);
   margin: 0.25rem 0 0.4rem;
   line-height: 1.2;
 }
@@ -270,7 +271,7 @@
   align-items: center;
   gap: 0.25rem;
   font-size: 0.75rem;
-  color: white;
+  color: var(--text-light-primary);
   margin-bottom: 0.6rem;
 }
 
@@ -294,7 +295,7 @@
   font-family: var(--font-sans);
   font-size: 1rem;
   font-weight: 700;
-  color: white;
+  color: var(--text-light-primary);
 }
 
 .pp-price-original {
