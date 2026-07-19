@@ -12,7 +12,7 @@ const endFrameNum = startFrameNum + totalFrames - 1; // 245
 const getFramePath = (index) => {
   const BASE = import.meta.env.BASE_URL || '/';
   const paddedIndex = String(index).padStart(3, '0');
-  return `${BASE}image/herosection/new/hf_20260718_194543_38905dcd-3226-421c-a8f2-a4fdd40e1b9f${paddedIndex}.png`;
+  return `${BASE}image/herosection/new_webp/hf_20260718_194543_38905dcd-3226-421c-a8f2-a4fdd40e1b9f${paddedIndex}.webp`;
 };
 
 const drawImageProp = (ctx, img, x, y, w, h, offsetX = 0.5, offsetY = 0) => {

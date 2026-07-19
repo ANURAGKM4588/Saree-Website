@@ -28,3 +28,7 @@ dist-ssr
 .env
 .env.*
 
+# Large original PNG sequences
+public/image/herosection/new/
+public/images/herosection/new/
+
