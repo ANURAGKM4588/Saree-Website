@@ -155,8 +155,8 @@
 }
 
 .social-pill svg {
+  fill: #edf4c1;
   color: #edf4c1;
-  stroke: #edf4c1;
 }
 
 .social-pill:hover {
@@ -167,8 +167,8 @@
 }
 
 .social-pill:hover svg {
+  fill: #042219;
   color: #042219;
-  stroke: #042219;
 }
 
 .footer-heading {
