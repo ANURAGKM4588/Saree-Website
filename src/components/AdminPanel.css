@@ -1227,7 +1227,7 @@
 }
 
 /* ==========================================================================
-   8. MULTI-STEP WIZARD PRODUCT MODAL
+   8. SLEEK MINIMAL MODAL WINDOWS
    ========================================================================== */
 
 .modal-backdrop {
@@ -1243,220 +1243,249 @@
   overflow-y: auto;
 }
 
-.wizard-modal-card {
+.minimal-modal-card {
   background: #ffffff;
   border: 1px solid var(--adm-border-strong);
   border-radius: 16px;
   width: 100%;
-  max-width: 620px;
+  max-width: 760px;
   box-shadow: 0 24px 64px rgba(7, 56, 44, 0.22);
   overflow: hidden;
   display: flex;
   flex-direction: column;
 }
 
-.wizard-modal-header {
-  padding: 20px 24px 16px;
+.minimal-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
   border-bottom: 1px solid var(--adm-border);
   background: #fafcfa;
 }
 
-.wizard-header-top {
+.modal-title-group {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-bottom: 16px;
+  gap: 14px;
 }
 
-/* 3-Step Indicator Bar */
-.wizard-stepper-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  padding: 8px 12px;
-  background: #ffffff;
-  border: 1px solid var(--adm-border);
-  border-radius: 30px;
-}
-
-.stepper-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  opacity: 0.5;
-  transition: var(--adm-transition);
-}
-
-.stepper-item.active,
-.stepper-item.completed {
-  opacity: 1;
-}
-
-.stepper-circle {
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  background: var(--adm-bg-input);
-  border: 1.5px solid var(--adm-border-strong);
+.modal-icon-badge {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--adm-green-pale);
+  border: 1px solid rgba(7, 56, 44, 0.2);
+  color: var(--adm-green-primary);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 11px;
+}
+
+.modal-title-group h2 {
+  font-size: 17px;
   font-weight: 800;
-  color: var(--adm-text-secondary);
+  color: var(--adm-green-primary);
+  margin: 0;
+  line-height: 1.2;
 }
 
-.stepper-item.active .stepper-circle {
-  background: var(--adm-green-primary);
-  border-color: var(--adm-green-primary);
-  color: #ffffff;
+.modal-title-group p {
+  font-size: 12px;
+  color: var(--adm-text-muted);
+  margin-top: 3px;
 }
 
-.stepper-item.completed .stepper-circle {
-  background: var(--adm-success);
-  border-color: var(--adm-success);
-  color: #ffffff;
+.minimal-close-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: transparent;
+  border: 1px solid var(--adm-border);
+  color: var(--adm-text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--adm-transition);
 }
 
-.stepper-label {
-  font-size: 11.5px;
-  font-weight: 700;
-  color: var(--adm-text-primary);
-  white-space: nowrap;
+.minimal-close-btn:hover {
+  background: #fef5f5;
+  border-color: #f5c6c6;
+  color: var(--adm-danger);
+  transform: rotate(90deg);
 }
 
-.stepper-line {
-  flex: 1;
-  height: 2px;
-  background: var(--adm-border);
-}
-
-/* Wizard Form Body */
-.wizard-modal-form {
+.minimal-modal-form {
   display: flex;
   flex-direction: column;
 }
 
-.wizard-body-container {
+.minimal-form-grid {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 24px;
   padding: 24px;
-  min-height: 320px;
-  max-height: 60vh;
+  max-height: 70vh;
   overflow-y: auto;
 }
 
-.fade-in {
-  animation: wizardFadeIn 0.25s ease-in-out;
+/* Image Preview & Left Col */
+.modal-left-col {
+  display: flex;
+  flex-direction: column;
 }
 
-@keyframes wizardFadeIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* Step 2 Image Grid */
-.wizard-image-grid {
-  display: grid;
-  grid-template-columns: 140px 1fr;
-  gap: 16px;
-  margin-top: 8px;
-  align-items: start;
-}
-
-.wizard-image-preview-card {
-  width: 140px;
-  height: 160px;
+.image-preview-card {
+  width: 100%;
+  height: 240px;
   border-radius: 12px;
   background: #f8faf9;
   border: 2px dashed var(--adm-border-strong);
   overflow: hidden;
+  position: relative;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
 }
 
-.wizard-image-preview-card img {
+.preview-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.wizard-image-inputs {
+.image-placeholder {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  align-items: center;
+  gap: 8px;
+  color: var(--adm-text-muted);
+  font-size: 12px;
 }
 
-/* Step 3 Toggle Cards */
-.wizard-toggles-list {
+.upload-actions-bar {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  right: 10px;
   display: flex;
-  flex-direction: column;
-  gap: 12px;
+  justify-content: center;
 }
 
-.wizard-toggles-list h4 {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--adm-green-primary);
-  margin-bottom: 4px;
-}
-
-.wizard-toggle-card {
+.minimal-upload-btn {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 14px 18px;
-  background: #fafcfa;
-  border: 1.5px solid var(--adm-border);
-  border-radius: 12px;
+  gap: 6px;
+  padding: 8px 14px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(4px);
+  border: 1px solid var(--adm-border-strong);
+  border-radius: 20px;
+  color: var(--adm-green-primary);
+  font-family: var(--adm-font);
+  font-size: 11.5px;
+  font-weight: 700;
   cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   transition: var(--adm-transition);
 }
 
-.wizard-toggle-card:hover {
+.minimal-upload-btn:hover {
+  background: var(--adm-green-primary);
+  color: #ffffff;
   border-color: var(--adm-green-primary);
-  background: var(--adm-green-pale);
 }
 
-.toggle-left strong {
-  display: block;
-  font-size: 13.5px;
-  color: var(--adm-text-primary);
+.margin-top-12 {
+  margin-top: 12px;
 }
 
-.toggle-left span {
-  font-size: 11.5px;
-  color: var(--adm-text-muted);
+/* Right Col & Fields */
+.modal-right-col {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 
-.wizard-toggle-card input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
-  accent-color: var(--adm-green-primary);
-  cursor: pointer;
-}
-
-/* Wizard Footer */
-.wizard-modal-footer {
+/* Minimal Custom Switch Toggles */
+.minimal-toggles-container {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 14px;
+  background: #fafcfa;
+  border: 1px solid var(--adm-border);
+  border-radius: 10px;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+
+.switch-toggle-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.switch-toggle-item input[type="checkbox"] {
+  display: none;
+}
+
+.switch-slider {
+  width: 34px;
+  height: 18px;
+  background: #cbd5e1;
+  border-radius: 20px;
+  position: relative;
+  transition: var(--adm-transition);
+}
+
+.switch-slider::before {
+  content: '';
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #ffffff;
+  top: 2px;
+  left: 2px;
+  transition: var(--adm-transition);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.switch-toggle-item input[type="checkbox"]:checked + .switch-slider {
+  background: var(--adm-green-primary);
+}
+
+.switch-toggle-item input[type="checkbox"]:checked + .switch-slider::before {
+  transform: translateX(16px);
+}
+
+.toggle-text {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--adm-text-secondary);
+}
+
+/* Minimal Modal Footer */
+.minimal-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
   padding: 16px 24px;
   background: #fafcfa;
   border-top: 1px solid var(--adm-border);
 }
 
-@media (max-width: 580px) {
-  .wizard-stepper-bar .stepper-label {
-    display: none;
-  }
-  .wizard-image-grid {
+@media (max-width: 640px) {
+  .minimal-form-grid {
     grid-template-columns: 1fr;
-  }
-  .wizard-image-preview-card {
-    width: 100%;
-    height: 180px;
+    gap: 16px;
   }
 }
 
