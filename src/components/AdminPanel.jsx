@@ -1208,231 +1208,323 @@ export default function AdminPanel() {
         </div>
       )}
 
-      {/* SLEEK & MINIMAL ADD / EDIT PRODUCT MODAL */}
+      {/* MULTI-STEP WIZARD PRODUCT MODAL */}
       {isModalOpen && (
         <div className="modal-backdrop">
-          <div className="minimal-modal-card">
-            {/* Modal Header */}
-            <div className="minimal-modal-header">
-              <div className="modal-title-group">
-                <div className="modal-icon-badge">
-                  {editingProduct ? <Edit3 size={18} /> : <Plus size={18} />}
+          <div className="wizard-modal-card">
+            {/* Wizard Header & Progress Bar */}
+            <div className="wizard-modal-header">
+              <div className="wizard-header-top">
+                <div className="modal-title-group">
+                  <div className="modal-icon-badge">
+                    {editingProduct ? <Edit3 size={18} /> : <Plus size={18} />}
+                  </div>
+                  <div>
+                    <h2>{editingProduct ? 'Edit Saree Product' : 'Add New Saree'}</h2>
+                    <p>Step {wizardStep} of 3: {
+                      wizardStep === 1 ? 'Weave & Basic Details' :
+                      wizardStep === 2 ? 'Pricing & Saree Photo' :
+                      'Stock Controls & Badges'
+                    }</p>
+                  </div>
                 </div>
-                <div>
-                  <h2>{editingProduct ? 'Edit Saree Product' : 'Add New Saree'}</h2>
-                  <p>{editingProduct ? `Updating weave details for ID #${editingProduct.id}` : 'Fill in saree details to add to live catalog'}</p>
+                <button onClick={() => setIsModalOpen(false)} className="minimal-close-btn" title="Close">
+                  <X size={18} />
+                </button>
+              </div>
+
+              {/* 3-Step Indicator Bar */}
+              <div className="wizard-stepper-bar">
+                <div 
+                  className={`stepper-item ${wizardStep === 1 ? 'active' : wizardStep > 1 ? 'completed' : ''}`}
+                  onClick={() => wizardStep > 1 && setWizardStep(1)}
+                >
+                  <div className="stepper-circle">{wizardStep > 1 ? <Check size={14} /> : '1'}</div>
+                  <span className="stepper-label">1. Weave & Title</span>
+                </div>
+                <div className="stepper-line"></div>
+                <div 
+                  className={`stepper-item ${wizardStep === 2 ? 'active' : wizardStep > 2 ? 'completed' : ''}`}
+                  onClick={() => wizardStep > 2 && setWizardStep(2)}
+                >
+                  <div className="stepper-circle">{wizardStep > 2 ? <Check size={14} /> : '2'}</div>
+                  <span className="stepper-label">2. Price & Image</span>
+                </div>
+                <div className="stepper-line"></div>
+                <div className={`stepper-item ${wizardStep === 3 ? 'active' : ''}`}>
+                  <div className="stepper-circle">3</div>
+                  <span className="stepper-label">3. Stock & Badges</span>
                 </div>
               </div>
-              <button onClick={() => setIsModalOpen(false)} className="minimal-close-btn" title="Close">
-                <X size={18} />
-              </button>
             </div>
 
-            {/* Modal Form */}
-            <form onSubmit={handleSubmit} className="minimal-modal-form">
-              <div className="minimal-form-grid">
-                
-                {/* Left Column: Image Upload & Preview */}
-                <div className="modal-left-col">
-                  <div className="image-preview-card">
-                    {formData.image ? (
-                      <img 
-                        src={
-                          formData.image.startsWith('data:') || formData.image.startsWith('http') || formData.image.startsWith('/')
-                            ? formData.image
-                            : '/' + formData.image
-                        } 
-                        alt="Preview" 
-                        className="preview-img"
-                        onError={(e) => { e.target.src = '/logo/logo-emblem.png'; }}
-                      />
-                    ) : (
-                      <div className="image-placeholder">
-                        <ImageIcon size={32} />
-                        <span>No image uploaded</span>
+            {/* Form Content Steps */}
+            <form onSubmit={handleSubmit} className="wizard-modal-form">
+              <div className="wizard-body-container">
+
+                {/* STEP 1: WEAVE & TITLE */}
+                {wizardStep === 1 && (
+                  <div className="wizard-step-content fade-in">
+                    <div className="adm-form-row">
+                      <div className="adm-form-field">
+                        <label className="adm-form-label" htmlFor="prodId">Product ID (Unique Integer)*</label>
+                        <input 
+                          className="adm-form-input"
+                          type="number" 
+                          id="prodId"
+                          value={formData.id}
+                          onChange={(e) => setFormData({ ...formData, id: e.target.value })}
+                          placeholder="e.g. 125"
+                          disabled={Boolean(editingProduct)}
+                          required
+                        />
                       </div>
-                    )}
-                    
-                    <div className="upload-actions-bar">
+                      <div className="adm-form-field">
+                        <label className="adm-form-label" htmlFor="prodCategory">Category Weave*</label>
+                        <select 
+                          className="adm-form-select"
+                          id="prodCategory"
+                          value={formData.category}
+                          onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                        >
+                          <option value="Kanjeevaram">Kanjeevaram</option>
+                          <option value="Banarasi">Banarasi</option>
+                          <option value="Organza">Organza</option>
+                          <option value="Patola">Patola</option>
+                          <option value="Mysore">Mysore</option>
+                          <option value="Paithani">Paithani</option>
+                          <option value="Tussar">Tussar</option>
+                          <option value="Chanderi">Chanderi</option>
+                          <option value="Kota">Kota</option>
+                          <option value="Kasavu">Kasavu</option>
+                          <option value="Muga">Muga</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="adm-form-field">
+                      <label className="adm-form-label" htmlFor="prodName">Saree Title / Name*</label>
                       <input 
-                        type="file" 
-                        accept="image/*" 
-                        onChange={handleImageUpload}
-                        id="modalImageFileSelect"
-                        className="hidden-file-input"
+                        className="adm-form-input"
+                        type="text" 
+                        id="prodName"
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        placeholder="e.g. Kanchipuram Divine Lotus Silk Saree"
+                        required
                       />
-                      <label htmlFor="modalImageFileSelect" className="minimal-upload-btn">
-                        <Upload size={14} />
-                        <span>{imageUploading ? 'Uploading...' : 'Upload Image'}</span>
+                    </div>
+
+                    <div className="adm-form-field">
+                      <label className="adm-form-label" htmlFor="prodMaterial">Material & Craft Specs*</label>
+                      <input 
+                        className="adm-form-input"
+                        type="text" 
+                        id="prodMaterial"
+                        value={formData.material}
+                        onChange={(e) => setFormData({ ...formData, material: e.target.value })}
+                        placeholder="e.g. Pure Katan Silk, Real Gold Zari Pallu"
+                        required
+                      />
+                    </div>
+
+                    <div className="adm-form-field">
+                      <label className="adm-form-label" htmlFor="prodDesc">Product Description</label>
+                      <textarea 
+                        className="adm-form-textarea"
+                        id="prodDesc"
+                        value={formData.description}
+                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                        placeholder="Describe weave history, thread type, border motifs..."
+                        rows="3"
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* STEP 2: PRICING & IMAGE */}
+                {wizardStep === 2 && (
+                  <div className="wizard-step-content fade-in">
+                    <div className="adm-form-row">
+                      <div className="adm-form-field">
+                        <label className="adm-form-label" htmlFor="prodPrice">Offer Price (₹)*</label>
+                        <input 
+                          className="adm-form-input"
+                          type="number" 
+                          id="prodPrice"
+                          value={formData.price}
+                          onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                          placeholder="e.g. 48500"
+                          required
+                        />
+                      </div>
+                      <div className="adm-form-field">
+                        <label className="adm-form-label" htmlFor="prodOrigPrice">Original Slash Price (₹)</label>
+                        <input 
+                          className="adm-form-input"
+                          type="number" 
+                          id="prodOrigPrice"
+                          value={formData.originalPrice}
+                          onChange={(e) => setFormData({ ...formData, originalPrice: e.target.value })}
+                          placeholder="e.g. 62000"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="wizard-image-grid">
+                      <div className="wizard-image-preview-card">
+                        {formData.image ? (
+                          <img 
+                            src={
+                              formData.image.startsWith('data:') || formData.image.startsWith('http') || formData.image.startsWith('/')
+                                ? formData.image
+                                : '/' + formData.image
+                            } 
+                            alt="Preview" 
+                            onError={(e) => { e.target.src = '/logo/logo-emblem.png'; }}
+                          />
+                        ) : (
+                          <div className="image-placeholder">
+                            <ImageIcon size={32} />
+                            <span>No image selected</span>
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="wizard-image-inputs">
+                        <div className="adm-form-field">
+                          <label className="adm-form-label">Upload Saree Image File</label>
+                          <div className="image-input-container">
+                            <input 
+                              type="file" 
+                              accept="image/*" 
+                              onChange={handleImageUpload}
+                              id="wizardImageFile"
+                              className="hidden-file-input"
+                            />
+                            <label htmlFor="wizardImageFile" className="upload-file-label-btn">
+                              <Upload size={14} />
+                              <span>{imageUploading ? 'Uploading...' : 'Choose File'}</span>
+                            </label>
+                          </div>
+                        </div>
+
+                        <div className="adm-form-field">
+                          <label className="adm-form-label" htmlFor="prodImage">Or Image Path / URL*</label>
+                          <input 
+                            className="adm-form-input"
+                            type="text" 
+                            id="prodImage"
+                            value={formData.image}
+                            onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+                            placeholder="image/saree/kanjivaram.webp"
+                            required
+                          />
+                          {imageUploadError && <span className="input-field-error-msg">{imageUploadError}</span>}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* STEP 3: STOCK & VISIBILITY */}
+                {wizardStep === 3 && (
+                  <div className="wizard-step-content fade-in">
+                    <div className="adm-form-field">
+                      <label className="adm-form-label" htmlFor="prodTag">Label Badge Tag (Optional)</label>
+                      <input 
+                        className="adm-form-input"
+                        type="text" 
+                        id="prodTag"
+                        value={formData.tag}
+                        onChange={(e) => setFormData({ ...formData, tag: e.target.value })}
+                        placeholder="e.g. Bestseller, New Arrival, Festive"
+                      />
+                    </div>
+
+                    <div className="wizard-toggles-list">
+                      <h4>Inventory & Visibility Settings</h4>
+                      
+                      <label className="wizard-toggle-card">
+                        <div className="toggle-left">
+                          <strong>In Stock</strong>
+                          <span>Available for customer purchase on store</span>
+                        </div>
+                        <input 
+                          type="checkbox" 
+                          checked={formData.inStock}
+                          onChange={(e) => setFormData({ ...formData, inStock: e.target.checked })}
+                        />
+                      </label>
+
+                      <label className="wizard-toggle-card">
+                        <div className="toggle-left">
+                          <strong>Featured Masterpiece</strong>
+                          <span>Showcase on homepage bestsellers & collections grid</span>
+                        </div>
+                        <input 
+                          type="checkbox" 
+                          checked={formData.featured}
+                          onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
+                        />
+                      </label>
+
+                      <label className="wizard-toggle-card">
+                        <div className="toggle-left">
+                          <strong>Coming Soon</strong>
+                          <span>Mark as upcoming drop (disables checkout button)</span>
+                        </div>
+                        <input 
+                          type="checkbox" 
+                          checked={formData.comingSoon}
+                          onChange={(e) => setFormData({ ...formData, comingSoon: e.target.checked })}
+                        />
                       </label>
                     </div>
                   </div>
-
-                  <div className="form-group margin-top-12">
-                    <label htmlFor="prodImage">Image Path / URL*</label>
-                    <input 
-                      type="text" 
-                      id="prodImage"
-                      value={formData.image}
-                      onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                      placeholder="e.g. image/saree/kanjivaram.webp"
-                      required
-                    />
-                    {imageUploadError && <span className="input-field-error-msg">{imageUploadError}</span>}
-                  </div>
-                </div>
-
-                {/* Right Column: Product Fields */}
-                <div className="modal-right-col">
-                  <div className="form-row-2">
-                    <div className="form-group">
-                      <label htmlFor="prodId">Product ID*</label>
-                      <input 
-                        type="number" 
-                        id="prodId"
-                        value={formData.id}
-                        onChange={(e) => setFormData({ ...formData, id: e.target.value })}
-                        placeholder="e.g. 125"
-                        disabled={Boolean(editingProduct)}
-                        required
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label htmlFor="prodCategory">Category Weave*</label>
-                      <select 
-                        id="prodCategory"
-                        value={formData.category}
-                        onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                      >
-                        <option value="Kanjeevaram">Kanjeevaram</option>
-                        <option value="Banarasi">Banarasi</option>
-                        <option value="Organza">Organza</option>
-                        <option value="Patola">Patola</option>
-                        <option value="Mysore">Mysore</option>
-                        <option value="Paithani">Paithani</option>
-                        <option value="Tussar">Tussar</option>
-                        <option value="Chanderi">Chanderi</option>
-                        <option value="Kota">Kota</option>
-                        <option value="Kasavu">Kasavu</option>
-                        <option value="Muga">Muga</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div className="form-group">
-                    <label htmlFor="prodName">Saree Title / Name*</label>
-                    <input 
-                      type="text" 
-                      id="prodName"
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      placeholder="e.g. Kanchipuram Gold Brocade Silk"
-                      required
-                    />
-                  </div>
-
-                  <div className="form-group">
-                    <label htmlFor="prodMaterial">Material & Craft Specs*</label>
-                    <input 
-                      type="text" 
-                      id="prodMaterial"
-                      value={formData.material}
-                      onChange={(e) => setFormData({ ...formData, material: e.target.value })}
-                      placeholder="e.g. Pure Katan Silk, Real Gold Zari Woven"
-                      required
-                    />
-                  </div>
-
-                  <div className="form-row-2">
-                    <div className="form-group">
-                      <label htmlFor="prodPrice">Offer Price (₹)*</label>
-                      <input 
-                        type="number" 
-                        id="prodPrice"
-                        value={formData.price}
-                        onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                        placeholder="e.g. 48500"
-                        required
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label htmlFor="prodOrigPrice">Original Price (₹)</label>
-                      <input 
-                        type="number" 
-                        id="prodOrigPrice"
-                        value={formData.originalPrice}
-                        onChange={(e) => setFormData({ ...formData, originalPrice: e.target.value })}
-                        placeholder="e.g. 62000"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="form-group">
-                    <label htmlFor="prodTag">Badge Label (Optional)</label>
-                    <input 
-                      type="text" 
-                      id="prodTag"
-                      value={formData.tag}
-                      onChange={(e) => setFormData({ ...formData, tag: e.target.value })}
-                      placeholder="e.g. Bestseller, New Arrival, Festive"
-                    />
-                  </div>
-
-                  <div className="form-group">
-                    <label htmlFor="prodDesc">Short Description</label>
-                    <textarea 
-                      id="prodDesc"
-                      value={formData.description}
-                      onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                      placeholder="Brief weave summary, pallu design details..."
-                      rows="2"
-                    />
-                  </div>
-
-                  {/* Switch Toggles Bar */}
-                  <div className="minimal-toggles-container">
-                    <label className="switch-toggle-item">
-                      <input 
-                        type="checkbox" 
-                        checked={formData.inStock}
-                        onChange={(e) => setFormData({ ...formData, inStock: e.target.checked })}
-                      />
-                      <span className="switch-slider"></span>
-                      <span className="toggle-text">In Stock</span>
-                    </label>
-
-                    <label className="switch-toggle-item">
-                      <input 
-                        type="checkbox" 
-                        checked={formData.featured}
-                        onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
-                      />
-                      <span className="switch-slider"></span>
-                      <span className="toggle-text">Featured</span>
-                    </label>
-
-                    <label className="switch-toggle-item">
-                      <input 
-                        type="checkbox" 
-                        checked={formData.comingSoon}
-                        onChange={(e) => setFormData({ ...formData, comingSoon: e.target.checked })}
-                      />
-                      <span className="switch-slider"></span>
-                      <span className="toggle-text">Coming Soon</span>
-                    </label>
-                  </div>
-                </div>
+                )}
 
               </div>
 
-              {/* Modal Footer */}
-              <div className="minimal-modal-footer">
-                <button type="button" onClick={() => setIsModalOpen(false)} className="cancel-form-btn">
-                  Cancel
-                </button>
-                <button type="submit" className="save-form-btn" disabled={formSubmitLoading}>
-                  {formSubmitLoading ? <RefreshCw size={16} className="spin-icon" /> : (editingProduct ? 'Update Saree' : 'Save & Publish Saree')}
-                </button>
+              {/* Wizard Footer Controls */}
+              <div className="wizard-modal-footer">
+                {wizardStep > 1 ? (
+                  <button 
+                    type="button" 
+                    onClick={() => setWizardStep(prev => prev - 1)} 
+                    className="cancel-form-btn"
+                  >
+                    ← Back
+                  </button>
+                ) : (
+                  <button 
+                    type="button" 
+                    onClick={() => setIsModalOpen(false)} 
+                    className="cancel-form-btn"
+                  >
+                    Cancel
+                  </button>
+                )}
+
+                {wizardStep < 3 ? (
+                  <button 
+                    type="button" 
+                    onClick={() => {
+                      if (wizardStep === 1 && (!formData.id || !formData.name || !formData.material)) {
+                        alert('Please fill in Product ID, Name, and Material before moving to step 2.');
+                        return;
+                      }
+                      setWizardStep(prev => prev + 1);
+                    }} 
+                    className="save-form-btn"
+                  >
+                    Next Step →
+                  </button>
+                ) : (
+                  <button type="submit" className="save-form-btn" disabled={formSubmitLoading}>
+                    {formSubmitLoading ? <RefreshCw size={16} className="spin-icon" /> : (editingProduct ? 'Update Saree' : 'Save & Publish Saree')}
+                  </button>
+                )}
               </div>
             </form>
           </div>
