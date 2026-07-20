@@ -1,201 +1,185 @@
-.bridal-banner-scroll-container {
-  height: 300vh;
+.raj-gharana-section {
   position: relative;
-  background-color: var(--bg-obsidian);
-  z-index: 3;
+  width: 100%;
+  background-color: #0c0806;
+  overflow: hidden;
+  border-bottom: 1px solid var(--border-light);
 }
 
-.bb-sticky-wrapper {
-  position: sticky;
-  top: 0;
-  height: 100vh;
+.raj-gharana-banner-container {
+  position: relative;
   width: 100%;
-  overflow: hidden;
+  min-height: 580px;
+  height: 70vh;
+  max-height: 720px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  z-index: 3;
+  justify-content: flex-end;
+  padding: 3rem 8%;
 }
 
-.bb-background-container {
+.raj-gharana-bg-image {
   position: absolute;
   inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-}
-
-.bb-bg-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center;
-  filter: brightness(0.6) contrast(1.05);
-  transition: transform 0.1s ease-out;
+  object-position: center 25%;
 }
 
-.bb-canvas-overlay {
+.raj-gharana-gradient-overlay {
   position: absolute;
   inset: 0;
-  background: radial-gradient(
-    circle at 50% 50%,
-    rgba(5, 30, 23, 0.2) 0%,
-    rgba(5, 30, 23, 0.75) 60%,
-    rgba(5, 30, 23, 0.95) 100%
+  background: linear-gradient(
+    90deg, 
+    rgba(12, 8, 6, 0.1) 0%, 
+    rgba(12, 8, 6, 0.4) 45%, 
+    rgba(12, 8, 6, 0.85) 75%, 
+    rgba(12, 8, 6, 0.95) 100%
   );
   z-index: 2;
-  pointer-events: none;
 }
 
-/* Phased Text Overlays */
-.bb-text-overlay {
-  position: absolute;
+/* Right Aligned Content Box */
+.raj-gharana-content-right {
+  position: relative;
   z-index: 10;
-  color: white;
-  pointer-events: none;
+  max-width: 480px;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  width: 90%;
-  max-width: 800px;
-  will-change: transform, opacity;
-  opacity: 0;
+  color: #ffffff;
+  margin-right: 2rem;
 }
 
-.bb-tag {
+/* Logo Emblem */
+.rg-logo-emblem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+
+.rg-emblem-svg {
+  width: 64px;
+  height: 64px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.rg-emblem-text {
   font-family: var(--font-sans);
-  font-size: 0.8rem;
+  font-size: 0.65rem;
   font-weight: 700;
   letter-spacing: 0.25em;
-  color: var(--color-gold);
-  margin-bottom: 1.5rem;
-  display: block;
+  color: #ffffff;
+  margin-top: 0.4rem;
+  text-transform: uppercase;
 }
 
-.bb-heading {
+/* Title */
+.rg-title {
   font-family: var(--font-serif);
-  font-size: 4.5rem;
-  font-weight: 700;
-  line-height: 1.1;
-  color: white;
-  margin: 0;
-  text-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  font-size: 4.8rem;
+  font-weight: 600;
+  line-height: 0.95;
+  color: #ffffff;
+  margin-bottom: 1rem;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+  letter-spacing: 0.02em;
 }
 
-.bb-desc {
-  font-family: var(--font-serif);
-  font-size: 2.2rem;
-  line-height: 1.5;
-  color: var(--text-light-secondary);
+/* Subtitle */
+.rg-subtitle {
+  font-family: var(--font-sans);
+  font-size: 1.6rem;
   font-weight: 400;
-  font-style: italic;
-  max-width: 650px;
-  margin: 0;
-  text-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  color: #ffffff;
+  margin-bottom: 0.6rem;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  letter-spacing: 0.01em;
 }
 
-.bb-desc-tagline {
+/* Tagline */
+.rg-tagline {
   font-family: var(--font-sans);
-  font-size: 1.2rem;
-  line-height: 1.8;
-  color: var(--color-gold);
-  font-weight: 300;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  margin-bottom: 2rem;
-}
-
-.bb-cta-wrapper {
-  pointer-events: auto;
-}
-
-.bb-cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 1rem 2.5rem;
-  background: linear-gradient(135deg, #d4af37 0%, #b8941e 50%, #a48010 100%);
-  color: var(--bg-obsidian);
-  font-family: var(--font-sans);
-  font-size: 0.9rem;
+  font-size: 0.82rem;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.18em;
+  color: rgba(255, 255, 255, 0.95);
+  margin-bottom: 2rem;
   text-transform: uppercase;
+}
+
+/* Explore Now Button */
+.rg-explore-btn {
+  display: inline-block;
+  background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
+  color: #ffffff;
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  padding: 13px 38px;
+  border-radius: 30px;
   text-decoration: none;
-  border-radius: 50px;
-  transition: var(--transition-fast);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  text-transform: uppercase;
+  box-shadow: 0 6px 20px rgba(183, 28, 28, 0.45);
+  transition: all 0.3s ease;
 }
 
-.bb-cta:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 30px rgba(212, 175, 55, 0.35);
-  background: linear-gradient(135deg, #e5c158 0%, #c8a428 100%);
-}
-
-.bb-mobile-unified {
-  display: none;
+.rg-explore-btn:hover {
+  background: linear-gradient(135deg, #e53935 0%, #c62828 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(183, 28, 28, 0.6);
 }
 
 /* Responsiveness */
 @media (max-width: 1024px) {
-  .bb-heading {
-    font-size: 3.5rem;
+  .rg-title {
+    font-size: 3.8rem;
   }
-  .bb-desc {
-    font-size: 1.8rem;
+  .rg-subtitle {
+    font-size: 1.3rem;
+  }
+  .raj-gharana-banner-container {
+    padding: 2.5rem 5%;
   }
 }
 
 @media (max-width: 768px) {
-  .bridal-banner-scroll-container {
-    height: 100vh;
-  }
-
-  .bb-sticky-wrapper {
-    position: relative;
-    height: 100vh;
-  }
-
-  .bb-phase-1,
-  .bb-phase-2,
-  .bb-phase-3 {
-    display: none !important;
-  }
-
-  .bb-mobile-unified {
-    display: flex !important;
-    opacity: 1 !important;
-    pointer-events: auto !important;
-    flex-direction: column;
-    align-items: center;
+  .raj-gharana-banner-container {
+    min-height: 500px;
+    height: auto;
     justify-content: center;
-    text-align: center;
-    gap: 1rem;
-    padding: 0 1.5rem;
+    padding: 3.5rem 1.5rem;
   }
 
-  .bb-mobile-unified .bb-tag {
-    font-size: 0.75rem;
-    margin-bottom: 0.5rem;
+  .raj-gharana-gradient-overlay {
+    background: radial-gradient(circle at center, rgba(12, 8, 6, 0.6) 0%, rgba(12, 8, 6, 0.92) 100%);
   }
 
-  .bb-mobile-unified .bb-heading {
-    font-size: 2rem;
-    line-height: 1.2;
-    margin-bottom: 0.5rem;
-  }
-
-  .bb-mobile-unified .bb-desc {
-    font-size: 1.1rem;
-    line-height: 1.5;
-    margin-bottom: 1rem;
+  .raj-gharana-content-right {
+    margin-right: 0;
     max-width: 100%;
   }
 
-  .bb-mobile-unified .bb-cta {
-    padding: 0.8rem 1.8rem;
+  .rg-title {
+    font-size: 3.2rem;
+  }
+
+  .rg-subtitle {
+    font-size: 1.2rem;
+  }
+
+  .rg-tagline {
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+  }
+
+  .rg-explore-btn {
+    padding: 11px 30px;
     font-size: 0.8rem;
   }
 }

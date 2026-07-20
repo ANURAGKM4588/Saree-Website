@@ -1,34 +1,42 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap');
+
 :root {
-  /* Colors */
+  /* KADHA Luxury Palette */
   --bg-obsidian: #ffffff;
-  --bg-silk: #fafbf2;
-  --color-gold: #0c7356;
-  --color-gold-hover: #084c39;
-  --color-crimson: #0c7356;
-  --color-crimson-light: #11a279;
+  --bg-silk: #fcfbfa;
+  --bg-cream-gold: #f8f6f0;
+  --color-gold: #07382c;
+  --color-gold-hover: #031c15;
+  --color-accent-gold: #c89d36;
+  --color-crimson: #07382c;
+  --color-crimson-light: #0b4f3e;
+  --color-royal-maroon: #800020;
   
-  /* Brand Green Gradient — used for buttons, highlights, accents */
-  --gradient-gold: linear-gradient(135deg, #084c39 0%, #0c7356 35%, #349679 60%, #0c7356 80%, #053729 100%);
-  --gradient-gold-hover: linear-gradient(135deg, #053729 0%, #084c39 35%, #0c7356 60%, #053729 80%, #032018 100%);
-  --gradient-gold-text: linear-gradient(90deg, #084c39 0%, #0c7356 40%, #209975 70%, #084c39 100%);
+  /* Sleek Minimal Emerald Green Gradients */
+  --gradient-gold: linear-gradient(135deg, #031c15 0%, #073b2d 50%, #04241b 100%);
+  --gradient-gold-hover: linear-gradient(135deg, #02120d 0%, #04241b 50%, #02120d 100%);
+  --gradient-gold-text: linear-gradient(90deg, #031c15 0%, #094736 50%, #c89d36 100%);
+  --gradient-royal-gold: linear-gradient(135deg, #c89d36 0%, #e8ca74 50%, #b88a25 100%);
 
   --text-dark-primary: #ffffff;
   --text-dark-secondary: #f0e8c8;
-  --text-light-primary: #120103;
-  --text-light-secondary: #524043;
-  --text-muted: #8e7a7d;
+  --text-light-primary: #1c1917;
+  --text-light-secondary: #44403c;
+  --text-muted: #78716c;
   
-  --border-light: rgba(18, 1, 3, 0.08);
-  --border-dark: rgba(18, 1, 3, 0.15);
+  --border-light: rgba(7, 56, 44, 0.1);
+  --border-gold-subtle: rgba(200, 157, 54, 0.25);
+  --border-dark: rgba(28, 25, 23, 0.15);
   
-  --navbar-height: 72px;
+  --navbar-height: 120px;
   
-  /* Fonts */
-  --font-serif: 'Plus Jakarta Sans', sans-serif;
-  --font-sans: 'Plus Jakarta Sans', sans-serif;
+  /* Universal Font Family — Montserrat */
+  --font-serif: 'Montserrat', sans-serif;
+  --font-sans: 'Montserrat', sans-serif;
+  --font-montserrat: 'Montserrat', sans-serif;
   
   /* Transitions */
-  --transition-smooth: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   --transition-fast: all 0.2s ease;
 }
 
@@ -36,39 +44,55 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  font-family: 'Montserrat', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+#fabric-section,
+#occasion-section,
+#bridal-section,
+#arrivals-section,
+#pattern-section,
+#reviews-section {
+  scroll-margin-top: 100px;
 }
 
 html, body {
   background-color: var(--bg-obsidian);
   color: var(--text-light-primary);
-  font-family: var(--font-sans);
+  font-family: 'Montserrat', sans-serif;
   overflow-x: hidden;
   width: 100%;
   scroll-behavior: smooth;
   scrollbar-gutter: stable;
 }
 
-/* Custom Scrollbar */
+/* Modal Open state — lock body scroll */
+body.modal-open {
+  overflow: hidden !important;
+}
+
+/* Normal Clean Modern Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 10px;
+  height: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--bg-silk);
+  background: #f1f1f1;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--gradient-gold);
-  border-radius: 4px;
+  background: #c1c1c1;
+  border-radius: 5px;
+  border: 2px solid #f1f1f1;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-gold);
+  background: #a0a0a0;
 }
 
-/* Override Vite's default index.css limits */
 #root {
   width: 100vw;
   max-width: 100%;
@@ -80,44 +104,73 @@ html, body {
   display: block;
 }
 
-/* Base Headings — Plus Jakarta Sans, bold, clean & modern luxury */
+/* Base Headings */
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-weight: 700;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
   font-style: normal;
 }
 
 a {
   color: inherit;
   text-decoration: none;
+  font-family: 'Montserrat', sans-serif;
   transition: var(--transition-fast);
 }
 
-button {
+button, input, select, textarea {
   background: none;
   border: none;
   cursor: pointer;
-  font-family: inherit;
+  font-family: 'Montserrat', sans-serif;
   color: inherit;
 }
 
-/* Selection highlight */
 ::selection {
   background: var(--color-gold);
   color: #ffffff;
 }
 
-/* =========================================
-   Global gradient gold utility classes
-   Apply these to any text span or button
-   ========================================= */
-
-/* Gradient text — used on heading highlights */
+/* Gradient text */
 .gold-text {
   background: var(--gradient-gold-text);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   display: inline-block;
+}
+
+.kalyan-section-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.kalyan-section-subtitle {
+  font-family: 'Montserrat', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-gold);
+  margin-bottom: 0.4rem;
+}
+
+.kalyan-section-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--text-light-primary);
+  position: relative;
+  display: inline-block;
+}
+
+.kalyan-section-title::after {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 3px;
+  background: var(--gradient-royal-gold);
+  margin: 0.6rem auto 0;
+  border-radius: 2px;
 }

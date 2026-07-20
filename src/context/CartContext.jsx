@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useMemo, useCallback } from 'react';
+import { createContext, useContext, useState, useMemo, useCallback, useEffect } from 'react';
 
 const CartContext = createContext(null);
 
@@ -6,6 +6,17 @@ export function CartProvider({ children }) {
   const [cartItems, setCartItems] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [wishlist, setWishlist] = useState([]);
+
+  useEffect(() => {
+    if (isCartOpen) {
+      document.body.classList.add('modal-open');
+    } else {
+      document.body.classList.remove('modal-open');
+    }
+    return () => {
+      document.body.classList.remove('modal-open');
+    };
+  }, [isCartOpen]);
 
   const addToCart = useCallback((product, qty = 1) => {
     setCartItems((prev) => {

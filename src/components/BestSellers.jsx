@@ -1,14 +1,29 @@
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ShoppingBag, Star, ArrowRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { ShoppingBag, Star, ArrowRight, X } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { formatPrice } from '../data/products';
 import { useDatabase } from '../context/DatabaseContext';
+import ProductCard from './ProductCard';
 import './BestSellers.css';
 
 export default function BestSellers() {
+  const navigate = useNavigate();
   const { featuredProducts } = useDatabase();
   const { addToCart, setIsCartOpen } = useCart();
+  const [quickViewProduct, setQuickViewProduct] = useState(null);
+
+  useEffect(() => {
+    if (quickViewProduct) {
+      document.body.classList.add('modal-open');
+    } else {
+      document.body.classList.remove('modal-open');
+    }
+    return () => {
+      document.body.classList.remove('modal-open');
+    };
+  }, [quickViewProduct]);
 
   const handleBuyNow = (product) => {
     addToCart(product);
@@ -16,107 +31,107 @@ export default function BestSellers() {
   };
 
   return (
-    <section className="bestsellers-section" id="bestsellers">
+    <section className="bestsellers-section" id="bestsellers-section">
       <div className="bs-inner">
-        <motion.span
-          className="bs-tag"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, margin: '-80px' }}
-          transition={{ duration: 0.5 }}
-        >
-          BESTSELLERS
-        </motion.span>
-        <motion.h2
-          className="bs-heading"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, margin: '-80px' }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-        >
-          Most Treasured Weaves
-        </motion.h2>
-        <motion.p
-          className="bs-desc"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, margin: '-80px' }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-        >
+        <div className="kalyan-section-header">
+          <h2 className="kalyan-section-title">
+            Best <span className="gold-text">Sellers</span>
+          </h2>
+        </div>
+
+        <p className="bs-desc">
           Our most beloved sarees, handpicked by connoisseurs of fine craftsmanship.
-        </motion.p>
+        </p>
 
         <div className="bs-grid">
-          {featuredProducts.slice(0, 6).map((product, index) => (
-            <motion.div
-              key={product.id}
-              className="bs-card"
-              initial={{ opacity: 0, y: 60 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false, margin: '-60px' }}
-              transition={{ duration: 0.7, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <Link to={`/product/${product.id}`} className="bs-card-img-link">
-                <div className="bs-card-img-wrap">
-                  <div className="bs-card-tag">{product.tag}</div>
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="bs-card-img"
-                    loading="lazy"
-                  />
-                  {product.originalPrice && (
-                    <div className="bs-card-discount">
-                      -{Math.round((1 - product.price / product.originalPrice) * 100)}%
-                    </div>
-                  )}
-                </div>
-              </Link>
-
-              <div className="bs-card-info">
-                <Link to={`/product/${product.id}`} className="bs-card-info-link">
-                  <span className="bs-card-material">{product.material}</span>
-                  <h3 className="bs-card-name">{product.name}</h3>
-                </Link>
-
-                <div className="bs-card-rating">
-                  <Star size={12} fill="#d4af37" color="#d4af37" />
-                  <span className="bs-rating-value">{product.rating}</span>
-                  <span className="bs-rating-count">({product.reviews})</span>
-                </div>
-
-                <div className="bs-card-prices">
-                  <span className="bs-price-current">{formatPrice(product.price)}</span>
-                  {product.originalPrice && (
-                    <span className="bs-price-original">{formatPrice(product.originalPrice)}</span>
-                  )}
-                </div>
-
-                <div className="bs-card-actions">
-                  <button className="bs-btn-add" onClick={() => addToCart(product)}>
-                    <ShoppingBag size={14} /> Add to Bag
-                  </button>
-                  <button className="bs-btn-buy" onClick={() => handleBuyNow(product)}>
-                    Buy Now
-                  </button>
-                </div>
-              </div>
-            </motion.div>
+          {featuredProducts.slice(0, 6).map((product) => (
+            <div key={product.id} className="bs-card-item">
+              <ProductCard 
+                product={product} 
+                onQuickView={(p) => setQuickViewProduct(p)} 
+              />
+            </div>
           ))}
         </div>
 
-        <motion.div
-          className="bs-view-all"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-        >
-          <Link to="/products" className="bs-view-all-link">
-            View All Sarees <ArrowRight size={16} />
-          </Link>
-        </motion.div>
+        <div className="bs-view-all">
+          <button onClick={() => navigate('/products')} className="bs-view-all-link">
+            Explore All Bestsellers <ArrowRight size={16} />
+          </button>
+        </div>
       </div>
+
+      {/* Quick View Modal */}
+      {quickViewProduct && (
+        <div className="quickview-modal-backdrop" onClick={() => setQuickViewProduct(null)}>
+          <div className="quickview-modal-box" onClick={(e) => e.stopPropagation()}>
+            <button className="quickview-close-btn" onClick={() => setQuickViewProduct(null)}>
+              <X size={22} />
+            </button>
+            <div className="quickview-grid">
+              <motion.div 
+                className="qv-image-side"
+                initial={{ opacity: 0, x: -60 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <img src={quickViewProduct.image} alt={quickViewProduct.name} className="qv-img" />
+              </motion.div>
+              <motion.div 
+                className="qv-details-side"
+                initial={{ opacity: 0, x: 60 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <span className="qv-brand">AUTHENTIC KADHA SILKS</span>
+                <h2 className="qv-title">{quickViewProduct.name}</h2>
+                <div className="qv-rating">
+                  <Star size={14} fill="#c89d36" color="#c89d36" />
+                  <Star size={14} fill="#c89d36" color="#c89d36" />
+                  <Star size={14} fill="#c89d36" color="#c89d36" />
+                  <Star size={14} fill="#c89d36" color="#c89d36" />
+                  <Star size={14} fill="#c89d36" color="#c89d36" />
+                  <span>(4.9 / 5.0)</span>
+                </div>
+                <div className="qv-price-block">
+                  <span className="qv-price">{formatPrice(quickViewProduct.price)}</span>
+                  {quickViewProduct.originalPrice && (
+                    <span className="qv-orig">{formatPrice(quickViewProduct.originalPrice)}</span>
+                  )}
+                </div>
+                <p className="qv-description">
+                  {quickViewProduct.description || 'Crafted on traditional looms with pure silk filaments and intricate metallic zari borders. Includes matching unstitched blouse piece.'}
+                </p>
+                <div className="qv-specs">
+                  <div><strong>Fabric:</strong> {quickViewProduct.material || 'Pure Silk'}</div>
+                  <div><strong>Craft:</strong> {quickViewProduct.weave || 'Handloom Zari'}</div>
+                  <div><strong>Dispatch:</strong> Express (2-4 Business Days)</div>
+                </div>
+                <div className="qv-actions">
+                  <button 
+                    className="qv-add-btn"
+                    onClick={() => {
+                      addToCart(quickViewProduct);
+                      setQuickViewProduct(null);
+                    }}
+                  >
+                    <ShoppingBag size={16} /> Add to Cart
+                  </button>
+                  <button 
+                    className="qv-buy-btn"
+                    onClick={() => {
+                      handleBuyNow(quickViewProduct);
+                      setQuickViewProduct(null);
+                    }}
+                  >
+                    Buy Now
+                  </button>
+                </div>
+              </motion.div>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

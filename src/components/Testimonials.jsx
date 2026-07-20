@@ -1,31 +1,42 @@
 import React, { useRef } from 'react';
-import { Star, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Star, ChevronLeft, ChevronRight, Quote, CheckCircle2 } from 'lucide-react';
 import './Testimonials.css';
 
-const reviews = [
+const kalyanReviews = [
   {
-    name: 'Hetal Shah',
-    location: 'Delhi, India',
+    title: 'Quality, Fit, and Care',
+    name: 'Ananya & Family',
+    location: 'Kerala, India',
     rating: 5.0,
-    text: '"Beautiful dress, perfect size. I ordered for my sister\'s wedding and it arrived on time. The fabric quality is exceptional."'
+    text: 'As a customer, I value the quality and variety that KADHA provides. The customer care team arranged custom stitching for our event and delivered with exceptional promptness. The fit and silk quality were amazing!'
   },
   {
-    name: 'Indu Vasavala',
-    location: 'Mumbai, India',
+    title: 'Making Every Gift Special',
+    name: 'Prajith Nair',
+    location: 'Salalah, Oman',
     rating: 5.0,
-    text: '"This is my second jewelry order from GG Fashion. I loved them both. They arrived well packed and exactly as shown in pictures."'
+    text: 'I was searching for a special pure silk saree for my wife’s birthday. The online support team customized the saree according to my requirement and delivered smoothly abroad. KADHA customer support is truly outstanding!'
   },
   {
-    name: 'Rayn',
-    location: 'Delhi, India',
+    title: 'Excellent Video Shopping Experience',
+    name: 'Dr. Meera Menon',
+    location: 'Bangalore, India',
     rating: 5.0,
-    text: '"Beautiful necklace. Good experience shopping here. The customer support was very helpful with size customization."'
+    text: 'Purchased a Kanjivaram saree via assisted video shopping. The executive patiently showed different saree options on video and explained the zari weight & fabric clearly. The saree delivered was identical and gorgeous!'
   },
   {
-    name: 'Ananya Sharma',
-    location: 'Mumbai, India',
+    title: 'Always Happy Shopping at KADHA',
+    name: 'Chitra Nair',
+    location: 'Kochi, Kerala',
     rating: 5.0,
-    text: '"The Banarasi Royal Velvet is an absolute masterpiece. The zari work is stunning and catches the light perfectly."'
+    text: 'Shopping has become very common, but my favorite destination is always KADHA online store. You can find great collections for every celebration with 100% genuine silk quality.'
+  },
+  {
+    title: 'Top-Notch Sarees & Service',
+    name: 'Sunita Reddy',
+    location: 'Hyderabad, India',
+    rating: 5.0,
+    text: 'KADHA is my all-time favorite destination for traditional and bridal sarees. The customer care team is extremely courteous, knowledgeable, and patient throughout the video call.'
   }
 ];
 
@@ -34,7 +45,7 @@ export default function Testimonials() {
 
   const scroll = (direction) => {
     if (sliderRef.current) {
-      const scrollAmount = 340;
+      const scrollAmount = 360;
       sliderRef.current.scrollBy({
         left: direction === 'left' ? -scrollAmount : scrollAmount,
         behavior: 'smooth',
@@ -43,13 +54,12 @@ export default function Testimonials() {
   };
 
   return (
-    <section className="reviews-section">
+    <section className="kalyan-reviews-section" id="reviews-section">
       <div className="reviews-container">
-        <div className="reviews-header">
-          <h2 className="reviews-title">
-            Reviews & <span className="gold-text">Ratings</span>
+        <div className="kalyan-section-header">
+          <h2 className="kalyan-section-title">
+            Customer <span className="gold-text">Stories</span>
           </h2>
-          <button className="view-all-reviews">VIEW ALL</button>
         </div>
 
         <div className="reviews-slider-wrapper">
@@ -58,30 +68,35 @@ export default function Testimonials() {
             onClick={() => scroll('left')}
             aria-label="Scroll Left"
           >
-            <ChevronLeft size={20} />
+            <ChevronLeft size={22} />
           </button>
 
-          <div className="reviews-slider" ref={sliderRef}>
-            {reviews.map((r, index) => (
-              <div key={index} className="review-card">
-                <div className="review-stars-row">
-                  <span className="rating-num">{r.rating.toFixed(1)}</span>
+          <div className="reviews-slider-track" ref={sliderRef}>
+            {kalyanReviews.map((rev, idx) => (
+              <div key={idx} className="kalyan-review-card">
+                <div className="review-rating-row">
                   <div className="stars-wrap">
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <Star key={i} size={14} fill="var(--color-gold)" color="var(--color-gold)" />
+                    {[1, 2, 3, 4, 5].map((s) => (
+                      <Star key={s} size={14} fill="#c89d36" color="#c89d36" />
                     ))}
                   </div>
+                  <span className="verified-badge">
+                    <CheckCircle2 size={12} /> Verified Buyer
+                  </span>
                 </div>
-                
-                <p className="review-text">{r.text}</p>
-                
-                <div className="reviewer-info">
+
+                <Quote size={28} className="quote-icon" />
+
+                <h3 className="review-title-text">{rev.title}</h3>
+                <p className="review-body-text">"{rev.text}"</p>
+
+                <div className="reviewer-profile">
                   <div className="reviewer-avatar">
-                    {r.name.split(' ').map((n) => n[0]).join('')}
+                    {rev.name[0]}
                   </div>
-                  <div className="reviewer-details">
-                    <h4 className="reviewer-name">{r.name}</h4>
-                    <span className="reviewer-loc">{r.location}</span>
+                  <div className="reviewer-meta">
+                    <h4 className="reviewer-name-str">{rev.name}</h4>
+                    <span className="reviewer-loc-str">{rev.location}</span>
                   </div>
                 </div>
               </div>
@@ -93,7 +108,7 @@ export default function Testimonials() {
             onClick={() => scroll('right')}
             aria-label="Scroll Right"
           >
-            <ChevronRight size={20} />
+            <ChevronRight size={22} />
           </button>
         </div>
       </div>

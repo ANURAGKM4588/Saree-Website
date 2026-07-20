@@ -1,48 +1,45 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { ArrowRight, Sparkles } from 'lucide-react';
 import './ShopByOccasion.css';
 
 const BASE = import.meta.env.BASE_URL || '/';
 
-const occasions = [
+const kalyanOccasions = [
   {
     id: 'wedding',
-    title: 'The Wedding Edit',
-    subtitle: 'Explore >',
+    title: 'Weddings & Grand Events',
+    description: 'Opulent Kanjivaram & Banarasi Pure Silk Sarees',
+    badge: 'Bridal Heritage',
     image: `${BASE}image/saree/folded-kanjivaram-silk-saree-green-golden-pallu.webp`,
-    className: 'grid-item tall',
+    className: 'grid-item-main',
     filterUrl: '/products?category=Kanjeevaram'
   },
   {
-    id: 'haldi',
-    title: 'Haldi & Mehendi',
-    subtitle: 'Shop Sangeet & Haldi >',
-    image: `${BASE}image/saree/images (12).jpeg`,
-    className: 'grid-item wide-top',
-    filterUrl: '/products?category=Kota'
-  },
-  {
-    id: 'cocktail',
-    title: 'Cocktail Night',
-    subtitle: 'Shop Sarees >',
-    image: `${BASE}image/saree/IMG20250515110716.jpg`,
-    className: 'grid-item narrow-top',
-    filterUrl: '/products?category=Organza'
-  },
-  {
     id: 'festive',
-    title: 'Festive Ready',
-    subtitle: 'Shop Suits >',
+    title: 'Festive & Onam Celebrations',
+    description: 'Set Sarees & Handpicked Golden Pallus',
+    badge: 'Tradition',
     image: `${BASE}image/saree/5_73_7415436e-9226-4442-9a42-d47387d04730.webp`,
-    className: 'grid-item narrow-bottom',
+    className: 'grid-item-side-top',
     filterUrl: '/products?category=Banarasi'
   },
   {
-    id: 'casual',
-    title: 'Casual Ethnic',
-    subtitle: 'Shop Kurtis & Suits >',
+    id: 'evenings',
+    title: 'Evenings & Celebrations',
+    description: 'Designer Organza & Shimmer Brocades',
+    badge: 'Cocktail Elegance',
+    image: `${BASE}image/saree/IMG20250515110716.jpg`,
+    className: 'grid-item-side-bottom1',
+    filterUrl: '/products?category=Organza'
+  },
+  {
+    id: 'workwear',
+    title: 'Work & Everyday Grace',
+    description: 'Breathable Pure Cotton & Soft Linen Weaves',
+    badge: 'Daily Luxury',
     image: `${BASE}image/saree/images (9).jpeg`,
-    className: 'grid-item wide-bottom',
+    className: 'grid-item-side-bottom2',
     filterUrl: '/products?category=Chanderi'
   }
 ];
@@ -50,31 +47,40 @@ const occasions = [
 export default function ShopByOccasion() {
   const navigate = useNavigate();
 
-  const handleCardClick = (url) => {
-    navigate(url);
-  };
-
   return (
-    <section className="occasion-section">
+    <section className="kalyan-occasion-section" id="occasion-section">
       <div className="occasion-container">
-        <h2 className="occasion-title">
-          Shop By <span className="gold-text">Occasion</span>
-        </h2>
+        <div className="kalyan-section-header">
+          <h2 className="kalyan-section-title">
+            Curated <span className="gold-text">Occasions</span>
+          </h2>
+        </div>
         
-        <div className="occasion-grid">
-          {occasions.map((occ) => (
+        <div className="kalyan-occasion-grid">
+          {kalyanOccasions.map((occ) => (
             <div 
-              key={occ.id} 
-              className={`occasion-card ${occ.className}`}
-              onClick={() => handleCardClick(occ.filterUrl)}
+              key={occ.id}
+              className={`occasion-tile ${occ.className}`}
+              onClick={() => {
+                navigate(occ.filterUrl);
+                window.scrollTo(0, 0);
+              }}
             >
-              <div className="occasion-img-wrapper">
-                <img src={occ.image} alt={occ.title} className="occasion-img" />
-                <div className="occasion-overlay" />
+              <div className="tile-img-container">
+                <img src={occ.image} alt={occ.title} className="tile-img" />
+                <div className="tile-gradient-overlay" />
               </div>
-              <div className="occasion-content">
-                <h3 className="occasion-card-title">{occ.title}</h3>
-                <span className="occasion-card-subtitle">{occ.subtitle}</span>
+              
+              <div className="tile-badge">
+                <Sparkles size={11} /> {occ.badge}
+              </div>
+
+              <div className="tile-info">
+                <h3 className="tile-title">{occ.title}</h3>
+                <p className="tile-desc">{occ.description}</p>
+                <button className="tile-cta">
+                  Explore Edit <ArrowRight size={14} />
+                </button>
               </div>
             </div>
           ))}

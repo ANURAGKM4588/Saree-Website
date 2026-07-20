@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Image, Globe, Video, Send, Mail, MapPin, Phone } from 'lucide-react';
+import { Send, Mail, Phone, MessageCircle, Globe, Video, Share2 } from 'lucide-react';
 import { useDatabase } from '../context/DatabaseContext';
 import './Footer.css';
 
@@ -19,113 +19,131 @@ export default function Footer() {
     setLoading(false);
     
     if (res.success) {
-      setSuccess('Thank you for subscribing!');
+      setSuccess('Thank you for joining the KADHA family!');
       setEmail('');
     } else {
-      setSuccess('Failed to subscribe. Please try again.');
+      setSuccess('Subscription failed. Please try again.');
     }
   };
 
   return (
-    <footer className="new-footer" id="contact">
-      <div className="footer-container">
-        <div className="footer-grid">
-          {/* Column 1: About */}
-          <div className="footer-column brand-col">
-            <div className="footer-logo-wrapper">
-              <img src="/logo/logo vertical white.png" alt="Kadha Logo" className="footer-logo-img" />
-            </div>
-            <p className="footer-about-text">
-              Your destination for premium ethnic wear. We blend traditional craftsmanship with modern silhouettes to bring you the finest sarees, lehengas, and suits.
-            </p>
-            <div className="footer-social-row">
-              <a href="#" className="social-icon-btn" aria-label="Facebook">
-                <Globe size={18} />
-              </a>
-              <a href="#" className="social-icon-btn" aria-label="Instagram">
-                <Image size={18} />
-              </a>
-              <a href="#" className="social-icon-btn" aria-label="Youtube">
-                <Video size={18} />
-              </a>
-              <a href="#" className="social-icon-btn" aria-label="Twitter">
-                <Send size={18} />
-              </a>
-            </div>
-            <div className="payment-gateways">
-              <span className="payment-badge">VISA</span>
-              <span className="payment-badge">MC</span>
-              <span className="payment-badge">UPI</span>
-              <span className="payment-badge">COD</span>
-            </div>
+    <footer className="kalyan-footer" id="contact">
+      {/* Top Newsletter Bar */}
+      <div className="footer-newsletter-bar">
+        <div className="fn-container">
+          <div className="fn-text">
+            <h3>Subscribe to KADHA Offers</h3>
+            <p>Get special festival offers, new collection drops, and once-in-a-lifetime deals delivered to your inbox.</p>
           </div>
+          <form className="fn-form" onSubmit={handleSubmit}>
+            <input 
+              type="email" 
+              placeholder="Enter your email address" 
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="fn-input"
+            />
+            <button type="submit" disabled={loading} className="fn-btn">
+              {loading ? 'Subscribing...' : 'Subscribe Now'} <Send size={14} />
+            </button>
+          </form>
+        </div>
+        {success && <p className="fn-status">{success}</p>}
+      </div>
 
-          {/* Column 2: Shop Online */}
-          <div className="footer-column links-col">
-            <h4 className="footer-col-title">SHOP ONLINE</h4>
-            <ul className="footer-links-list">
-              <li><Link to="/products">New Arrivals</Link></li>
-              <li><Link to="/products?category=Banarasi">Banarasi Sarees</Link></li>
-              <li><Link to="/products">Designer Lehengas</Link></li>
-              <li><Link to="/products">Party Wear Suits</Link></li>
-              <li><Link to="/products">Festive Collection</Link></li>
-              <li><Link to="/products">Sale</Link></li>
-            </ul>
-          </div>
-
-          {/* Column 3: Customer Care */}
-          <div className="footer-column links-col">
-            <h4 className="footer-col-title">CUSTOMER CARE</h4>
-            <ul className="footer-links-list">
-              <li><a href="#">Track Order</a></li>
-              <li><a href="#">Return & Exchange</a></li>
-              <li><a href="#">Shipping Policy</a></li>
-              <li><a href="#">Terms & Conditions</a></li>
-              <li><a href="#">Privacy Policy</a></li>
-              <li><a href="#">Contact Us</a></li>
-            </ul>
-          </div>
-
-          {/* Column 4: Stay Connected */}
-          <div className="footer-column connect-col">
-            <h4 className="footer-col-title">STAY CONNECTED</h4>
-            <p className="subscribe-info-text">
-              Subscribe to get exclusive offers and new launch updates.
-            </p>
-            <form className="subscribe-form" onSubmit={handleSubmit}>
-              <input 
-                type="email" 
-                placeholder="Enter your email" 
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="subscribe-input"
-              />
-              <button type="submit" disabled={loading} className="subscribe-btn">
-                {loading ? '...' : <Send size={14} />}
-              </button>
-            </form>
-            {success && <p className="subscribe-status">{success}</p>}
-
-            <div className="contact-details-list">
-              <div className="contact-item">
-                <MapPin size={16} className="contact-icon" />
-                <span>C-202, Sector-2, Greater Noida, Uttar Pradesh - 201310</span>
+      <div className="kalyan-footer-main">
+        <div className="footer-container">
+          <div className="footer-cols-grid">
+            {/* Col 1: Brand Info */}
+            <div className="footer-col brand-col">
+              <div className="footer-logo">
+                <img src="/logo/logo vertical white.png" alt="KADHA Logo" className="footer-logo-img" />
               </div>
-              <div className="contact-item">
-                <Phone size={16} className="contact-icon" />
-                <span>+91 8278288888</span>
+              <p className="footer-bio">
+                Welcome to the world of KADHA, the world’s largest silk saree showroom network and the most trusted brand for over a century.
+              </p>
+              <div className="social-links-row">
+                <a href="#" aria-label="Instagram" className="social-pill">
+                  <Globe size={16} />
+                </a>
+                <a href="#" aria-label="Facebook" className="social-pill">
+                  <Share2 size={16} />
+                </a>
+                <a href="#" aria-label="YouTube" className="social-pill">
+                  <Video size={16} />
+                </a>
+                <a href="#" aria-label="X Twitter" className="social-pill">
+                  <Send size={16} />
+                </a>
               </div>
-              <div className="contact-item">
-                <Mail size={16} className="contact-icon" />
-                <span>support@kadhafashion.com</span>
+            </div>
+
+            {/* Col 2: Categories */}
+            <div className="footer-col">
+              <h4 className="footer-heading">Categories</h4>
+              <ul className="footer-list">
+                <li><Link to="/products?fabric=Pure Silk">Pure Silk Sarees</Link></li>
+                <li><Link to="/products?fabric=Semi Silk">Semi Silk Sarees</Link></li>
+                <li><Link to="/products?fabric=Georgette">Georgette Sarees</Link></li>
+                <li><Link to="/products?fabric=Brocade">Brocade Art Silk</Link></li>
+                <li><Link to="/products?fabric=Organza">Organza Collection</Link></li>
+                <li><Link to="/products?category=Bridal">Bridal Kanjivaram</Link></li>
+                <li><Link to="/products?category=RajGharana">Raj Gharana Edition</Link></li>
+                <li><Link to="/products">Bestsellers & Offers</Link></li>
+              </ul>
+            </div>
+
+            {/* Col 3: KADHA Info */}
+            <div className="footer-col">
+              <h4 className="footer-heading">KADHA</h4>
+              <ul className="footer-list">
+                <li><a href="#story">About Us</a></li>
+                <li><a href="#fabric-section">Our Showrooms</a></li>
+                <li><a href="#reviews-section">Customer Stories</a></li>
+                <li><a href="#bridal-section">CSR Initiatives</a></li>
+                <li><a href="#contact">Contact Support</a></li>
+                <li><a href="#pattern-section">Annual Return</a></li>
+                <li><a href="#pattern-section">Scheme of Arrangement</a></li>
+                <li><a href="#contact">Sitemap</a></li>
+              </ul>
+            </div>
+
+            {/* Col 4: Support & Live Shopping */}
+            <div className="footer-col support-col">
+              <h4 className="footer-heading">Customer Support</h4>
+              <div className="support-items-list">
+                <a href="tel:8129966333" className="support-item">
+                  <Phone size={15} /> +91 81299 66333
+                </a>
+                <a href="tel:04872434000" className="support-item">
+                  <Phone size={15} /> 0487 2434000
+                </a>
+                <a href="mailto:customerservice@kadha.com" className="support-item">
+                  <Mail size={15} /> customerservice@kadha.com
+                </a>
+                <a href="https://wa.me/914872434000?text=Hi" target="_blank" rel="noreferrer" className="support-item whatsapp-btn">
+                  <MessageCircle size={15} /> Live WhatsApp Video Shopping
+                </a>
               </div>
             </div>
           </div>
         </div>
+      </div>
 
-        <div className="footer-bottom-bar">
-          <p>© 2026 Kadha Fashion. All Rights Reserved.</p>
+      {/* Bottom bar policies */}
+      <div className="kalyan-footer-bottom">
+        <div className="bottom-container">
+          <p>© 2026 KADHA India. All Rights Reserved. Crafted for authentic silk lovers.</p>
+          <div className="policy-links">
+            <a href="#">Privacy Policy</a>
+            <span>•</span>
+            <a href="#">Shipping Policy</a>
+            <span>•</span>
+            <a href="#">Terms of Service</a>
+            <span>•</span>
+            <a href="#">Return Policy</a>
+          </div>
         </div>
       </div>
     </footer>

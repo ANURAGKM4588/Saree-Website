@@ -1,16 +1,67 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Heart, ShoppingBag, X, ChevronRight, Trash2 } from 'lucide-react';
+import { Search, Heart, ShoppingBag, X, ChevronRight, ChevronDown, Trash2 } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import './Navbar.css';
 
-const navItems = [
-  { name: 'Collections', href: '#collections' },
-  { name: 'Bestsellers', href: '#bestsellers' },
-  { name: 'Our Story', href: '#story' },
-  { name: 'Gallery', href: '#gallery' },
-  { name: 'Contact', href: '#contact' }
+const announcementMessages = [
+  "✨ KADHA: World's Largest Silk Saree Showroom Network",
+  "📦 Free Express Delivery Across India on Orders Above ₹2,999",
+  "👑 Pure Kanjivaram & Banarasi Silk Sarees — Handpicked Crafts"
+];
+
+const navCategories = [
+  { 
+    name: 'Sarees', 
+    href: '#fabric-section',
+    subItems: [
+      { label: 'Pure Silk', link: '/products?search=Silk' },
+      { label: 'Semi Silk', link: '/products?search=Silk' },
+      { label: 'Georgette', link: '/products?category=Organza' },
+      { label: 'Brocade', link: '/products?category=Banarasi' },
+      { label: 'Linen', link: '/products?search=Linen' },
+      { label: 'Organza', link: '/products?category=Organza' },
+      { label: 'Tussar', link: '/products?search=Tussar' },
+      { label: 'Cotton', link: '/products?category=Chanderi' },
+      { label: 'Ready to Wear', link: '/products' },
+      { label: 'Vichitra Silk', link: '/products' }
+    ] 
+  },
+  { 
+    name: 'Festive', 
+    href: '#occasion-section',
+    subItems: [
+      { label: 'Onam Special Silks', link: '/products?category=Banarasi' },
+      { label: 'Kerala Onam Set Saree', link: '/products?category=Banarasi' },
+      { label: 'Onam Kasavu & Zari Pallus', link: '/products?category=Kanjeevaram' }
+    ] 
+  },
+  { 
+    name: 'Bridal & Kanjivaram', 
+    href: '#bridal-section',
+    subItems: [
+      { label: 'Brocade Jacquard', link: '/products?category=Banarasi' },
+      { label: 'Kanchipuram Pure Silk', link: '/products?category=Kanjeevaram' },
+      { label: 'Banarasi Zari', link: '/products?category=Banarasi' },
+      { label: 'Raj Gharana Edition', link: '/products?category=Bridal' }
+    ] 
+  },
+  { 
+    name: 'Patterns', 
+    href: '#pattern-section',
+    subItems: [
+      { label: 'Floral', link: '/products?search=Floral' },
+      { label: 'Checks', link: '/products?search=Check' },
+      { label: 'Zari Woven', link: '/products?search=Zari' },
+      { label: 'Embroidery', link: '/products?search=Embroidery' },
+      { label: 'Handwork', link: '/products?search=Handwork' },
+      { label: 'Shimmer', link: '/products?search=Shimmer' }
+    ] 
+  },
+  { name: 'New Arrivals', href: '#arrivals-section' },
+  { name: 'Bestsellers', href: '#bestsellers-section' },
+  { name: 'Reviews', href: '#reviews-section' }
 ];
 
 function formatPrice(price) {
@@ -20,31 +71,61 @@ function formatPrice(price) {
 export default function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { cartItems, isCartOpen, setIsCartOpen, removeFromCart, cartTotal, cartCount, wishlistCount } = useCart();
+
   const [isScrolled, setIsScrolled] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [activeDropdown, setActiveDropdown] = useState(null);
+  const [announcementIdx, setAnnouncementIdx] = useState(0);
 
-  const { cartItems, isCartOpen, setIsCartOpen, removeFromCart, cartTotal, cartCount, wishlistCount } = useCart();
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setAnnouncementIdx((prev) => (prev + 1) % announcementMessages.length);
+    }, 4500);
+    return () => clearInterval(timer);
+  }, []);
 
-  const handleNavClick = (e, href) => {
+  const handleNavClick = (e, item) => {
     e.preventDefault();
-    const targetId = href.replace('#', '');
-    
-    // Check if we are on the homepage
+    if (item.href === '/products') {
+      navigate('/products');
+      window.scrollTo(0, 0);
+      setActiveDropdown(null);
+      return;
+    }
+
+    const targetId = item.href.replace('#', '');
+
     if (location.pathname !== '/') {
       navigate('/');
       setTimeout(() => {
-        const element = document.getElementById(targetId);
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth' });
+        const el = document.getElementById(targetId);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
-      }, 100);
+      }, 200);
     } else {
-      const element = document.getElementById(targetId);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
+      const el = document.getElementById(targetId);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
+    }
+    setActiveDropdown(null);
+  };
+
+  const handleSubLinkClick = (e, link) => {
+    e.preventDefault();
+    setActiveDropdown(null);
+    navigate(link);
+    window.scrollTo(0, 0);
+  };
+
+  const handleSearchSubmit = (e) => {
+    if (e.key === 'Enter' && searchQuery.trim()) {
+      navigate(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
+      setIsSearchOpen(false);
+      window.scrollTo(0, 0);
     }
   };
 
@@ -57,21 +138,39 @@ export default function Navbar() {
     }
 
     const handleScroll = () => {
-      const heroEnd = window.innerHeight * 3;
-      if (window.scrollY > heroEnd) {
+      const heroHeight = window.innerHeight * 0.9;
+      if (window.scrollY > heroHeight) {
         setIsScrolled(true);
       } else {
         setIsScrolled(false);
       }
     };
     
-    setIsScrolled(window.scrollY > window.innerHeight * 3);
+    setIsScrolled(window.scrollY > window.innerHeight * 0.9);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, [isHomepage]);
 
   return (
     <>
+      {/* Top Announcement Ticker Bar — Clean & Centered */}
+      <div className={`kalyan-announcement-bar ${isScrolled ? 'hidden-scrolled' : ''}`}>
+        <div className="announcement-content">
+          <AnimatePresence mode="wait">
+            <motion.span 
+              key={announcementIdx}
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 10 }}
+              transition={{ duration: 0.4 }}
+              className="announcement-text"
+            >
+              {announcementMessages[announcementIdx]}
+            </motion.span>
+          </AnimatePresence>
+        </div>
+      </div>
+
       <motion.nav 
         className={`navbar ${isScrolled ? 'scrolled' : ''}`}
         initial={{ y: -100 }}
@@ -79,36 +178,57 @@ export default function Navbar() {
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
       >
         <div className="navbar-container">
-          {/* Left Side: Brand + Nav */}
-          <div className="navbar-left">
-            <div className="navbar-brand-left">
-              <Link to="/" className="brand-logo-link">
-                <img src="/logo/logo vertical white.png" alt="Kadha Logo" className="brand-logo-img" />
-              </Link>
-            </div>
-            <ul className="nav-links">
-            {navItems.map((item, idx) => (
+          {/* Brand Logo */}
+          <div className="navbar-brand">
+            <Link to="/" className="brand-logo-link" onClick={() => window.scrollTo(0, 0)}>
+              <img src="/logo/logo vertical white.png" alt="KADHA Logo" className="brand-logo-img" />
+            </Link>
+          </div>
+
+          {/* Main Navigation Menu */}
+          <ul className="nav-links">
+            {navCategories.map((item) => (
               <li 
                 key={item.name}
-                onMouseEnter={() => setHoveredIndex(idx)}
-                onMouseLeave={() => setHoveredIndex(null)}
+                className="nav-item-dropdown-container"
+                onMouseEnter={() => item.subItems && setActiveDropdown(item.name)}
+                onMouseLeave={() => setActiveDropdown(null)}
               >
-                <a href={item.href} onClick={(e) => handleNavClick(e, item.href)}>
+                <a 
+                  href={item.href} 
+                  onClick={(e) => handleNavClick(e, item)}
+                  className="nav-item-link"
+                >
                   {item.name}
-                  {hoveredIndex === idx && (
-                    <motion.div 
-                      className="hover-underline"
-                      layoutId="nav-underline"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                    />
-                  )}
+                  {item.subItems && <ChevronDown size={14} className="dropdown-arrow" />}
                 </a>
+
+                {/* Submenu Mega Dropdown */}
+                {item.subItems && activeDropdown === item.name && (
+                  <motion.div 
+                    className="kalyan-mega-dropdown"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 10 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <div className="mega-dropdown-grid">
+                      {item.subItems.map((subObj, sIdx) => (
+                        <a 
+                          key={sIdx} 
+                          href={subObj.link} 
+                          onClick={(e) => handleSubLinkClick(e, subObj.link)} 
+                          className="mega-sub-link"
+                        >
+                          <span className="gold-bullet">♦</span> {subObj.label}
+                        </a>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
               </li>
             ))}
           </ul>
-          </div>
 
           {/* Right Actions */}
           <div className="navbar-actions">
@@ -118,12 +238,13 @@ export default function Navbar() {
                 {isSearchOpen && (
                   <motion.input 
                     type="text" 
-                    placeholder="Search masterweaves..."
+                    placeholder="Search silk sarees..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
+                    onKeyDown={handleSearchSubmit}
                     className="search-input"
                     initial={{ width: 0, opacity: 0 }}
-                    animate={{ width: 180, opacity: 1 }}
+                    animate={{ width: 200, opacity: 1 }}
                     exit={{ width: 0, opacity: 0 }}
                     transition={{ duration: 0.3 }}
                     autoFocus
@@ -135,13 +256,20 @@ export default function Navbar() {
                 className="action-btn"
                 aria-label="Search"
               >
-                {isSearchOpen ? <X size={20} /> : <Search size={20} />}
+                {isSearchOpen ? <X size={18} /> : <Search size={18} />}
               </button>
             </div>
 
             {/* Wishlist */}
-            <button className="action-btn wishlist-btn" aria-label="Wishlist">
-              <Heart size={20} fill={wishlistCount > 0 ? "var(--color-gold)" : "none"} color={wishlistCount > 0 ? "var(--color-gold)" : "currentColor"} />
+            <button 
+              className="action-btn wishlist-btn" 
+              onClick={() => {
+                navigate('/products');
+                window.scrollTo(0, 0);
+              }}
+              aria-label="Wishlist"
+            >
+              <Heart size={18} fill={wishlistCount > 0 ? "var(--color-accent-gold)" : "none"} color={wishlistCount > 0 ? "var(--color-accent-gold)" : "currentColor"} />
               {wishlistCount > 0 && (
                 <span className="badge">{wishlistCount}</span>
               )}
@@ -153,7 +281,7 @@ export default function Navbar() {
               onClick={() => setIsCartOpen(true)}
               aria-label="Shopping Bag"
             >
-              <ShoppingBag size={20} />
+              <ShoppingBag size={18} />
               {cartCount > 0 && (
                 <span className="badge">{cartCount}</span>
               )}
@@ -166,7 +294,6 @@ export default function Navbar() {
       <AnimatePresence>
         {isCartOpen && (
           <>
-            {/* Backdrop */}
             <motion.div 
               className="cart-backdrop"
               initial={{ opacity: 0 }}
@@ -175,7 +302,6 @@ export default function Navbar() {
               onClick={() => setIsCartOpen(false)}
             />
 
-            {/* Drawer */}
             <motion.div 
               className="cart-drawer"
               initial={{ x: '100%' }}
@@ -184,9 +310,9 @@ export default function Navbar() {
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
             >
               <div className="cart-header">
-                <h2>Shopping Bag</h2>
+                <h2>Shopping Bag ({cartCount})</h2>
                 <button className="close-cart-btn" onClick={() => setIsCartOpen(false)}>
-                  <X size={24} />
+                  <X size={22} />
                 </button>
               </div>
 
@@ -195,7 +321,7 @@ export default function Navbar() {
                   <div className="empty-cart">
                     <ShoppingBag size={48} className="empty-icon" />
                     <p>Your shopping bag is empty</p>
-                    <p className="empty-sub">Explore Kadha Masterpieces to fill your collection.</p>
+                    <p className="empty-sub">Explore authentic silk sarees to build your collection.</p>
                   </div>
                 ) : (
                   <div className="cart-items-list">
@@ -237,7 +363,7 @@ export default function Navbar() {
                     <span>Subtotal</span>
                     <span className="subtotal-amount">{formatPrice(cartTotal)}</span>
                   </div>
-                  <p className="cart-tax-info">Duties, shipping, and taxes calculated at checkout.</p>
+                  <p className="cart-tax-info">Free shipping applied on all silk sarees.</p>
                   <button className="checkout-btn">
                     <span>Proceed to Checkout</span>
                     <ChevronRight size={18} />

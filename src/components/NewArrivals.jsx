@@ -1,25 +1,36 @@
-import React, { useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Heart, ShoppingBag, ChevronLeft, ChevronRight } from 'lucide-react';
+import React, { useRef, useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { ChevronLeft, ChevronRight, X, Star, ShoppingBag } from 'lucide-react';
 import { useDatabase } from '../context/DatabaseContext';
 import { useCart } from '../context/CartContext';
 import { formatPrice } from '../data/products';
+import ProductCard from './ProductCard';
 import './NewArrivals.css';
 
 export default function NewArrivals() {
-  const navigate = useNavigate();
   const { products } = useDatabase();
-  const { addToCart, setIsCartOpen, wishlist, toggleWishlist } = useCart();
+  const { addToCart, setIsCartOpen } = useCart();
   const sliderRef = useRef(null);
 
-  // Filter for products that are new or general collection
-  const newArrivals = products
-    .filter((p) => p.tag === 'New' || p.tag === 'Bestseller' || p.featured)
-    .slice(0, 8);
+  const [quickViewProduct, setQuickViewProduct] = useState(null);
+
+  useEffect(() => {
+    if (quickViewProduct) {
+      document.body.classList.add('modal-open');
+    } else {
+      document.body.classList.remove('modal-open');
+    }
+    return () => {
+      document.body.classList.remove('modal-open');
+    };
+  }, [quickViewProduct]);
+
+  const newArrivals = products.slice(0, 10);
 
   const scroll = (direction) => {
     if (sliderRef.current) {
-      const scrollAmount = 300;
+      const scrollAmount = 320;
       sliderRef.current.scrollBy({
         left: direction === 'left' ? -scrollAmount : scrollAmount,
         behavior: 'smooth',
@@ -27,108 +38,47 @@ export default function NewArrivals() {
     }
   };
 
-  const handleToggleWishlist = (id, e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    toggleWishlist(id);
-  };
-
-  const handleBuyNow = (product, e) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const handleBuyNow = (product) => {
     addToCart(product);
     setIsCartOpen(true);
   };
 
   return (
-    <section className="new-arrivals-section">
-      <div className="new-arrivals-container">
-        <div className="section-header">
+    <section className="kalyan-arrivals-section" id="arrivals-section">
+      <div className="arrivals-container">
+        <div className="kalyan-section-header flex-header">
           <div>
-            <span className="section-subtitle">JUST IN</span>
-            <h2 className="section-title">New Arrivals</h2>
+            <h2 className="kalyan-section-title">
+              New <span className="gold-text">Arrivals</span>
+            </h2>
           </div>
-          <Link to="/products" className="view-all-link">
-            VIEW ALL PRODUCTS
+          <Link to="/products" className="kalyan-view-all-btn">
+            View All Collections ›
           </Link>
         </div>
 
-        <div className="slider-container">
+        <div className="arrivals-slider-wrapper">
           <button 
-            className="slider-arrow left" 
+            className="arrivals-arrow arrow-l" 
             onClick={() => scroll('left')}
             aria-label="Scroll Left"
           >
             <ChevronLeft size={22} />
           </button>
 
-          <div className="products-slider" ref={sliderRef}>
-            {newArrivals.map((product) => {
-              const discount = product.originalPrice 
-                ? Math.round((1 - product.price / product.originalPrice) * 100)
-                : null;
-
-              return (
-                <div key={product.id} className="new-product-card-wrap">
-                  <Link to={`/product/${product.id}`} className="new-product-card">
-                    {/* Image Area */}
-                    <div className="product-image-container">
-                      <img src={product.image} alt={product.name} className="product-img" />
-                      
-                      <button 
-                        className={`wishlist-toggle ${wishlist.includes(product.id) ? 'active' : ''}`}
-                        onClick={(e) => handleToggleWishlist(product.id, e)}
-                        aria-label="Add to Wishlist"
-                      >
-                        <Heart size={18} fill={wishlist.includes(product.id) ? "var(--color-gold)" : "none"} color={wishlist.includes(product.id) ? "var(--color-gold)" : "currentColor"} />
-                      </button>
-
-                      {discount && (
-                        <div className="discount-badge">-{discount}%</div>
-                      )}
-                    </div>
-
-                    {/* Details */}
-                    <div className="product-info-wrap">
-                      <span className="product-brand">KADHA WEAVES</span>
-                      <h3 className="product-title-text">{product.name}</h3>
-                      <div className="product-price-block">
-                        <span className="current-price">{formatPrice(product.price)}</span>
-                        {product.originalPrice && (
-                          <>
-                            <span className="original-price">{formatPrice(product.originalPrice)}</span>
-                            <span className="discount-pct">({discount}% OFF)</span>
-                          </>
-                        )}
-                      </div>
-                    </div>
-                  </Link>
-                  
-                  {/* Actions */}
-                  <div className="product-actions-hover">
-                    <button 
-                      className="add-to-bag-btn"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        addToCart(product);
-                      }}
-                    >
-                      <ShoppingBag size={14} /> Add to Bag
-                    </button>
-                    <button 
-                      className="buy-now-btn"
-                      onClick={(e) => handleBuyNow(product, e)}
-                    >
-                      Buy Now
-                    </button>
-                  </div>
-                </div>
-              );
-            })}
+          <div className="products-slider-track" ref={sliderRef}>
+            {newArrivals.map((product) => (
+              <div key={product.id} className="arrivals-card-wrapper">
+                <ProductCard 
+                  product={product} 
+                  onQuickView={(p) => setQuickViewProduct(p)} 
+                />
+              </div>
+            ))}
           </div>
 
           <button 
-            className="slider-arrow right" 
+            className="arrivals-arrow arrow-r" 
             onClick={() => scroll('right')}
             aria-label="Scroll Right"
           >
@@ -136,6 +86,78 @@ export default function NewArrivals() {
           </button>
         </div>
       </div>
+
+      {/* Quick View Modal */}
+      {quickViewProduct && (
+        <div className="quickview-modal-backdrop" onClick={() => setQuickViewProduct(null)}>
+          <div className="quickview-modal-box" onClick={(e) => e.stopPropagation()}>
+            <button className="quickview-close-btn" onClick={() => setQuickViewProduct(null)}>
+              <X size={22} />
+            </button>
+            <div className="quickview-grid">
+              <motion.div 
+                className="qv-image-side"
+                initial={{ opacity: 0, x: -60 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <img src={quickViewProduct.image} alt={quickViewProduct.name} className="qv-img" />
+              </motion.div>
+              <motion.div 
+                className="qv-details-side"
+                initial={{ opacity: 0, x: 60 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <span className="qv-brand">AUTHENTIC KADHA SILKS</span>
+                <h2 className="qv-title">{quickViewProduct.name}</h2>
+                <div className="qv-rating">
+                  <Star size={14} fill="#c89d36" color="#c89d36" />
+                  <Star size={14} fill="#c89d36" color="#c89d36" />
+                  <Star size={14} fill="#c89d36" color="#c89d36" />
+                  <Star size={14} fill="#c89d36" color="#c89d36" />
+                  <Star size={14} fill="#c89d36" color="#c89d36" />
+                  <span>(4.9 / 5.0)</span>
+                </div>
+                <div className="qv-price-block">
+                  <span className="qv-price">{formatPrice(quickViewProduct.price)}</span>
+                  {quickViewProduct.originalPrice && (
+                    <span className="qv-orig">{formatPrice(quickViewProduct.originalPrice)}</span>
+                  )}
+                </div>
+                <p className="qv-description">
+                  {quickViewProduct.description || 'Crafted on traditional looms with pure silk filaments and intricate metallic zari borders. Includes matching unstitched blouse piece.'}
+                </p>
+                <div className="qv-specs">
+                  <div><strong>Fabric:</strong> {quickViewProduct.material || 'Pure Silk'}</div>
+                  <div><strong>Craft:</strong> {quickViewProduct.weave || 'Handloom Zari'}</div>
+                  <div><strong>Dispatch:</strong> Express (2-4 Business Days)</div>
+                </div>
+                <div className="qv-actions">
+                  <button 
+                    className="qv-add-btn"
+                    onClick={() => {
+                      addToCart(quickViewProduct);
+                      setQuickViewProduct(null);
+                    }}
+                  >
+                    <ShoppingBag size={16} /> Add to Cart
+                  </button>
+                  <button 
+                    className="qv-buy-btn"
+                    onClick={() => {
+                      handleBuyNow(quickViewProduct);
+                      setQuickViewProduct(null);
+                    }}
+                  >
+                    Buy Now
+                  </button>
+                </div>
+              </motion.div>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

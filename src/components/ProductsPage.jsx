@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ShoppingBag, Star, ArrowLeft, Search, X, ChevronDown } from 'lucide-react';
+import { ArrowLeft, Search, X, ChevronDown, Star, ShoppingBag } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { formatPrice } from '../data/products';
 import { useDatabase } from '../context/DatabaseContext';
+import ProductCard from './ProductCard';
 import './ProductsPage.css';
 
 export default function ProductsPage() {
@@ -14,7 +15,19 @@ export default function ProductsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('default');
   const [showSort, setShowSort] = useState(false);
+  const [quickViewProduct, setQuickViewProduct] = useState(null);
   const location = useLocation();
+
+  useEffect(() => {
+    if (quickViewProduct) {
+      document.body.classList.add('modal-open');
+    } else {
+      document.body.classList.remove('modal-open');
+    }
+    return () => {
+      document.body.classList.remove('modal-open');
+    };
+  }, [quickViewProduct]);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -22,7 +35,6 @@ export default function ProductsPage() {
     const search = params.get('search');
     
     if (cat) {
-      // Find case-insensitive match for category in available list
       const matchedCat = categories.find(c => c.toLowerCase() === cat.toLowerCase());
       if (matchedCat) {
         setActiveCategory(matchedCat);
@@ -64,15 +76,6 @@ export default function ProductsPage() {
                   animation: 'shimmer 1.5s infinite'
                 }} />
               </div>
-              <div className="pp-card-info" style={{ marginTop: '15px' }}>
-                <div style={{ height: '14px', width: '40%', background: '#333', borderRadius: '4px', marginBottom: '8px' }} />
-                <div style={{ height: '20px', width: '80%', background: '#333', borderRadius: '4px', marginBottom: '8px' }} />
-                <div style={{ height: '12px', width: '30%', background: '#333', borderRadius: '4px', marginBottom: '12px' }} />
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div style={{ height: '18px', width: '50%', background: '#333', borderRadius: '4px' }} />
-                  <div style={{ height: '28px', width: '28px', background: '#333', borderRadius: '50%' }} />
-                </div>
-              </div>
             </div>
           ))}
         </div>
@@ -100,6 +103,11 @@ export default function ProductsPage() {
       if (sortBy === 'rating') return b.rating - a.rating;
       return 0;
     });
+
+  const handleBuyNow = (product) => {
+    addToCart(product);
+    setIsCartOpen(true);
+  };
 
   return (
     <div className="products-page">
@@ -182,88 +190,86 @@ export default function ProductsPage() {
         </div>
       ) : (
         <div className="pp-grid">
-          {filtered.map((product, i) => {
-            const discount = product.originalPrice 
-              ? Math.round((1 - product.price / product.originalPrice) * 100)
-              : null;
+          {filtered.map((product) => (
+            <div key={product.id} className="pp-card-wrapper">
+              <ProductCard 
+                product={product} 
+                onQuickView={(p) => setQuickViewProduct(p)} 
+              />
+            </div>
+          ))}
+        </div>
+      )}
 
-            return (
-              <motion.div
-                key={product.id}
-                className="pp-card"
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-40px' }}
-                transition={{ duration: 0.5, delay: i * 0.04 }}
+      {/* Quick View Modal */}
+      {quickViewProduct && (
+        <div className="quickview-modal-backdrop" onClick={() => setQuickViewProduct(null)}>
+          <div className="quickview-modal-box" onClick={(e) => e.stopPropagation()}>
+            <button className="quickview-close-btn" onClick={() => setQuickViewProduct(null)}>
+              <X size={22} />
+            </button>
+            <div className="quickview-grid">
+              <motion.div 
+                className="qv-image-side"
+                initial={{ opacity: 0, x: -60 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
               >
-                <Link to={`/product/${product.id}`} className="pp-card-image-link">
-                  <div className="pp-card-image-wrapper">
-                    {product.tag && (
-                      <div className={`product-tag tag-${product.tag.toLowerCase()}`}>
-                        {product.tag}
-                      </div>
-                    )}
-                    <img src={product.image} alt={product.name} className="pp-card-image" loading="lazy" />
-                    {discount && (
-                      <div className="product-discount">
-                        -{discount}%
-                      </div>
-                    )}
-                    {!product.inStock && (
-                      <div className="pp-out-of-stock">Out of Stock</div>
-                    )}
-                  </div>
-                </Link>
-
-                <div className="pp-card-info">
-                  <Link to={`/product/${product.id}`} className="pp-card-name-link">
-                    <span className="pp-card-material">{product.material}</span>
-                    <h3 className="pp-card-name">{product.name}</h3>
-                  </Link>
-                  <div className="pp-card-rating">
-                    <Star size={12} fill="var(--color-gold)" color="var(--color-gold)" />
-                    <span>{product.rating}</span>
-                    <span className="pp-review-count">({product.reviews})</span>
-                  </div>
-                  <div className="pp-card-bottom">
-                    <div className="pp-card-prices">
-                      <span className="pp-price-current">{formatPrice(product.price)}</span>
-                      {product.originalPrice && (
-                        <span className="pp-price-original">{formatPrice(product.originalPrice)}</span>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Sliding Action Buttons on Hover */}
-                {product.inStock && (
-                  <div className="product-actions-hover">
-                    <button 
-                      className="add-to-bag-btn"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        addToCart(product);
-                      }}
-                    >
-                      <ShoppingBag size={14} /> Add to Bag
-                    </button>
-                    <button 
-                      className="buy-now-btn"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        addToCart(product);
-                        setIsCartOpen(true);
-                      }}
-                    >
-                      Buy Now
-                    </button>
-                  </div>
-                )}
+                <img src={quickViewProduct.image} alt={quickViewProduct.name} className="qv-img" />
               </motion.div>
-            );
-          })}
+              <motion.div 
+                className="qv-details-side"
+                initial={{ opacity: 0, x: 60 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <span className="qv-brand">AUTHENTIC KADHA SILKS</span>
+                <h2 className="qv-title">{quickViewProduct.name}</h2>
+                <div className="qv-rating">
+                  <Star size={14} fill="#c89d36" color="#c89d36" />
+                  <Star size={14} fill="#c89d36" color="#c89d36" />
+                  <Star size={14} fill="#c89d36" color="#c89d36" />
+                  <Star size={14} fill="#c89d36" color="#c89d36" />
+                  <Star size={14} fill="#c89d36" color="#c89d36" />
+                  <span>(4.9 / 5.0)</span>
+                </div>
+                <div className="qv-price-block">
+                  <span className="qv-price">{formatPrice(quickViewProduct.price)}</span>
+                  {quickViewProduct.originalPrice && (
+                    <span className="qv-orig">{formatPrice(quickViewProduct.originalPrice)}</span>
+                  )}
+                </div>
+                <p className="qv-description">
+                  {quickViewProduct.description || 'Crafted on traditional looms with pure silk filaments and intricate metallic zari borders. Includes matching unstitched blouse piece.'}
+                </p>
+                <div className="qv-specs">
+                  <div><strong>Fabric:</strong> {quickViewProduct.material || 'Pure Silk'}</div>
+                  <div><strong>Craft:</strong> {quickViewProduct.weave || 'Handloom Zari'}</div>
+                  <div><strong>Dispatch:</strong> Express (2-4 Business Days)</div>
+                </div>
+                <div className="qv-actions">
+                  <button 
+                    className="qv-add-btn"
+                    onClick={() => {
+                      addToCart(quickViewProduct);
+                      setQuickViewProduct(null);
+                    }}
+                  >
+                    <ShoppingBag size={16} /> Add to Cart
+                  </button>
+                  <button 
+                    className="qv-buy-btn"
+                    onClick={() => {
+                      handleBuyNow(quickViewProduct);
+                      setQuickViewProduct(null);
+                    }}
+                  >
+                    Buy Now
+                  </button>
+                </div>
+              </motion.div>
+            </div>
+          </div>
         </div>
       )}
     </div>

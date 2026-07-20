@@ -1,17 +1,19 @@
 import React, { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 import './CelebrateOccasion.css';
 
 const BASE = import.meta.env.BASE_URL || '/';
 
-const categoriesList = [
-  { name: 'BANARASI', category: 'Banarasi', image: `${BASE}image/saree/5_73_7415436e-9226-4442-9a42-d47387d04730.webp` },
-  { name: 'KANJEEVARAM', category: 'Kanjeevaram', image: `${BASE}image/saree/folded-kanjivaram-silk-saree-green-golden-pallu.webp` },
-  { name: 'ORGANZA', category: 'Organza', image: `${BASE}image/saree/IMG20250515110716.jpg` },
-  { name: 'PATOLA', category: 'Patola', image: `${BASE}image/saree/images (5).jpeg` },
-  { name: 'MYSORE SILK', category: 'Mysore', image: `${BASE}image/saree/images (6).jpeg` },
-  { name: 'PAITHANI', category: 'Paithani', image: `${BASE}image/saree/images (10).jpeg` }
+const fabricCategories = [
+  { name: 'Pure Silk', fabric: 'Pure Silk', image: `${BASE}image/saree/folded-kanjivaram-silk-saree-green-golden-pallu.webp`, itemCounts: '120+ Designs' },
+  { name: 'Cotton Sarees', fabric: 'Cotton', image: `${BASE}image/saree/5_73_7415436e-9226-4442-9a42-d47387d04730.webp`, itemCounts: '85+ Designs' },
+  { name: 'Tussar Sarees', fabric: 'Tussar', image: `${BASE}image/saree/IMG20250515110716.jpg`, itemCounts: '64+ Designs' },
+  { name: 'Georgette', fabric: 'Georgette', image: `${BASE}image/saree/images (5).jpeg`, itemCounts: '90+ Designs' },
+  { name: 'Vichitra Silk', fabric: 'Vichitra', image: `${BASE}image/saree/images (6).jpeg`, itemCounts: '45+ Designs' },
+  { name: 'Brocade Silk', fabric: 'Brocade', image: `${BASE}image/saree/images (10).jpeg`, itemCounts: '110+ Designs' },
+  { name: 'Organza', fabric: 'Organza', image: `${BASE}image/saree/IMG20250515110716.jpg`, itemCounts: '75+ Designs' },
+  { name: 'Ready to Wear', fabric: 'ReadyToWear', image: `${BASE}image/saree/folded-kanjivaram-silk-saree-green-golden-pallu.webp`, itemCounts: '50+ Designs' }
 ];
 
 export default function CelebrateOccasion() {
@@ -20,7 +22,7 @@ export default function CelebrateOccasion() {
 
   const scroll = (direction) => {
     if (sliderRef.current) {
-      const scrollAmount = 240;
+      const scrollAmount = 280;
       sliderRef.current.scrollBy({
         left: direction === 'left' ? -scrollAmount : scrollAmount,
         behavior: 'smooth'
@@ -28,48 +30,56 @@ export default function CelebrateOccasion() {
     }
   };
 
-  const handleCategoryClick = (catName) => {
-    navigate(`/products?category=${catName}`);
+  const handleFabricClick = (fabricName) => {
+    navigate(`/products?search=${encodeURIComponent(fabricName)}`);
+    window.scrollTo(0, 0);
   };
 
   return (
-    <section className="celebrate-section">
-      <div className="celebrate-container">
-        <span className="celebrate-subtitle">CELEBRATE EVERY OCCASION IN STYLE</span>
-        <h2 className="celebrate-title">
-          Shop By <span className="gold-text">Category</span>
-        </h2>
+    <section className="kalyan-fabric-section" id="fabric-section">
+      <div className="fabric-container">
+        <div className="kalyan-section-header">
+          <h2 className="kalyan-section-title">
+            Shop By <span className="gold-text">Fabric</span>
+          </h2>
+        </div>
 
-        <div className="slider-wrapper">
+        <div className="fabric-slider-wrapper">
           <button 
-            className="nav-btn left-btn" 
+            className="slider-arrow arrow-left" 
             onClick={() => scroll('left')}
             aria-label="Scroll Left"
           >
-            <ChevronLeft size={20} />
+            <ChevronLeft size={22} />
           </button>
 
-          <div className="categories-slider" ref={sliderRef}>
-            {categoriesList.map((cat, index) => (
+          <div className="fabrics-grid-slider" ref={sliderRef}>
+            {fabricCategories.map((item, index) => (
               <div 
                 key={index} 
-                className="category-circle-card"
-                onClick={() => handleCategoryClick(cat.category)}
+                className="fabric-card"
+                onClick={() => handleFabricClick(item.fabric)}
               >
-                <div className="circle-image-wrapper">
-                  <img src={cat.image} alt={cat.name} className="circle-img" />
+                <div className="fabric-arch-frame">
+                  <img src={item.image} alt={item.name} className="fabric-img" />
+                  <div className="fabric-overlay">
+                    <span className="fabric-count">{item.itemCounts}</span>
+                    <button className="fabric-shop-btn">
+                      Shop Now <ArrowRight size={14} />
+                    </button>
+                  </div>
                 </div>
-                <span className="category-name">{cat.name}</span>
+                <h3 className="fabric-name">{item.name}</h3>
               </div>
             ))}
           </div>
 
           <button 
-            className="nav-btn right-btn" 
+            className="slider-arrow arrow-right" 
             onClick={() => scroll('right')}
             aria-label="Scroll Right"
           >
-            <ChevronRight size={20} />
+            <ChevronRight size={22} />
           </button>
         </div>
       </div>

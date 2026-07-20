@@ -1,88 +1,79 @@
-.trust-benefits-section {
-  padding: 3.5rem 5%;
-  background-color: #ffffff;
+.kalyan-trust-section {
+  padding: 4rem 5%;
+  background: var(--bg-cream-gold);
   border-bottom: 1px solid var(--border-light);
 }
 
-.trust-benefits-container {
+.trust-container {
   max-width: 1400px;
   margin: 0 auto;
 }
 
-.benefits-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 2rem;
+.trust-badges-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1.5rem;
 }
 
-.benefit-col {
-  flex: 1;
+.trust-card {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
+  padding: 1.5rem 1rem;
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid var(--border-gold-subtle);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+  transition: transform 0.3s ease, border-color 0.3s ease;
 }
 
-.benefit-icon-wrapper {
-  width: 48px;
-  height: 48px;
+.trust-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--color-gold);
+}
+
+.trust-icon-box {
+  width: 54px;
+  height: 54px;
   border-radius: 50%;
-  border: 1px dashed var(--color-gold);
+  background: var(--gradient-gold);
+  color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 1rem;
-  color: var(--color-gold);
-  transition: all 0.3s ease;
-}
-
-.benefit-col:hover .benefit-icon-wrapper {
-  background: var(--gradient-gold);
-  color: #ffffff;
-  border-style: solid;
-  transform: scale(1.08);
-}
-
-.benefit-icon {
+  box-shadow: 0 4px 12px rgba(12, 115, 86, 0.25);
   transition: transform 0.3s ease;
 }
 
-.benefit-col:hover .benefit-icon {
-  transform: rotate(360deg);
+.trust-card:hover .trust-icon-box {
+  transform: scale(1.08) rotate(5deg);
 }
 
-.benefit-title {
+.trust-card-title {
   font-family: var(--font-sans);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: var(--color-gold);
+  margin-bottom: 0.4rem;
+}
+
+.trust-card-desc {
   font-size: 0.75rem;
-  font-weight: 700;
-  color: var(--text-light-primary);
-  margin-bottom: 0.5rem;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+  line-height: 1.4;
+  color: var(--text-light-secondary);
 }
 
-.benefit-desc {
-  font-family: var(--font-sans);
-  font-size: 0.7rem;
-  line-height: 1.5;
-  color: var(--text-muted);
-  max-width: 200px;
-}
-
-@media (max-width: 900px) {
-  .benefits-row {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 2.5rem 1.5rem;
-  }
-  .benefit-col {
-    flex: 0 0 40%;
+@media (max-width: 1024px) {
+  .trust-badges-grid {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
-@media (max-width: 480px) {
-  .benefit-col {
-    flex: 0 0 100%;
+@media (max-width: 600px) {
+  .trust-badges-grid {
+    grid-template-columns: 1fr;
   }
 }

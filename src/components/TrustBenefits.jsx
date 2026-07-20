@@ -1,47 +1,47 @@
 import React from 'react';
-import { Award, Sparkles, Truck, RotateCcw, Lock } from 'lucide-react';
+import { Crown, ShieldCheck, Video, Globe2, RefreshCw } from 'lucide-react';
 import './TrustBenefits.css';
 
-const benefits = [
+const kalyanTrustBadges = [
   {
-    icon: Award,
-    title: 'AUTHENTIC QUALITY',
-    desc: 'Handpicked premium fabrics and trusted craftsmanship you can rely on.'
+    icon: Crown,
+    title: '100+ YEARS HERITAGE',
+    desc: 'World’s largest silk showroom network since 1909'
   },
   {
-    icon: Sparkles,
-    title: 'MODERN TRADITION',
-    desc: 'Designs that blend timeless Indian heritage with contemporary elegance.'
+    icon: ShieldCheck,
+    title: 'SILK MARK CERTIFIED',
+    desc: 'Guaranteed 100% pure Mulberry & Kanjivaram silk'
   },
   {
-    icon: Truck,
-    title: 'EXPRESS DELIVERY',
-    desc: 'Fast shipping across India with secure packaging and tracking.'
+    icon: Video,
+    title: 'LIVE VIDEO SHOPPING',
+    desc: 'Personalized virtual store tour on WhatsApp (+91 81299 66333)'
   },
   {
-    icon: RotateCcw,
-    title: 'EASY RETURNS',
-    desc: '7-day hassle-free returns and exchange policy for your peace of mind.'
+    icon: Globe2,
+    title: 'WORLDWIDE EXPRESS SHIPPING',
+    desc: 'Safe & tracked doorstep delivery across 60+ countries'
   },
   {
-    icon: Lock,
-    title: '100% SECURE PAYMENT',
-    desc: 'Safe payment gateways ensuring your data privacy.'
+    icon: RefreshCw,
+    title: 'EASY RETURNS & FITTING',
+    desc: 'Hassle-free 7-day returns & custom blouse stitching service'
   }
 ];
 
 export default function TrustBenefits() {
   return (
-    <section className="trust-benefits-section">
-      <div className="trust-benefits-container">
-        <div className="benefits-row">
-          {benefits.map((b, index) => (
-            <div key={index} className="benefit-col">
-              <div className="benefit-icon-wrapper">
-                <b.icon size={22} className="benefit-icon" />
+    <section className="kalyan-trust-section">
+      <div className="trust-container">
+        <div className="trust-badges-grid">
+          {kalyanTrustBadges.map((b, index) => (
+            <div key={index} className="trust-card">
+              <div className="trust-icon-box">
+                <b.icon size={26} className="trust-icon" />
               </div>
-              <h3 className="benefit-title">{b.title}</h3>
-              <p className="benefit-desc">{b.desc}</p>
+              <h3 className="trust-card-title">{b.title}</h3>
+              <p className="trust-card-desc">{b.desc}</p>
             </div>
           ))}
         </div>

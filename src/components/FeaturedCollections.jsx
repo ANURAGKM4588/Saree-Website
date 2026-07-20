@@ -1,136 +1,172 @@
-import React, { useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Heart, ShoppingBag, ChevronLeft, ChevronRight } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { Sparkles, X, Star, ShoppingBag } from 'lucide-react';
 import { useDatabase } from '../context/DatabaseContext';
 import { useCart } from '../context/CartContext';
 import { formatPrice } from '../data/products';
+import ProductCard from './ProductCard';
 import './FeaturedCollections.css';
+
+const patternsList = [
+  'Brocade',
+  'Floral',
+  'Zari Woven',
+  'Checks',
+  'Embroidery',
+  'Handwork',
+  'Geometric',
+  'Shimmer'
+];
 
 export default function FeaturedCollections() {
   const navigate = useNavigate();
-  const { featuredProducts } = useDatabase();
-  const { addToCart, setIsCartOpen, wishlist, toggleWishlist } = useCart();
-  const sliderRef = useRef(null);
+  const { products } = useDatabase();
+  const { addToCart, setIsCartOpen } = useCart();
+  const [selectedPattern, setSelectedPattern] = useState('Brocade');
+  const [quickViewProduct, setQuickViewProduct] = useState(null);
 
-  const scroll = (direction) => {
-    if (sliderRef.current) {
-      const scrollAmount = 300;
-      sliderRef.current.scrollBy({
-        left: direction === 'left' ? -scrollAmount : scrollAmount,
-        behavior: 'smooth',
-      });
+  useEffect(() => {
+    if (quickViewProduct) {
+      document.body.classList.add('modal-open');
+    } else {
+      document.body.classList.remove('modal-open');
     }
-  };
+    return () => {
+      document.body.classList.remove('modal-open');
+    };
+  }, [quickViewProduct]);
 
-  const handleToggleWishlist = (id, e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    toggleWishlist(id);
-  };
+  const filteredProducts = products
+    .filter((p) => {
+      if (selectedPattern === 'Brocade') return p.material?.includes('Silk') || p.weave?.includes('Zari');
+      if (selectedPattern === 'Floral') return p.name.toLowerCase().includes('floral') || p.description?.toLowerCase().includes('floral');
+      if (selectedPattern === 'Zari Woven') return p.weave?.includes('Zari') || p.name.toLowerCase().includes('zari');
+      if (selectedPattern === 'Checks') return p.name.toLowerCase().includes('check') || p.description?.toLowerCase().includes('check');
+      return p.featured || true;
+    })
+    .slice(0, 4);
 
-  const handleBuyNow = (product, e) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const handleBuyNow = (product) => {
     addToCart(product);
     setIsCartOpen(true);
   };
 
   return (
-    <section className="featured-section" id="collections">
-      <div className="featured-container">
-        <div className="section-header">
-          <div>
-            <span className="section-subtitle">HANDPICKED MASTERPIECES</span>
-            <h2 className="section-title">Our Featured Collection</h2>
-          </div>
-          <Link to="/products" className="view-all-link">
-            VIEW ALL PRODUCTS
-          </Link>
+    <section className="kalyan-pattern-section" id="pattern-section">
+      <div className="pattern-container">
+        <div className="kalyan-section-header">
+          <h2 className="kalyan-section-title">
+            Patterns & <span className="gold-text">Weaves</span>
+          </h2>
         </div>
 
-        <div className="slider-container">
+        {/* Pattern Pills Bar */}
+        <div className="pattern-pills-bar">
+          {patternsList.map((pattern) => (
+            <button 
+              key={pattern}
+              className={`pattern-pill ${selectedPattern === pattern ? 'active' : ''}`}
+              onClick={() => setSelectedPattern(pattern)}
+            >
+              <Sparkles size={12} className="pill-sparkle" /> {pattern}
+            </button>
+          ))}
+        </div>
+
+        {/* Pattern Showcase Grid */}
+        <div className="pattern-products-grid">
+          {filteredProducts.map((product) => (
+            <div key={product.id} className="pattern-card-wrapper">
+              <ProductCard 
+                product={product}
+                onQuickView={(p) => setQuickViewProduct(p)}
+              />
+            </div>
+          ))}
+        </div>
+
+        <div className="pattern-footer-cta">
           <button 
-            className="slider-arrow left" 
-            onClick={() => scroll('left')}
-            aria-label="Scroll Left"
+            className="kalyan-all-patterns-btn"
+            onClick={() => navigate('/products')}
           >
-            <ChevronLeft size={22} />
-          </button>
-
-          <div className="products-slider" ref={sliderRef}>
-            {featuredProducts.map((product) => {
-              const discount = product.originalPrice 
-                ? Math.round((1 - product.price / product.originalPrice) * 100)
-                : null;
-
-              return (
-                <div key={product.id} className="featured-product-card-wrap">
-                  <Link to={`/product/${product.id}`} className="featured-product-card">
-                    {/* Image Area */}
-                    <div className="product-image-container">
-                      <img src={product.image} alt={product.name} className="product-img" />
-                      
-                      <button 
-                        className={`wishlist-toggle ${wishlist.includes(product.id) ? 'active' : ''}`}
-                        onClick={(e) => handleToggleWishlist(product.id, e)}
-                        aria-label="Add to Wishlist"
-                      >
-                        <Heart size={18} fill={wishlist.includes(product.id) ? "var(--color-gold)" : "none"} color={wishlist.includes(product.id) ? "var(--color-gold)" : "currentColor"} />
-                      </button>
-
-                      {discount && (
-                        <div className="discount-badge">-{discount}%</div>
-                      )}
-                    </div>
-
-                    {/* Details */}
-                    <div className="product-info-wrap">
-                      <span className="product-brand">KADHA HERITAGE</span>
-                      <h3 className="product-title-text">{product.name}</h3>
-                      <div className="product-price-block">
-                        <span className="current-price">{formatPrice(product.price)}</span>
-                        {product.originalPrice && (
-                          <>
-                            <span className="original-price">{formatPrice(product.originalPrice)}</span>
-                            <span className="discount-pct">({discount}% OFF)</span>
-                          </>
-                        )}
-                      </div>
-                    </div>
-                  </Link>
-                  
-                  {/* Actions */}
-                  <div className="product-actions-hover">
-                    <button 
-                      className="add-to-bag-btn"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        addToCart(product);
-                      }}
-                    >
-                      <ShoppingBag size={14} /> Add to Bag
-                    </button>
-                    <button 
-                      className="buy-now-btn"
-                      onClick={(e) => handleBuyNow(product, e)}
-                    >
-                      Buy Now
-                    </button>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          <button 
-            className="slider-arrow right" 
-            onClick={() => scroll('right')}
-            aria-label="Scroll Right"
-          >
-            <ChevronRight size={22} />
+            Explore All {selectedPattern} Sarees ›
           </button>
         </div>
       </div>
+
+      {/* Quick View Modal */}
+      {quickViewProduct && (
+        <div className="quickview-modal-backdrop" onClick={() => setQuickViewProduct(null)}>
+          <div className="quickview-modal-box" onClick={(e) => e.stopPropagation()}>
+            <button className="quickview-close-btn" onClick={() => setQuickViewProduct(null)}>
+              <X size={22} />
+            </button>
+            <div className="quickview-grid">
+              <motion.div 
+                className="qv-image-side"
+                initial={{ opacity: 0, x: -60 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <img src={quickViewProduct.image} alt={quickViewProduct.name} className="qv-img" />
+              </motion.div>
+              <motion.div 
+                className="qv-details-side"
+                initial={{ opacity: 0, x: 60 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <span className="qv-brand">AUTHENTIC KADHA SILKS</span>
+                <h2 className="qv-title">{quickViewProduct.name}</h2>
+                <div className="qv-rating">
+                  <Star size={14} fill="#c89d36" color="#c89d36" />
+                  <Star size={14} fill="#c89d36" color="#c89d36" />
+                  <Star size={14} fill="#c89d36" color="#c89d36" />
+                  <Star size={14} fill="#c89d36" color="#c89d36" />
+                  <Star size={14} fill="#c89d36" color="#c89d36" />
+                  <span>(4.9 / 5.0)</span>
+                </div>
+                <div className="qv-price-block">
+                  <span className="qv-price">{formatPrice(quickViewProduct.price)}</span>
+                  {quickViewProduct.originalPrice && (
+                    <span className="qv-orig">{formatPrice(quickViewProduct.originalPrice)}</span>
+                  )}
+                </div>
+                <p className="qv-description">
+                  {quickViewProduct.description || 'Crafted on traditional looms with pure silk filaments and intricate metallic zari borders. Includes matching unstitched blouse piece.'}
+                </p>
+                <div className="qv-specs">
+                  <div><strong>Fabric:</strong> {quickViewProduct.material || 'Pure Silk'}</div>
+                  <div><strong>Craft:</strong> {quickViewProduct.weave || 'Handloom Zari'}</div>
+                  <div><strong>Dispatch:</strong> Express (2-4 Business Days)</div>
+                </div>
+                <div className="qv-actions">
+                  <button 
+                    className="qv-add-btn"
+                    onClick={() => {
+                      addToCart(quickViewProduct);
+                      setQuickViewProduct(null);
+                    }}
+                  >
+                    <ShoppingBag size={16} /> Add to Cart
+                  </button>
+                  <button 
+                    className="qv-buy-btn"
+                    onClick={() => {
+                      handleBuyNow(quickViewProduct);
+                      setQuickViewProduct(null);
+                    }}
+                  >
+                    Buy Now
+                  </button>
+                </div>
+              </motion.div>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
