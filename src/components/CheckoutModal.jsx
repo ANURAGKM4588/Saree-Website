@@ -132,29 +132,31 @@ export default function CheckoutModal({ isOpen, onClose, items = [], total = 0, 
                     </div>
                   </div>
 
-                  <div className="cm-input-group">
-                    <label><MapPin size={14} /> Delivery Address</label>
-                    <input
-                      type="text"
-                      name="address"
-                      placeholder="House/Flat No., Street, Area"
-                      value={formData.address}
-                      onChange={handleChange}
-                      required
-                      className="cm-input"
-                    />
-                  </div>
+                  <div className="cm-input-row">
+                    <div className="cm-input-group">
+                      <label><MapPin size={14} /> Delivery Address</label>
+                      <input
+                        type="text"
+                        name="address"
+                        placeholder="House/Flat No., Street"
+                        value={formData.address}
+                        onChange={handleChange}
+                        required
+                        className="cm-input"
+                      />
+                    </div>
 
-                  <div className="cm-input-group">
-                    <label><MapPin size={14} /> Landmark (Optional)</label>
-                    <input
-                      type="text"
-                      name="landmark"
-                      placeholder="e.g. Near Temple / Opposite Metro Station"
-                      value={formData.landmark}
-                      onChange={handleChange}
-                      className="cm-input"
-                    />
+                    <div className="cm-input-group">
+                      <label><MapPin size={14} /> Landmark (Optional)</label>
+                      <input
+                        type="text"
+                        name="landmark"
+                        placeholder="e.g. Near Temple"
+                        value={formData.landmark}
+                        onChange={handleChange}
+                        className="cm-input"
+                      />
+                    </div>
                   </div>
 
                   <div className="cm-input-row">
