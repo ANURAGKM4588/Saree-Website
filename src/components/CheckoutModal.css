@@ -127,6 +127,44 @@
   box-shadow: 0 0 0 3px rgba(3, 28, 21, 0.1);
 }
 
+.cm-save-address-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.1rem;
+}
+
+.cm-save-checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.76rem;
+  color: #444444;
+  font-weight: 500;
+  cursor: pointer;
+  user-select: none;
+}
+
+.cm-save-checkbox {
+  accent-color: #031c15;
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+}
+
+.cm-saved-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #0c7356;
+  background: rgba(12, 115, 86, 0.08);
+  padding: 2px 8px;
+  border-radius: 10px;
+  border: 1px solid rgba(12, 115, 86, 0.2);
+}
+
 .cm-method-selector {
   display: flex;
   gap: 0.5rem;

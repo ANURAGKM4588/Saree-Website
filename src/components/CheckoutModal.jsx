@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ShieldCheck, CreditCard, CheckCircle, ArrowRight, Lock, MapPin, User, Mail, Phone, Sparkles } from 'lucide-react';
+import { X, ShieldCheck, CreditCard, CheckCircle, ArrowRight, Lock, MapPin, User, Mail, Phone, Sparkles, BookmarkCheck } from 'lucide-react';
 import { formatPrice } from '../data/products';
 import { triggerRazorpayCheckout } from '../utils/razorpay';
 import { sendOrderConfirmationEmail } from '../utils/emailService';
@@ -17,9 +17,27 @@ export default function CheckoutModal({ isOpen, onClose, items = [], total = 0, 
     pincode: '',
   });
 
-  const [paymentMethod, setPaymentMethod] = useState('razorpay'); // 'razorpay' | 'demo'
+  const [saveAddress, setSaveAddress] = useState(true);
+  const [hasSavedAddress, setHasSavedAddress] = useState(false);
   const [loading, setLoading] = useState(false);
   const [completedOrder, setCompletedOrder] = useState(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      try {
+        const saved = localStorage.getItem('kadha_saved_address');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (parsed && parsed.name) {
+            setFormData(parsed);
+            setHasSavedAddress(true);
+          }
+        }
+      } catch (e) {
+        console.error('Error reading saved address:', e);
+      }
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -32,6 +50,15 @@ export default function CheckoutModal({ isOpen, onClose, items = [], total = 0, 
     if (!formData.name || !formData.email || !formData.phone || !formData.address) {
       alert('Please fill in your name, email, phone number, and delivery address.');
       return;
+    }
+
+    if (saveAddress) {
+      try {
+        localStorage.setItem('kadha_saved_address', JSON.stringify(formData));
+        setHasSavedAddress(true);
+      } catch (e) {
+        console.error('Error saving address to localStorage:', e);
+      }
     }
 
     setLoading(true);
@@ -185,6 +212,25 @@ export default function CheckoutModal({ isOpen, onClose, items = [], total = 0, 
                         className="cm-input"
                       />
                     </div>
+                  </div>
+
+                  {/* Save Address for Future Orders Option */}
+                  <div className="cm-save-address-bar">
+                    <label className="cm-save-checkbox-label">
+                      <input
+                        type="checkbox"
+                        checked={saveAddress}
+                        onChange={(e) => setSaveAddress(e.target.checked)}
+                        className="cm-save-checkbox"
+                      />
+                      <span>Save delivery address for future orders</span>
+                    </label>
+
+                    {hasSavedAddress && (
+                      <span className="cm-saved-badge" title="Address auto-filled from previous session">
+                        <BookmarkCheck size={12} /> Auto-filled
+                      </span>
+                    )}
                   </div>
 
                   <button type="submit" disabled={loading} className="cm-pay-btn">
