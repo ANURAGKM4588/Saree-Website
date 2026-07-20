@@ -470,5 +470,8 @@ export function getProductById(id) {
 }
 
 export function formatPrice(price) {
-  return '₹' + price.toLocaleString('en-IN');
+  if (Number(price) === 0) {
+    return 'FREE';
+  }
+  return '₹' + Number(price || 0).toLocaleString('en-IN');
 }

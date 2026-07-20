@@ -1335,14 +1335,36 @@ export default function AdminPanel() {
                   <div className="step-pane-content fade-in">
                     <div className="adm-form-row">
                       <div className="adm-form-field">
-                        <label className="adm-form-label" htmlFor="prodPrice">Selling Offer Price (₹)*</label>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                          <label className="adm-form-label" htmlFor="prodPrice" style={{ margin: 0 }}>Selling Offer Price (₹)*</label>
+                          <button
+                            type="button"
+                            className="free-price-btn"
+                            onClick={() => setFormData({ ...formData, price: Number(formData.price) === 0 && formData.price !== '' ? '' : 0 })}
+                            style={{
+                              padding: '2px 8px',
+                              borderRadius: '12px',
+                              fontSize: '0.72rem',
+                              fontWeight: '700',
+                              border: '1px solid #10b981',
+                              background: Number(formData.price) === 0 && formData.price !== '' ? '#10b981' : 'transparent',
+                              color: Number(formData.price) === 0 && formData.price !== '' ? '#ffffff' : '#10b981',
+                              cursor: 'pointer',
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '4px'
+                            }}
+                          >
+                            <Sparkles size={11} /> Mark as FREE (₹0)
+                          </button>
+                        </div>
                         <input 
                           className="adm-form-input"
                           type="number" 
                           id="prodPrice"
                           value={formData.price}
                           onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                          placeholder="e.g. 48500"
+                          placeholder="e.g. 48500 (or 0 for FREE)"
                           required
                         />
                       </div>
