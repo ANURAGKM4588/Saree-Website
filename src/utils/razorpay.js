@@ -30,8 +30,8 @@ export const triggerRazorpayCheckout = async ({
     return;
   }
 
-  // Use Razorpay Key ID from env variable or default test key
-  const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_KADHASILK2026';
+  // Use Razorpay Key ID from env variable or live merchant key
+  const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_live_TFrgh6oiJs5RNn';
 
   const options = {
     key: razorpayKey,

@@ -25,9 +25,10 @@ dist-ssr
 *.sln
 *.sw?
 
-# Environment files
+# Environment & Key files
 .env
 .env.*
+*.csv
 
 # Large original PNG sequences
 public/image/herosection/new/
