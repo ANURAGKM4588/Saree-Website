@@ -92,20 +92,23 @@
 }
 
 .fabric-shop-btn {
-  background: var(--gradient-royal-gold);
-  color: #120103;
+  background: #edf4c1;
+  color: #07382c;
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 800;
   padding: 6px 14px;
   border-radius: 20px;
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-  transition: transform 0.2s ease;
+  border: 1px solid #edf4c1;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: all 0.25s ease;
 }
 
 .fabric-card:hover .fabric-shop-btn {
+  background: #dce6a3;
+  border-color: #dce6a3;
   transform: scale(1.05);
 }
 
