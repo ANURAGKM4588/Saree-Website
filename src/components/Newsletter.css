@@ -90,21 +90,24 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.9rem 1.75rem;
-  background: var(--gradient-gold);
-  color: white;
+  background: #edf4c1;
+  color: #031c15;
   font-family: var(--font-sans);
   font-size: 0.85rem;
-  font-weight: 700;
-  border: none;
+  font-weight: 800;
+  border: 1px solid #edf4c1;
   border-radius: 12px;
   cursor: pointer;
-  transition: var(--transition-fast);
+  transition: all 0.25s ease;
   white-space: nowrap;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
 }
 
 .nl-btn:hover {
+  background: #dce6a3;
+  border-color: #dce6a3;
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(212, 175, 55, 0.25);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
 .nl-success {

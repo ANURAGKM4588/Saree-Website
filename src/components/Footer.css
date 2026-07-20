@@ -54,8 +54,8 @@
 }
 
 .fn-btn {
-  background: var(--gradient-royal-gold);
-  color: #120103;
+  background: #edf4c1;
+  color: #031c15;
   font-weight: 800;
   font-size: 0.85rem;
   padding: 0 1.5rem;
@@ -64,12 +64,17 @@
   align-items: center;
   gap: 0.4rem;
   white-space: nowrap;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  transition: transform 0.2s ease;
+  border: 1px solid #edf4c1;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  transition: all 0.25s ease;
+  cursor: pointer;
 }
 
 .fn-btn:hover {
+  background: #dce6a3;
+  border-color: #dce6a3;
   transform: scale(1.05);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
 }
 
 .fn-status {
