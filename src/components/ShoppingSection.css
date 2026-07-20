@@ -465,16 +465,18 @@
 }
 
 .btn-buy-now {
-  background: linear-gradient(135deg, #d4af37 0%, #a48010 100%);
+  background: linear-gradient(135deg, #07382c 0%, #0c5643 50%, #052920 100%);
   color: #ffffff;
   font-weight: 700;
-  border: none;
+  border: 1px solid rgba(7, 56, 44, 0.3);
+  box-shadow: 0 4px 15px rgba(7, 56, 44, 0.25);
+  transition: var(--transition-fast);
 }
 
 .btn-buy-now:hover {
-  background: linear-gradient(135deg, #e5c158 0%, #b89218 100%);
+  background: linear-gradient(135deg, #094738 0%, #106c54 50%, #07382c 100%);
   transform: translateY(-1px);
-  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.25);
+  box-shadow: 0 6px 20px rgba(7, 56, 44, 0.4);
 }
 
 /* ─── View All ─── */
