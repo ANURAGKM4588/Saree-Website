@@ -727,17 +727,54 @@
 
 /* Responsive */
 @media (max-width: 768px) {
+  .pdp-container {
+    padding: 1rem 1rem 4rem;
+  }
+
   .pdp-layout {
     grid-template-columns: 1fr;
-    gap: 2rem;
+    gap: 1.5rem;
+  }
+
+  .pdp-thumbnails {
+    flex-direction: row;
+    overflow-x: auto;
+    width: 100%;
+    padding-bottom: 0.5rem;
+  }
+
+  .pdp-thumb {
+    flex-shrink: 0;
+    width: 65px;
+    height: 80px;
   }
 
   .pdp-name {
-    font-size: 2rem;
+    font-size: 1.75rem;
+  }
+
+  .pdp-price-row {
+    flex-wrap: wrap;
+    gap: 0.5rem;
   }
 
   .pdp-actions {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem;
+  }
+
+  .pdp-add-cart,
+  .pdp-buy-now {
+    height: 48px;
+    font-size: 0.85rem;
+  }
+
+  .specs-list {
+    padding: 1rem 1.25rem;
+  }
+
+  .spec-item-row {
+    font-size: 0.85rem;
   }
 
   .reviews-header-banner {
@@ -758,6 +795,6 @@
   }
 
   .warm-reviews-wrapper {
-    padding: 1.5rem;
+    padding: 1.25rem;
   }
 }

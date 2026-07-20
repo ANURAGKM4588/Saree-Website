@@ -354,10 +354,12 @@
 @media (max-width: 768px) {
   .pp-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 0.85rem;
   }
 
   .pp-controls {
     flex-direction: column;
+    gap: 0.75rem;
   }
 
   .pp-title {
@@ -367,7 +369,16 @@
 
 @media (max-width: 480px) {
   .pp-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
+  .pp-card-info {
+    padding: 0.85rem;
+  }
+
+  .pp-name {
+    font-size: 0.9rem;
   }
 }
 
