@@ -12,8 +12,9 @@
 .flex-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
+  align-items: center;
   margin-bottom: 2.5rem;
+  width: 100%;
 }
 
 .kalyan-view-all-btn {
@@ -23,6 +24,8 @@
   border-bottom: 2px solid var(--color-gold);
   padding-bottom: 3px;
   transition: var(--transition-fast);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .kalyan-view-all-btn:hover {
@@ -246,6 +249,18 @@
 }
 
 @media (max-width: 768px) {
+  .flex-header {
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    margin-bottom: 1.5rem !important;
+    gap: 0.5rem;
+  }
+  .kalyan-view-all-btn {
+    font-size: 0.72rem !important;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+  }
   .quickview-grid {
     grid-template-columns: 1fr;
   }

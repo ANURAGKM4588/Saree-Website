@@ -163,6 +163,7 @@ button, input, select, textarea {
   color: var(--text-light-primary);
   position: relative;
   display: inline-block;
+  white-space: nowrap;
 }
 
 .kalyan-section-title::after {
@@ -173,4 +174,16 @@ button, input, select, textarea {
   background: var(--gradient-royal-gold);
   margin: 0.6rem auto 0;
   border-radius: 2px;
+}
+
+@media (max-width: 768px) {
+  .kalyan-section-title {
+    font-size: clamp(1.2rem, 4.5vw, 1.65rem);
+    white-space: nowrap;
+  }
+
+  .kalyan-section-title::after {
+    margin: 0.3rem 0 0;
+    width: 40px;
+  }
 }
