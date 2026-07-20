@@ -109,9 +109,18 @@ export default function Hero() {
     let scrollTl = null;
 
     const ctx = gsap.context(() => {
-      // Ensure phase-1 text is visible instantly on load complete
-      gsap.set('.phase-1', { opacity: 1, y: 0 });
-      gsap.set('.scroll-indicator', { opacity: 1 });
+      // Ensure phase-1 container is active
+      gsap.set('.phase-1', { opacity: 1 });
+
+      // ---- Staggered Entrance Animation-In on Page Load Complete ----
+      const introTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+      introTl
+        .fromTo('.hero-tagline', { opacity: 0, y: -25 }, { opacity: 1, y: 0, duration: 0.9 }, 0.1)
+        .fromTo('.hero-title', { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 1.1 }, 0.25)
+        .fromTo('.hero-divider', { opacity: 0, scaleX: 0 }, { opacity: 1, scaleX: 1, duration: 0.8 }, 0.45)
+        .fromTo('.hero-subtext', { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: 0.9 }, 0.6)
+        .fromTo('.hero-buttons', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.9 }, 0.75)
+        .fromTo('.scroll-indicator', { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.8 }, 0.95);
 
       const frameObj2 = { val: startFrameNum };
 
