@@ -86,28 +86,35 @@
 }
 
 .nl-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.9rem 1.75rem;
-  background: #edf4c1;
-  color: #031c15;
-  font-family: var(--font-sans);
-  font-size: 0.85rem;
-  font-weight: 800;
-  border: 1px solid #edf4c1;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.25s ease;
-  white-space: nowrap;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.5rem !important;
+  padding: 0.9rem 1.75rem !important;
+  background: #edf4c1 !important;
+  color: #07382c !important;
+  font-family: var(--font-sans) !important;
+  font-size: 0.85rem !important;
+  font-weight: 800 !important;
+  border: 1px solid #edf4c1 !important;
+  border-radius: 12px !important;
+  cursor: pointer !important;
+  transition: all 0.25s ease !important;
+  white-space: nowrap !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2) !important;
+}
+
+.nl-btn svg {
+  color: #07382c !important;
+  stroke: #07382c !important;
 }
 
 .nl-btn:hover {
-  background: #dce6a3;
-  border-color: #dce6a3;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  background: #dce6a3 !important;
+  border-color: #dce6a3 !important;
+  color: #031c15 !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3) !important;
 }
 
 .nl-success {
