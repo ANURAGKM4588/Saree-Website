@@ -13,6 +13,7 @@ export default function CheckoutModal({ isOpen, onClose, items = [], total = 0, 
     email: '',
     phone: '',
     address: '',
+    landmark: '',
     city: '',
     pincode: '',
   });
@@ -144,6 +145,18 @@ export default function CheckoutModal({ isOpen, onClose, items = [], total = 0, 
                     />
                   </div>
 
+                  <div className="cm-input-group">
+                    <label><MapPin size={14} /> Landmark (Optional)</label>
+                    <input
+                      type="text"
+                      name="landmark"
+                      placeholder="e.g. Near Temple / Opposite Metro Station"
+                      value={formData.landmark}
+                      onChange={handleChange}
+                      className="cm-input"
+                    />
+                  </div>
+
                   <div className="cm-input-row">
                     <div className="cm-input-group">
                       <label>City</label>
@@ -251,7 +264,10 @@ export default function CheckoutModal({ isOpen, onClose, items = [], total = 0, 
                 </div>
                 <div className="cm-ticket-row">
                   <span className="tk-label">Delivery Address:</span>
-                  <span className="tk-val">{completedOrder.customer.address}, {completedOrder.customer.city}</span>
+                  <span className="tk-val">
+                    {completedOrder.customer.address}
+                    {completedOrder.customer.landmark ? `, Near ${completedOrder.customer.landmark}` : ''}, {completedOrder.customer.city}
+                  </span>
                 </div>
               </div>
 
