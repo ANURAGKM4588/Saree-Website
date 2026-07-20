@@ -1208,111 +1208,102 @@ export default function AdminPanel() {
         </div>
       )}
 
-      {/* MULTI-STEP WIZARD PRODUCT MODAL */}
+      {/* NEW ULTRA-MINIMAL STEP-BY-STEP PROCEEDING MODAL */}
       {isModalOpen && (
         <div className="modal-backdrop">
-          <div className="wizard-modal-card">
-            {/* Wizard Header & Progress Bar */}
-            <div className="wizard-modal-header">
-              <div className="wizard-header-top">
-                <div className="modal-title-group">
-                  <div className="modal-icon-badge">
-                    {editingProduct ? <Edit3 size={18} /> : <Plus size={18} />}
-                  </div>
-                  <div>
-                    <h2>{editingProduct ? 'Edit Saree Product' : 'Add New Saree'}</h2>
-                    <p>Step {wizardStep} of 3: {
-                      wizardStep === 1 ? 'Weave & Basic Details' :
-                      wizardStep === 2 ? 'Pricing & Saree Photo' :
-                      'Stock Controls & Badges'
-                    }</p>
-                  </div>
+          <div className="minimal-step-card">
+            
+            {/* Modal Header & Segmented Pill Stepper */}
+            <div className="minimal-step-header">
+              <div className="step-header-title">
+                <div>
+                  <span className="step-subtitle-pill">Step {wizardStep} of 3</span>
+                  <h2>{editingProduct ? 'Edit Saree Product' : 'Add New Saree'}</h2>
                 </div>
-                <button onClick={() => setIsModalOpen(false)} className="minimal-close-btn" title="Close">
+                <button onClick={() => setIsModalOpen(false)} className="minimal-close-circle" title="Close">
                   <X size={18} />
                 </button>
               </div>
 
-              {/* 3-Step Indicator Bar */}
-              <div className="wizard-stepper-bar">
-                <div 
-                  className={`stepper-item ${wizardStep === 1 ? 'active' : wizardStep > 1 ? 'completed' : ''}`}
-                  onClick={() => wizardStep > 1 && setWizardStep(1)}
+              {/* Minimal Segmented Tab Switcher */}
+              <div className="minimal-tab-switcher">
+                <button 
+                  type="button"
+                  className={`tab-segment-btn ${wizardStep === 1 ? 'active' : wizardStep > 1 ? 'done' : ''}`}
+                  onClick={() => setWizardStep(1)}
                 >
-                  <div className="stepper-circle">{wizardStep > 1 ? <Check size={14} /> : '1'}</div>
-                  <span className="stepper-label">1. Weave & Title</span>
-                </div>
-                <div className="stepper-line"></div>
-                <div 
-                  className={`stepper-item ${wizardStep === 2 ? 'active' : wizardStep > 2 ? 'completed' : ''}`}
-                  onClick={() => wizardStep > 2 && setWizardStep(2)}
+                  <span className="segment-num">1</span>
+                  <span>Saree Info</span>
+                </button>
+                <button 
+                  type="button"
+                  className={`tab-segment-btn ${wizardStep === 2 ? 'active' : wizardStep > 2 ? 'done' : ''}`}
+                  onClick={() => setWizardStep(2)}
                 >
-                  <div className="stepper-circle">{wizardStep > 2 ? <Check size={14} /> : '2'}</div>
-                  <span className="stepper-label">2. Price & Image</span>
-                </div>
-                <div className="stepper-line"></div>
-                <div className={`stepper-item ${wizardStep === 3 ? 'active' : ''}`}>
-                  <div className="stepper-circle">3</div>
-                  <span className="stepper-label">3. Stock & Badges</span>
-                </div>
+                  <span className="segment-num">2</span>
+                  <span>Media & Price</span>
+                </button>
+                <button 
+                  type="button"
+                  className={`tab-segment-btn ${wizardStep === 3 ? 'active' : ''}`}
+                  onClick={() => setWizardStep(3)}
+                >
+                  <span className="segment-num">3</span>
+                  <span>Stock & Tags</span>
+                </button>
               </div>
             </div>
 
-            {/* Form Content Steps */}
-            <form onSubmit={handleSubmit} className="wizard-modal-form">
-              <div className="wizard-body-container">
+            {/* Modal Step Content Form */}
+            <form onSubmit={handleSubmit} className="minimal-step-form">
+              <div className="minimal-step-body">
 
-                {/* STEP 1: WEAVE & TITLE */}
+                {/* STEP 1: SAREE ESSENCE */}
                 {wizardStep === 1 && (
-                  <div className="wizard-step-content fade-in">
+                  <div className="step-pane-content fade-in">
                     <div className="adm-form-row">
                       <div className="adm-form-field">
-                        <label className="adm-form-label" htmlFor="prodId">Product ID (Unique Integer)*</label>
+                        <label className="adm-form-label" htmlFor="prodId">Product ID #</label>
                         <input 
                           className="adm-form-input"
                           type="number" 
                           id="prodId"
                           value={formData.id}
                           onChange={(e) => setFormData({ ...formData, id: e.target.value })}
-                          placeholder="e.g. 125"
+                          placeholder="e.g. 101"
                           disabled={Boolean(editingProduct)}
                           required
                         />
                       </div>
                       <div className="adm-form-field">
-                        <label className="adm-form-label" htmlFor="prodCategory">Category Weave*</label>
-                        <select 
-                          className="adm-form-select"
-                          id="prodCategory"
-                          value={formData.category}
-                          onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                        >
-                          <option value="Kanjeevaram">Kanjeevaram</option>
-                          <option value="Banarasi">Banarasi</option>
-                          <option value="Organza">Organza</option>
-                          <option value="Patola">Patola</option>
-                          <option value="Mysore">Mysore</option>
-                          <option value="Paithani">Paithani</option>
-                          <option value="Tussar">Tussar</option>
-                          <option value="Chanderi">Chanderi</option>
-                          <option value="Kota">Kota</option>
-                          <option value="Kasavu">Kasavu</option>
-                          <option value="Muga">Muga</option>
-                        </select>
+                        <label className="adm-form-label" htmlFor="prodName">Saree Title / Name*</label>
+                        <input 
+                          className="adm-form-input"
+                          type="text" 
+                          id="prodName"
+                          value={formData.name}
+                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                          placeholder="e.g. Kanchipuram Divine Lotus Silk"
+                          required
+                        />
                       </div>
                     </div>
 
+                    {/* Weave Category Selection Chips */}
                     <div className="adm-form-field">
-                      <label className="adm-form-label" htmlFor="prodName">Saree Title / Name*</label>
-                      <input 
-                        className="adm-form-input"
-                        type="text" 
-                        id="prodName"
-                        value={formData.name}
-                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        placeholder="e.g. Kanchipuram Divine Lotus Silk Saree"
-                        required
-                      />
+                      <label className="adm-form-label">Select Weave Category*</label>
+                      <div className="category-chips-grid">
+                        {['Kanjeevaram', 'Banarasi', 'Organza', 'Patola', 'Mysore', 'Paithani', 'Tussar', 'Chanderi', 'Kasavu'].map(cat => (
+                          <button
+                            type="button"
+                            key={cat}
+                            className={`category-chip-btn ${formData.category === cat ? 'active' : ''}`}
+                            onClick={() => setFormData({ ...formData, category: cat })}
+                          >
+                            {cat}
+                          </button>
+                        ))}
+                      </div>
                     </div>
 
                     <div className="adm-form-field">
@@ -1323,31 +1314,31 @@ export default function AdminPanel() {
                         id="prodMaterial"
                         value={formData.material}
                         onChange={(e) => setFormData({ ...formData, material: e.target.value })}
-                        placeholder="e.g. Pure Katan Silk, Real Gold Zari Pallu"
+                        placeholder="e.g. Pure Katan Silk with Real Gold Zari Woven Pallu"
                         required
                       />
                     </div>
 
                     <div className="adm-form-field">
-                      <label className="adm-form-label" htmlFor="prodDesc">Product Description</label>
+                      <label className="adm-form-label" htmlFor="prodDesc">Product Description (Optional)</label>
                       <textarea 
                         className="adm-form-textarea"
                         id="prodDesc"
                         value={formData.description}
                         onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                        placeholder="Describe weave history, thread type, border motifs..."
-                        rows="3"
+                        placeholder="Brief summary of motif details, pallu weave, border style..."
+                        rows="2"
                       />
                     </div>
                   </div>
                 )}
 
-                {/* STEP 2: PRICING & IMAGE */}
+                {/* STEP 2: MEDIA & PRICING */}
                 {wizardStep === 2 && (
-                  <div className="wizard-step-content fade-in">
+                  <div className="step-pane-content fade-in">
                     <div className="adm-form-row">
                       <div className="adm-form-field">
-                        <label className="adm-form-label" htmlFor="prodPrice">Offer Price (₹)*</label>
+                        <label className="adm-form-label" htmlFor="prodPrice">Selling Offer Price (₹)*</label>
                         <input 
                           className="adm-form-input"
                           type="number" 
@@ -1359,7 +1350,7 @@ export default function AdminPanel() {
                         />
                       </div>
                       <div className="adm-form-field">
-                        <label className="adm-form-label" htmlFor="prodOrigPrice">Original Slash Price (₹)</label>
+                        <label className="adm-form-label" htmlFor="prodOrigPrice">Original Price (₹)</label>
                         <input 
                           className="adm-form-input"
                           type="number" 
@@ -1371,8 +1362,9 @@ export default function AdminPanel() {
                       </div>
                     </div>
 
-                    <div className="wizard-image-grid">
-                      <div className="wizard-image-preview-card">
+                    {/* Image Upload Box & Preview */}
+                    <div className="media-upload-pane">
+                      <div className="media-preview-box">
                         {formData.image ? (
                           <img 
                             src={
@@ -1384,33 +1376,31 @@ export default function AdminPanel() {
                             onError={(e) => { e.target.src = '/logo/logo-emblem.png'; }}
                           />
                         ) : (
-                          <div className="image-placeholder">
+                          <div className="media-placeholder">
                             <ImageIcon size={32} />
-                            <span>No image selected</span>
+                            <span>Upload photo or enter URL below</span>
                           </div>
                         )}
                       </div>
 
-                      <div className="wizard-image-inputs">
+                      <div className="media-fields-stack">
                         <div className="adm-form-field">
-                          <label className="adm-form-label">Upload Saree Image File</label>
-                          <div className="image-input-container">
-                            <input 
-                              type="file" 
-                              accept="image/*" 
-                              onChange={handleImageUpload}
-                              id="wizardImageFile"
-                              className="hidden-file-input"
-                            />
-                            <label htmlFor="wizardImageFile" className="upload-file-label-btn">
-                              <Upload size={14} />
-                              <span>{imageUploading ? 'Uploading...' : 'Choose File'}</span>
-                            </label>
-                          </div>
+                          <label className="adm-form-label">Upload Image File</label>
+                          <input 
+                            type="file" 
+                            accept="image/*" 
+                            onChange={handleImageUpload}
+                            id="stepImageFileInput"
+                            className="hidden-file-input"
+                          />
+                          <label htmlFor="stepImageFileInput" className="media-browse-btn">
+                            <Upload size={15} />
+                            <span>{imageUploading ? 'Uploading...' : 'Browse Local Image'}</span>
+                          </label>
                         </div>
 
                         <div className="adm-form-field">
-                          <label className="adm-form-label" htmlFor="prodImage">Or Image Path / URL*</label>
+                          <label className="adm-form-label" htmlFor="prodImage">Image Path / URL*</label>
                           <input 
                             className="adm-form-input"
                             type="text" 
@@ -1427,9 +1417,9 @@ export default function AdminPanel() {
                   </div>
                 )}
 
-                {/* STEP 3: STOCK & VISIBILITY */}
+                {/* STEP 3: STOCK & TAGS */}
                 {wizardStep === 3 && (
-                  <div className="wizard-step-content fade-in">
+                  <div className="step-pane-content fade-in">
                     <div className="adm-form-field">
                       <label className="adm-form-label" htmlFor="prodTag">Label Badge Tag (Optional)</label>
                       <input 
@@ -1438,17 +1428,15 @@ export default function AdminPanel() {
                         id="prodTag"
                         value={formData.tag}
                         onChange={(e) => setFormData({ ...formData, tag: e.target.value })}
-                        placeholder="e.g. Bestseller, New Arrival, Festive"
+                        placeholder="e.g. Bestseller, New Arrival, Festive Special"
                       />
                     </div>
 
-                    <div className="wizard-toggles-list">
-                      <h4>Inventory & Visibility Settings</h4>
-                      
-                      <label className="wizard-toggle-card">
-                        <div className="toggle-left">
+                    <div className="step-toggles-section">
+                      <label className="step-toggle-card">
+                        <div>
                           <strong>In Stock</strong>
-                          <span>Available for customer purchase on store</span>
+                          <span>Ready for customer orders on website</span>
                         </div>
                         <input 
                           type="checkbox" 
@@ -1457,10 +1445,10 @@ export default function AdminPanel() {
                         />
                       </label>
 
-                      <label className="wizard-toggle-card">
-                        <div className="toggle-left">
+                      <label className="step-toggle-card">
+                        <div>
                           <strong>Featured Masterpiece</strong>
-                          <span>Showcase on homepage bestsellers & collections grid</span>
+                          <span>Showcase on homepage bestsellers grid</span>
                         </div>
                         <input 
                           type="checkbox" 
@@ -1469,10 +1457,10 @@ export default function AdminPanel() {
                         />
                       </label>
 
-                      <label className="wizard-toggle-card">
-                        <div className="toggle-left">
+                      <label className="step-toggle-card">
+                        <div>
                           <strong>Coming Soon</strong>
-                          <span>Mark as upcoming drop (disables checkout button)</span>
+                          <span>Display as upcoming drop preview</span>
                         </div>
                         <input 
                           type="checkbox" 
@@ -1486,8 +1474,8 @@ export default function AdminPanel() {
 
               </div>
 
-              {/* Wizard Footer Controls */}
-              <div className="wizard-modal-footer">
+              {/* Footer Controls */}
+              <div className="minimal-step-footer">
                 {wizardStep > 1 ? (
                   <button 
                     type="button" 
@@ -1511,14 +1499,14 @@ export default function AdminPanel() {
                     type="button" 
                     onClick={() => {
                       if (wizardStep === 1 && (!formData.id || !formData.name || !formData.material)) {
-                        alert('Please fill in Product ID, Name, and Material before moving to step 2.');
+                        alert('Please fill in Product ID, Saree Name, and Material to proceed.');
                         return;
                       }
                       setWizardStep(prev => prev + 1);
                     }} 
                     className="save-form-btn"
                   >
-                    Next Step →
+                    Continue to Step {wizardStep + 1} →
                   </button>
                 ) : (
                   <button type="submit" className="save-form-btn" disabled={formSubmitLoading}>
@@ -1527,6 +1515,7 @@ export default function AdminPanel() {
                 )}
               </div>
             </form>
+
           </div>
         </div>
       )}

@@ -1337,6 +1337,310 @@
   flex-direction: column;
 }
 
+/* ==========================================================================
+   8. NEW ULTRA-MINIMAL STEP-BY-STEP PROCEEDING MODAL
+   ========================================================================== */
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(7, 56, 44, 0.45);
+  backdrop-filter: blur(6px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.minimal-step-card {
+  background: #ffffff;
+  border: 1px solid var(--adm-border-strong);
+  border-radius: 18px;
+  width: 100%;
+  max-width: 600px;
+  box-shadow: 0 24px 64px rgba(7, 56, 44, 0.22);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.minimal-step-header {
+  padding: 22px 24px 16px;
+  background: #fafcfa;
+  border-bottom: 1px solid var(--adm-border);
+}
+
+.step-header-title {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.step-subtitle-pill {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--adm-gold);
+  background: var(--adm-gold-muted);
+  border: 1px solid var(--adm-gold-border);
+  padding: 3px 10px;
+  border-radius: 20px;
+  display: inline-block;
+  margin-bottom: 6px;
+}
+
+.step-header-title h2 {
+  font-size: 19px;
+  font-weight: 800;
+  color: var(--adm-green-primary);
+  margin: 0;
+}
+
+.minimal-close-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 1.5px solid var(--adm-border);
+  color: var(--adm-text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--adm-transition);
+}
+
+.minimal-close-circle:hover {
+  background: #fef5f5;
+  border-color: #f5c6c6;
+  color: var(--adm-danger);
+  transform: rotate(90deg);
+}
+
+/* Minimal Segmented Tab Switcher */
+.minimal-tab-switcher {
+  display: flex;
+  background: var(--adm-bg-input);
+  border: 1px solid var(--adm-border);
+  border-radius: 12px;
+  padding: 4px;
+  gap: 4px;
+}
+
+.tab-segment-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 9px 12px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  font-family: var(--adm-font);
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--adm-text-muted);
+  cursor: pointer;
+  transition: var(--adm-transition);
+}
+
+.tab-segment-btn.active {
+  background: var(--adm-green-primary);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(7, 56, 44, 0.2);
+}
+
+.tab-segment-btn.done:not(.active) {
+  color: var(--adm-green-primary);
+  background: rgba(7, 56, 44, 0.08);
+}
+
+.segment-num {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.tab-segment-btn.active .segment-num {
+  background: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+}
+
+/* Category Selection Chips */
+.category-chips-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 4px;
+}
+
+.category-chip-btn {
+  padding: 6px 14px;
+  background: #ffffff;
+  border: 1.5px solid var(--adm-border);
+  border-radius: 20px;
+  font-family: var(--adm-font);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--adm-text-secondary);
+  cursor: pointer;
+  transition: var(--adm-transition);
+}
+
+.category-chip-btn:hover {
+  border-color: var(--adm-green-primary);
+  color: var(--adm-green-primary);
+}
+
+.category-chip-btn.active {
+  background: var(--adm-green-primary);
+  border-color: var(--adm-green-primary);
+  color: #ffffff;
+  font-weight: 700;
+}
+
+/* Step 2 Media Pane */
+.media-upload-pane {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 16px;
+  margin-top: 6px;
+  align-items: start;
+}
+
+.media-preview-box {
+  width: 140px;
+  height: 150px;
+  border-radius: 12px;
+  background: #f8faf9;
+  border: 2px dashed var(--adm-border-strong);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.media-preview-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.media-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  color: var(--adm-text-muted);
+  font-size: 11px;
+  text-align: center;
+  padding: 10px;
+}
+
+.media-fields-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.media-browse-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: var(--adm-green-pale);
+  border: 1.5px solid rgba(7, 56, 44, 0.25);
+  border-radius: 8px;
+  color: var(--adm-green-primary);
+  font-family: var(--adm-font);
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--adm-transition);
+  width: fit-content;
+}
+
+.media-browse-btn:hover {
+  background: #d4eddf;
+  border-color: var(--adm-green-primary);
+}
+
+/* Step 3 Toggles */
+.step-toggles-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.step-toggle-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: #fafcfa;
+  border: 1.5px solid var(--adm-border);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: var(--adm-transition);
+}
+
+.step-toggle-card:hover {
+  border-color: var(--adm-green-primary);
+  background: var(--adm-green-pale);
+}
+
+.step-toggle-card strong {
+  display: block;
+  font-size: 13.5px;
+  color: var(--adm-text-primary);
+}
+
+.step-toggle-card span {
+  font-size: 11.5px;
+  color: var(--adm-text-muted);
+}
+
+.step-toggle-card input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--adm-green-primary);
+  cursor: pointer;
+}
+
+/* Minimal Step Form & Footer */
+.minimal-step-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.minimal-step-body {
+  padding: 24px;
+  min-height: 300px;
+  max-height: 55vh;
+  overflow-y: auto;
+}
+
+.minimal-step-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  background: #fafcfa;
+  border-top: 1px solid var(--adm-border);
+}
+
 .image-preview-card {
   width: 100%;
   height: 240px;
