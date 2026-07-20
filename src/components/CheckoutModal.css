@@ -57,9 +57,22 @@
 }
 
 .cm-auth-pane {
-  padding: 2rem 2.5rem;
-  max-width: 520px;
+  padding: 2.2rem 2.5rem;
+  max-width: 480px;
   margin: 0 auto;
+  text-align: center;
+}
+
+.cm-auth-pane .cm-header {
+  text-align: center;
+}
+
+.cm-auth-pane .cm-input-group label {
+  justify-content: center;
+}
+
+.cm-auth-pane .cm-input {
+  text-align: center;
 }
 
 .cm-auth-tabs {
