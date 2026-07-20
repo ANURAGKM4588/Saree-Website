@@ -80,11 +80,6 @@ export default function Navbar() {
   const [announcementIdx, setAnnouncementIdx] = useState(0);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
-  const [isWishlistOpen, setIsWishlistOpen] = useState(false);
-
-  const wishlistProducts = React.useMemo(() => {
-    return (dbProducts || []).filter((p) => wishlist.includes(p.id));
-  }, [dbProducts, wishlist]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -281,8 +276,8 @@ export default function Navbar() {
             <button 
               className="action-btn wishlist-btn" 
               onClick={() => {
-                setIsWishlistOpen(true);
                 navigate('/wishlist');
+                window.scrollTo(0, 0);
               }}
               aria-label="Wishlist"
               title="View Liked Sarees"
@@ -394,87 +389,6 @@ export default function Navbar() {
                   </button>
                 </div>
               )}
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
-
-      {/* Liked Sarees / Wishlist Drawer (Right to Left) */}
-      <AnimatePresence>
-        {isWishlistOpen && (
-          <>
-            <motion.div 
-              className="cart-backdrop"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setIsWishlistOpen(false)}
-            />
-
-            <motion.div 
-              className="cart-drawer wishlist-drawer"
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            >
-              <div className="cart-header">
-                <h2>Liked Sarees ({wishlistCount})</h2>
-                <button className="close-cart-btn" onClick={() => setIsWishlistOpen(false)}>
-                  <X size={22} />
-                </button>
-              </div>
-
-              <div className="cart-content">
-                {wishlistProducts.length === 0 ? (
-                  <div className="empty-cart">
-                    <Heart size={48} className="empty-icon" color="var(--color-accent-gold)" fill="rgba(200, 157, 54, 0.2)" />
-                    <p>Your wishlist is empty</p>
-                    <p className="empty-sub">Tap the heart icon on any saree to save it to your liked collection.</p>
-                  </div>
-                ) : (
-                  <div className="cart-items-list">
-                    {wishlistProducts.map((item) => (
-                      <motion.div 
-                        key={item.id} 
-                        className="cart-item"
-                        layout
-                        exit={{ opacity: 0, y: 50 }}
-                      >
-                        <div className="cart-item-img-wrapper">
-                          <img src={item.image} alt={item.name} className="cart-item-img" />
-                        </div>
-                        <div className="cart-item-details">
-                          <span className="cart-item-material">{item.material}</span>
-                          <h4 className="cart-item-name">{item.name}</h4>
-                          <div className="cart-item-footer">
-                            <span className="cart-item-price">{formatPrice(item.price)}</span>
-                            <div className="cart-qty-row">
-                              <button 
-                                className="add-to-cart-quick-btn"
-                                onClick={() => {
-                                  addToCart(item);
-                                  setIsWishlistOpen(false);
-                                  setIsCartOpen(true);
-                                }}
-                              >
-                                Move to Bag
-                              </button>
-                              <button 
-                                className="remove-item-btn"
-                                onClick={() => toggleWishlist(item.id)}
-                                title="Remove from Wishlist"
-                              >
-                                <Trash2 size={16} />
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </motion.div>
-                    ))}
-                  </div>
-                )}
-              </div>
             </motion.div>
           </>
         )}
