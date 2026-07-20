@@ -333,16 +333,6 @@
   padding-top: 4px;
 }
 
-.mouse-wheel {
-  width: 20px;
-  height: 32px;
-  border: 1px solid var(--text-muted);
-  border-radius: 10px;
-  display: flex;
-  justify-content: center;
-  padding-top: 4px;
-}
-
 .wheel-dot {
   width: 4px;
   height: 6px;
