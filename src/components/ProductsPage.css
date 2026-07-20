@@ -181,10 +181,12 @@
 }
 
 /* Grid */
-.pp-grid {
+.pp-grid,
+.products-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 1.5rem;
+  gap: 1.8rem;
+  margin-bottom: 3.5rem;
 }
 
 .pp-card {
