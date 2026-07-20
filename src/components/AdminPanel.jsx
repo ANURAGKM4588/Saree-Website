@@ -130,6 +130,7 @@ export default function AdminPanel() {
 
   // Modal Form State (Add / Edit Product)
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [wizardStep, setWizardStep] = useState(1);
   const [editingProduct, setEditingProduct] = useState(null);
   const [formSubmitLoading, setFormSubmitLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -272,6 +273,7 @@ export default function AdminPanel() {
   // Product Modal Handlers
   const handleOpenAdd = () => {
     setEditingProduct(null);
+    setWizardStep(1);
     setFormData({
       id: '',
       name: '',
@@ -291,6 +293,7 @@ export default function AdminPanel() {
 
   const handleOpenEdit = (product) => {
     setEditingProduct(product);
+    setWizardStep(1);
     setFormData({
       id: product.id,
       name: product.name,
@@ -299,9 +302,9 @@ export default function AdminPanel() {
       originalPrice: product.originalPrice || '',
       image: product.image.replace(/^\//, ''),
       tag: product.tag || '',
-      category: product.category,
+      category: product.category || 'Kanjeevaram',
       description: product.description || '',
-      inStock: product.inStock,
+      inStock: product.inStock !== false,
       featured: Boolean(product.featured),
       comingSoon: Boolean(product.comingSoon)
     });
