@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Heart, ShoppingBag, X, ChevronRight, ChevronDown, Trash2, User } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import CheckoutModal from './CheckoutModal';
+import CustomerProfileModal from './CustomerProfileModal';
 import './Navbar.css';
 
 const announcementMessages = [
@@ -76,6 +77,7 @@ export default function Navbar() {
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [announcementIdx, setAnnouncementIdx] = useState(0);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -261,9 +263,9 @@ export default function Navbar() {
             {/* Customer Account / Login Profile */}
             <button 
               className="action-btn profile-btn"
-              onClick={() => setIsCheckoutOpen(true)}
-              title="Customer Login / Account"
-              aria-label="Customer Login"
+              onClick={() => setIsProfileModalOpen(true)}
+              title="Customer Account"
+              aria-label="Customer Account"
             >
               <User size={18} />
             </button>
@@ -398,6 +400,12 @@ export default function Navbar() {
         onPaymentSuccess={() => {
           clearCart();
         }}
+      />
+
+      {/* Standalone Customer Profile / Login Modal */}
+      <CustomerProfileModal 
+        isOpen={isProfileModalOpen}
+        onClose={() => setIsProfileModalOpen(false)}
       />
     </>
   );
