@@ -592,7 +592,15 @@ export default function AdminPanel() {
                           <td className="id-cell">#{product.id}</td>
                           <td className="product-info-cell">
                             <div className="product-avatar-wrapper">
-                              <img src={product.image.startsWith('http') ? product.image : '/' + product.image} alt={product.name} />
+                              <img
+                                src={
+                                  product.image.startsWith('http') || product.image.startsWith('/')
+                                    ? product.image
+                                    : '/' + product.image
+                                }
+                                alt={product.name}
+                                onError={(e) => { e.target.style.opacity = '0.3'; e.target.src = '/logo/logo-emblem.png'; }}
+                              />
                             </div>
                             <div className="product-name-block">
                               <strong>{product.name}</strong>
