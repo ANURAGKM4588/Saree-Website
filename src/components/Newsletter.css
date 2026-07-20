@@ -90,21 +90,44 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.9rem 1.75rem;
-  background: var(--gradient-gold);
-  color: white;
+  background: linear-gradient(135deg, rgba(247, 230, 181, 0.95) 0%, rgba(212, 175, 55, 0.95) 35%, rgba(170, 124, 17, 0.95) 65%, rgba(230, 202, 101, 0.95) 100%);
+  color: #1a1202;
   font-family: var(--font-sans);
   font-size: 0.85rem;
-  font-weight: 700;
-  border: none;
+  font-weight: 800;
+  border: 1px solid rgba(255, 248, 220, 0.7);
   border-radius: 12px;
   cursor: pointer;
-  transition: var(--transition-fast);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  box-shadow: 0 8px 25px -4px rgba(170, 124, 17, 0.45), inset 0 1.5px 2px rgba(255, 255, 255, 0.85), inset 0 -2px 4px rgba(0, 0, 0, 0.25);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   white-space: nowrap;
 }
 
+.nl-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.7), transparent);
+  transform: skewX(-20deg);
+  transition: 0.75s ease;
+  pointer-events: none;
+}
+
+.nl-btn:hover::before {
+  left: 140%;
+}
+
 .nl-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(212, 175, 55, 0.25);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 14px 32px -4px rgba(170, 124, 17, 0.6), inset 0 2px 3px rgba(255, 255, 255, 0.95), inset 0 -2px 6px rgba(0, 0, 0, 0.3);
+  border-color: rgba(255, 255, 255, 0.95);
 }
 
 .nl-success {
