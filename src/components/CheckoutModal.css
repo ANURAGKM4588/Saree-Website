@@ -56,6 +56,91 @@
   padding: 1.5rem 2rem;
 }
 
+.cm-auth-pane {
+  padding: 2rem 2.5rem;
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.cm-auth-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+  background: #f4f7f5;
+  padding: 4px;
+  border-radius: 10px;
+}
+
+.cm-auth-tab-btn {
+  flex: 1;
+  height: 36px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: #666666;
+  font-size: 0.82rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cm-auth-tab-btn.active {
+  background: #031c15;
+  color: #edf4c1;
+  box-shadow: 0 2px 8px rgba(3, 28, 21, 0.2);
+}
+
+.cm-auth-error {
+  padding: 0.5rem 0.75rem;
+  background: rgba(220, 38, 38, 0.08);
+  border: 1px solid rgba(220, 38, 38, 0.2);
+  border-radius: 8px;
+  color: #dc2626;
+  font-size: 0.78rem;
+  font-weight: 600;
+  margin-bottom: 0.85rem;
+}
+
+.cm-user-badge-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(3, 28, 21, 0.05);
+  border-radius: 8px;
+  padding: 0.4rem 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.cm-user-welcome {
+  font-size: 0.78rem;
+  color: #031c15;
+}
+
+.cm-logout-mini-btn {
+  background: transparent;
+  border: 1px solid rgba(3, 28, 21, 0.2);
+  border-radius: 6px;
+  padding: 2px 8px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #555555;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cm-logout-mini-btn:hover {
+  background: #dc2626;
+  color: #ffffff;
+  border-color: #dc2626;
+}
+
 .cm-header {
   margin-bottom: 1rem;
 }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Heart, ShoppingBag, X, ChevronRight, ChevronDown, Trash2 } from 'lucide-react';
+import { Search, Heart, ShoppingBag, X, ChevronRight, ChevronDown, Trash2, User } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import CheckoutModal from './CheckoutModal';
 import './Navbar.css';
@@ -257,6 +257,16 @@ export default function Navbar() {
                 {isSearchOpen ? <X size={18} /> : <Search size={18} />}
               </button>
             </div>
+
+            {/* Customer Account / Login Profile */}
+            <button 
+              className="action-btn profile-btn"
+              onClick={() => setIsCheckoutOpen(true)}
+              title="Customer Login / Account"
+              aria-label="Customer Login"
+            >
+              <User size={18} />
+            </button>
 
             {/* Wishlist */}
             <button 

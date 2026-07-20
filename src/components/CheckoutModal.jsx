@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ShieldCheck, CreditCard, CheckCircle, ArrowRight, Lock, MapPin, User, Mail, Phone, Sparkles, BookmarkCheck } from 'lucide-react';
+import { X, ShieldCheck, CreditCard, CheckCircle, ArrowRight, Lock, MapPin, User, Mail, Phone, Sparkles, BookmarkCheck, LogIn, UserPlus, LogOut, KeyRound } from 'lucide-react';
 import { formatPrice } from '../data/products';
 import { triggerRazorpayCheckout } from '../utils/razorpay';
 import { sendOrderConfirmationEmail } from '../utils/emailService';
@@ -17,6 +17,11 @@ export default function CheckoutModal({ isOpen, onClose, items = [], total = 0, 
     pincode: '',
   });
 
+  const [customerUser, setCustomerUser] = useState(null);
+  const [authTab, setAuthTab] = useState('login'); // 'login' | 'signup'
+  const [authForm, setAuthForm] = useState({ name: '', email: '', phone: '', password: '' });
+  const [authError, setAuthError] = useState('');
+
   const [saveAddress, setSaveAddress] = useState(true);
   const [hasSavedAddress, setHasSavedAddress] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -25,16 +30,30 @@ export default function CheckoutModal({ isOpen, onClose, items = [], total = 0, 
   useEffect(() => {
     if (isOpen) {
       try {
-        const saved = localStorage.getItem('kadha_saved_address');
-        if (saved) {
-          const parsed = JSON.parse(saved);
-          if (parsed && parsed.name) {
-            setFormData(parsed);
+        const storedUser = localStorage.getItem('kadha_customer_user');
+        if (storedUser) {
+          const parsedUser = JSON.parse(storedUser);
+          if (parsedUser && parsedUser.email) {
+            setCustomerUser(parsedUser);
+            setFormData((prev) => ({
+              ...prev,
+              name: parsedUser.name || prev.name,
+              email: parsedUser.email || prev.email,
+              phone: parsedUser.phone || prev.phone,
+            }));
+          }
+        }
+
+        const savedAddr = localStorage.getItem('kadha_saved_address');
+        if (savedAddr) {
+          const parsedAddr = JSON.parse(savedAddr);
+          if (parsedAddr && parsedAddr.address) {
+            setFormData((prev) => ({ ...prev, ...parsedAddr }));
             setHasSavedAddress(true);
           }
         }
       } catch (e) {
-        console.error('Error reading saved address:', e);
+        console.error('Error reading customer session or saved address:', e);
       }
     }
   }, [isOpen]);
@@ -43,6 +62,66 @@ export default function CheckoutModal({ isOpen, onClose, items = [], total = 0, 
 
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleAuthFormChange = (e) => {
+    setAuthForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleCustomerLogin = (e) => {
+    e.preventDefault();
+    setAuthError('');
+    if (!authForm.email || !authForm.password) {
+      setAuthError('Please enter your email address and password.');
+      return;
+    }
+
+    const displayName = authForm.name || authForm.email.split('@')[0];
+    const userSession = {
+      name: displayName.charAt(0).toUpperCase() + displayName.slice(1),
+      email: authForm.email,
+      phone: authForm.phone || '',
+      loggedInAt: new Date().toISOString(),
+    };
+
+    localStorage.setItem('kadha_customer_user', JSON.stringify(userSession));
+    setCustomerUser(userSession);
+    setFormData((prev) => ({
+      ...prev,
+      name: userSession.name,
+      email: userSession.email,
+      phone: userSession.phone || prev.phone,
+    }));
+  };
+
+  const handleCustomerSignup = (e) => {
+    e.preventDefault();
+    setAuthError('');
+    if (!authForm.name || !authForm.email || !authForm.password) {
+      setAuthError('Please fill in your full name, email, and password.');
+      return;
+    }
+
+    const userSession = {
+      name: authForm.name,
+      email: authForm.email,
+      phone: authForm.phone || '',
+      loggedInAt: new Date().toISOString(),
+    };
+
+    localStorage.setItem('kadha_customer_user', JSON.stringify(userSession));
+    setCustomerUser(userSession);
+    setFormData((prev) => ({
+      ...prev,
+      name: userSession.name,
+      email: userSession.email,
+      phone: userSession.phone || prev.phone,
+    }));
+  };
+
+  const handleCustomerLogout = () => {
+    localStorage.removeItem('kadha_customer_user');
+    setCustomerUser(null);
   };
 
   const handleSubmitOrder = async (e) => {
@@ -107,12 +186,139 @@ export default function CheckoutModal({ isOpen, onClose, items = [], total = 0, 
             <X size={20} />
           </button>
 
-          {!completedOrder ? (
+          {!customerUser ? (
+            <div className="cm-auth-pane">
+              <div className="cm-header">
+                <img src="/logo/herologo.png" alt="Kadha Logo" className="cm-brand-logo" />
+                <h2 className="cm-title">Customer Login Required</h2>
+                <p className="cm-subtitle">Please log in or create an account to proceed with your order checkout.</p>
+              </div>
+
+              {/* Tab Selector: Login vs Signup */}
+              <div className="cm-auth-tabs">
+                <button
+                  type="button"
+                  className={`cm-auth-tab-btn ${authTab === 'login' ? 'active' : ''}`}
+                  onClick={() => { setAuthTab('login'); setAuthError(''); }}
+                >
+                  <LogIn size={14} /> Log In
+                </button>
+                <button
+                  type="button"
+                  className={`cm-auth-tab-btn ${authTab === 'signup' ? 'active' : ''}`}
+                  onClick={() => { setAuthTab('signup'); setAuthError(''); }}
+                >
+                  <UserPlus size={14} /> Create Account
+                </button>
+              </div>
+
+              {authError && <div className="cm-auth-error">{authError}</div>}
+
+              {authTab === 'login' ? (
+                <form className="cm-form" onSubmit={handleCustomerLogin}>
+                  <div className="cm-input-group">
+                    <label><Mail size={14} /> Email Address</label>
+                    <input
+                      type="email"
+                      name="email"
+                      placeholder="e.g. ananya@example.com"
+                      value={authForm.email}
+                      onChange={handleAuthFormChange}
+                      required
+                      className="cm-input"
+                    />
+                  </div>
+
+                  <div className="cm-input-group">
+                    <label><KeyRound size={14} /> Password</label>
+                    <input
+                      type="password"
+                      name="password"
+                      placeholder="••••••••••••"
+                      value={authForm.password}
+                      onChange={handleAuthFormChange}
+                      required
+                      className="cm-input"
+                    />
+                  </div>
+
+                  <button type="submit" className="cm-pay-btn">
+                    Log In & Proceed to Checkout <ArrowRight size={16} />
+                  </button>
+                </form>
+              ) : (
+                <form className="cm-form" onSubmit={handleCustomerSignup}>
+                  <div className="cm-input-group">
+                    <label><User size={14} /> Full Name</label>
+                    <input
+                      type="text"
+                      name="name"
+                      placeholder="e.g. Ananya Sharma"
+                      value={authForm.name}
+                      onChange={handleAuthFormChange}
+                      required
+                      className="cm-input"
+                    />
+                  </div>
+
+                  <div className="cm-input-row">
+                    <div className="cm-input-group">
+                      <label><Mail size={14} /> Email Address</label>
+                      <input
+                        type="email"
+                        name="email"
+                        placeholder="ananya@example.com"
+                        value={authForm.email}
+                        onChange={handleAuthFormChange}
+                        required
+                        className="cm-input"
+                      />
+                    </div>
+
+                    <div className="cm-input-group">
+                      <label><Phone size={14} /> Phone Number</label>
+                      <input
+                        type="tel"
+                        name="phone"
+                        placeholder="+91 98765 43210"
+                        value={authForm.phone}
+                        onChange={handleAuthFormChange}
+                        required
+                        className="cm-input"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="cm-input-group">
+                    <label><KeyRound size={14} /> Create Password</label>
+                    <input
+                      type="password"
+                      name="password"
+                      placeholder="At least 6 characters"
+                      value={authForm.password}
+                      onChange={handleAuthFormChange}
+                      required
+                      className="cm-input"
+                    />
+                  </div>
+
+                  <button type="submit" className="cm-pay-btn">
+                    Create Account & Proceed to Checkout <ArrowRight size={16} />
+                  </button>
+                </form>
+              )}
+            </div>
+          ) : !completedOrder ? (
             <div className="cm-body-grid">
               {/* Left Form: Shipping Details */}
               <div className="cm-form-col">
                 <div className="cm-header">
-                  <img src="/logo/herologo.png" alt="Kadha Logo" className="cm-brand-logo" />
+                  <div className="cm-user-badge-bar">
+                    <span className="cm-user-welcome">👤 Logged in as <strong>{customerUser.name}</strong></span>
+                    <button type="button" className="cm-logout-mini-btn" onClick={handleCustomerLogout}>
+                      <LogOut size={11} /> Switch Account
+                    </button>
+                  </div>
                   <h2 className="cm-title">Express Checkout</h2>
                   <p className="cm-subtitle">Enter your delivery details to initiate secure Razorpay payment.</p>
                 </div>
