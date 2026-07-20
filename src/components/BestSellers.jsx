@@ -55,7 +55,7 @@ export default function BestSellers() {
         </div>
 
         <div className="bs-view-all">
-          <button onClick={() => navigate('/products')} className="bs-view-all-link">
+          <button onClick={() => navigate('/bestsellers')} className="bs-view-all-link">
             Explore All Bestsellers <ArrowRight size={16} />
           </button>
         </div>

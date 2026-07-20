@@ -14,6 +14,7 @@ import Testimonials from './components/Testimonials';
 import TrustBenefits from './components/TrustBenefits';
 import Footer from './components/Footer';
 import ProductsPage from './components/ProductsPage';
+import BestsellersPage from './components/BestsellersPage';
 import ProductDetailPage from './components/ProductDetailPage';
 import AdminPanel from './components/AdminPanel';
 
@@ -25,7 +26,7 @@ function ScrollToTop() {
     const lastId = sessionStorage.getItem('last_viewed_product_id');
     const lastScroll = sessionStorage.getItem('last_scroll_pos');
 
-    if (pathname === '/products' && lastId) {
+    if ((pathname === '/products' || pathname === '/bestsellers') && lastId) {
       document.documentElement.style.scrollBehavior = 'auto';
       const targetElement = document.getElementById(`product-card-${lastId}`);
       if (targetElement) {
@@ -71,6 +72,7 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/products" element={<><Navbar /><ProductsPage /><Footer /></>} />
+            <Route path="/bestsellers" element={<><Navbar /><BestsellersPage /><Footer /></>} />
             <Route path="/product/:id" element={<><Navbar /><ProductDetailPage /><Footer /></>} />
             <Route path="/admin" element={<AdminPanel />} />
           </Routes>
