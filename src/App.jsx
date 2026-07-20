@@ -16,6 +16,7 @@ import Footer from './components/Footer';
 import ProductsPage from './components/ProductsPage';
 import BestsellersPage from './components/BestsellersPage';
 import ProductDetailPage from './components/ProductDetailPage';
+import WishlistPage from './components/WishlistPage';
 import AdminPanel from './components/AdminPanel';
 
 function ScrollToTop() {
@@ -74,6 +75,7 @@ function App() {
             <Route path="/products" element={<><Navbar /><ProductsPage /><Footer /></>} />
             <Route path="/bestsellers" element={<><Navbar /><BestsellersPage /><Footer /></>} />
             <Route path="/product/:id" element={<><Navbar /><ProductDetailPage /><Footer /></>} />
+            <Route path="/wishlist" element={<><Navbar /><WishlistPage /><Footer /></>} />
             <Route path="/admin" element={<AdminPanel />} />
           </Routes>
         </HashRouter>

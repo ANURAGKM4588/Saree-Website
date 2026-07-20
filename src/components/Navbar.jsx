@@ -280,7 +280,10 @@ export default function Navbar() {
             {/* Wishlist */}
             <button 
               className="action-btn wishlist-btn" 
-              onClick={() => setIsWishlistOpen(true)}
+              onClick={() => {
+                setIsWishlistOpen(true);
+                navigate('/wishlist');
+              }}
               aria-label="Wishlist"
               title="View Liked Sarees"
             >
