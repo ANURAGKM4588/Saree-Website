@@ -77,7 +77,7 @@ export default function Testimonials() {
                 <div className="review-rating-row">
                   <div className="stars-wrap">
                     {[1, 2, 3, 4, 5].map((s) => (
-                      <Star key={s} size={14} fill="#EDF4C1" color="#EDF4C1" />
+                      <Star key={s} size={14} fill="#c89d36" color="#c89d36" />
                     ))}
                   </div>
                   <span className="verified-badge">

@@ -54,47 +54,22 @@
 }
 
 .fn-btn {
-  background: linear-gradient(135deg, rgba(247, 230, 181, 0.95) 0%, rgba(212, 175, 55, 0.95) 35%, rgba(170, 124, 17, 0.95) 65%, rgba(230, 202, 101, 0.95) 100%);
-  color: #1a1202;
+  background: var(--gradient-royal-gold);
+  color: #120103;
   font-weight: 800;
   font-size: 0.85rem;
-  padding: 0.85rem 1.8rem;
-  border-radius: 30px;
+  padding: 0 1.5rem;
+  border-radius: 24px;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.4rem;
   white-space: nowrap;
-  backdrop-filter: blur(12px) saturate(180%);
-  -webkit-backdrop-filter: blur(12px) saturate(180%);
-  border: 1px solid rgba(255, 248, 220, 0.7);
-  box-shadow: 0 8px 25px -4px rgba(170, 124, 17, 0.45), inset 0 1.5px 2px rgba(255, 255, 255, 0.85), inset 0 -2px 4px rgba(0, 0, 0, 0.25);
-  position: relative;
-  overflow: hidden;
-  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-  cursor: pointer;
-}
-
-.fn-btn::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 60%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.7), transparent);
-  transform: skewX(-20deg);
-  transition: 0.75s ease;
-  pointer-events: none;
-}
-
-.fn-btn:hover::before {
-  left: 140%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease;
 }
 
 .fn-btn:hover {
-  transform: translateY(-2px) scale(1.03);
-  box-shadow: 0 14px 32px -4px rgba(170, 124, 17, 0.6), inset 0 2px 3px rgba(255, 255, 255, 0.95), inset 0 -2px 6px rgba(0, 0, 0, 0.3);
-  border-color: rgba(255, 255, 255, 0.95);
+  transform: scale(1.05);
 }
 
 .fn-status {

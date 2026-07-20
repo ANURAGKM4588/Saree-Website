@@ -172,8 +172,8 @@ export default function ProductDetailPage() {
                   <Star
                     key={s}
                     size={16}
-                    fill={s <= Math.round(product.rating || 5) ? '#EDF4C1' : 'none'}
-                    color="#EDF4C1"
+                    fill={s <= Math.round(product.rating || 5) ? '#c89d36' : 'none'}
+                    color="#c89d36"
                   />
                 ))}
               </div>
