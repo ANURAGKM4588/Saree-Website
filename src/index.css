@@ -5,18 +5,22 @@
   --bg-obsidian: #ffffff;
   --bg-silk: #fcfbfa;
   --bg-cream-gold: #f8f6f0;
-  --color-gold: #07382c;
-  --color-gold-hover: #031c15;
-  --color-accent-gold: #c89d36;
+  --color-gold: #aa7c11;
+  --color-gold-hover: #8e650b;
+  --color-accent-gold: #d4af37;
   --color-crimson: #07382c;
   --color-crimson-light: #0b4f3e;
   --color-royal-maroon: #800020;
   
-  /* Sleek Minimal Emerald Green Gradients */
-  --gradient-gold: linear-gradient(135deg, #031c15 0%, #073b2d 50%, #04241b 100%);
-  --gradient-gold-hover: linear-gradient(135deg, #02120d 0%, #04241b 50%, #02120d 100%);
-  --gradient-gold-text: linear-gradient(90deg, #031c15 0%, #094736 50%, #c89d36 100%);
-  --gradient-royal-gold: linear-gradient(135deg, #c89d36 0%, #e8ca74 50%, #b88a25 100%);
+  /* Modern Liquid Glass Metallic Gold Gradients */
+  --gradient-gold: linear-gradient(135deg, #f7e6b5 0%, #d4af37 30%, #aa7c11 60%, #e6ca65 85%, #fff5d6 100%);
+  --gradient-gold-hover: linear-gradient(135deg, #fff2cc 0%, #e0bd45 30%, #b88816 60%, #f0d673 85%, #ffffff 100%);
+  --gradient-gold-text: linear-gradient(135deg, #b8860b 0%, #d4af37 40%, #aa7c11 70%, #996515 100%);
+  --gradient-royal-gold: linear-gradient(135deg, #d4af37 0%, #f3e5ab 30%, #b8860b 65%, #e6ca65 100%);
+
+  /* Liquid Glass Emerald Gradients */
+  --gradient-liquid-emerald: linear-gradient(135deg, #07382c 0%, #0c5643 45%, #052920 75%, #157960 100%);
+  --gradient-liquid-emerald-hover: linear-gradient(135deg, #094738 0%, #106c54 45%, #07382c 75%, #1ba07f 100%);
 
   --text-dark-primary: #ffffff;
   --text-dark-secondary: #f0e8c8;
@@ -25,7 +29,7 @@
   --text-muted: #78716c;
   
   --border-light: rgba(7, 56, 44, 0.1);
-  --border-gold-subtle: rgba(200, 157, 54, 0.25);
+  --border-gold-subtle: rgba(212, 175, 55, 0.35);
   --border-dark: rgba(28, 25, 23, 0.15);
   
   --navbar-height: 120px;
@@ -173,4 +177,102 @@ button, input, select, textarea {
   background: var(--gradient-royal-gold);
   margin: 0.6rem auto 0;
   border-radius: 2px;
+}
+
+/* ==========================================================================
+   LIQUID GLASS BUTTON EFFECT SYSTEM
+   ========================================================================== */
+
+.btn-liquid-glass,
+.save-form-btn,
+.hero-cta-btn,
+.add-to-cart-btn,
+.nav-cta-btn,
+.liquid-glass-btn {
+  position: relative;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.95) 0%, rgba(170, 124, 17, 0.95) 40%, rgba(230, 202, 101, 0.95) 80%, rgba(255, 243, 205, 0.95) 100%) !important;
+  color: #1a1202 !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.04em !important;
+  backdrop-filter: blur(12px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(12px) saturate(180%) !important;
+  border: 1px solid rgba(255, 248, 220, 0.65) !important;
+  box-shadow: 0 8px 25px -4px rgba(170, 124, 17, 0.4), inset 0 1.5px 2px rgba(255, 255, 255, 0.8), inset 0 -2px 4px rgba(0, 0, 0, 0.25) !important;
+  overflow: hidden !important;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* Glossy Liquid Glass Shimmer Layer */
+.btn-liquid-glass::before,
+.save-form-btn::before,
+.hero-cta-btn::before,
+.add-to-cart-btn::before,
+.nav-cta-btn::before,
+.liquid-glass-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+  transform: skewX(-20deg);
+  transition: 0.75s ease;
+  pointer-events: none;
+}
+
+.btn-liquid-glass:hover::before,
+.save-form-btn:hover::before,
+.hero-cta-btn:hover::before,
+.add-to-cart-btn:hover::before,
+.nav-cta-btn:hover::before,
+.liquid-glass-btn:hover::before {
+  left: 140%;
+}
+
+.btn-liquid-glass:hover,
+.save-form-btn:hover,
+.hero-cta-btn:hover,
+.add-to-cart-btn:hover,
+.nav-cta-btn:hover,
+.liquid-glass-btn:hover {
+  transform: translateY(-2px) scale(1.02) !important;
+  box-shadow: 0 14px 32px -4px rgba(170, 124, 17, 0.55), inset 0 2px 3px rgba(255, 255, 255, 0.95), inset 0 -2px 6px rgba(0, 0, 0, 0.3) !important;
+  border-color: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Liquid Glass Emerald Accent Buttons */
+.btn-liquid-emerald {
+  position: relative;
+  background: linear-gradient(135deg, #07382c 0%, #0c5643 45%, #052920 75%, #157960 100%) !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(163, 230, 201, 0.4) !important;
+  box-shadow: 0 8px 25px -4px rgba(7, 56, 44, 0.4), inset 0 1.5px 2px rgba(255, 255, 255, 0.35), inset 0 -2px 4px rgba(0, 0, 0, 0.3) !important;
+  overflow: hidden !important;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.btn-liquid-emerald::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transform: skewX(-20deg);
+  transition: 0.75s ease;
+  pointer-events: none;
+}
+
+.btn-liquid-emerald:hover::before {
+  left: 140%;
+}
+
+.btn-liquid-emerald:hover {
+  transform: translateY(-2px) scale(1.02) !important;
+  box-shadow: 0 14px 32px -4px rgba(7, 56, 44, 0.55), inset 0 2px 3px rgba(255, 255, 255, 0.5), inset 0 -2px 6px rgba(0, 0, 0, 0.4) !important;
 }

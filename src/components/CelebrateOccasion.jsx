@@ -6,14 +6,14 @@ import './CelebrateOccasion.css';
 const BASE = import.meta.env.BASE_URL || '/';
 
 const fabricCategories = [
-  { name: 'Pure Silk', fabric: 'Pure Silk', image: `${BASE}image/saree/folded-kanjivaram-silk-saree-green-golden-pallu.webp`, itemCounts: '120+ Designs' },
-  { name: 'Cotton Sarees', fabric: 'Cotton', image: `${BASE}image/saree/5_73_7415436e-9226-4442-9a42-d47387d04730.webp`, itemCounts: '85+ Designs' },
-  { name: 'Tussar Sarees', fabric: 'Tussar', image: `${BASE}image/saree/IMG20250515110716.jpg`, itemCounts: '64+ Designs' },
-  { name: 'Georgette', fabric: 'Georgette', image: `${BASE}image/saree/images (5).jpeg`, itemCounts: '90+ Designs' },
-  { name: 'Vichitra Silk', fabric: 'Vichitra', image: `${BASE}image/saree/images (6).jpeg`, itemCounts: '45+ Designs' },
-  { name: 'Brocade Silk', fabric: 'Brocade', image: `${BASE}image/saree/images (10).jpeg`, itemCounts: '110+ Designs' },
-  { name: 'Organza', fabric: 'Organza', image: `${BASE}image/saree/IMG20250515110716.jpg`, itemCounts: '75+ Designs' },
-  { name: 'Ready to Wear', fabric: 'ReadyToWear', image: `${BASE}image/saree/folded-kanjivaram-silk-saree-green-golden-pallu.webp`, itemCounts: '50+ Designs' }
+  { name: 'Pure Silk', fabric: 'Pure Silk', image: `${BASE}images/sarees/folded-kanjivaram-silk-saree-green-golden-pallu.webp`, itemCounts: '120+ Designs' },
+  { name: 'Cotton Sarees', fabric: 'Cotton', image: `${BASE}images/sarees/5_73_7415436e-9226-4442-9a42-d47387d04730.webp`, itemCounts: '85+ Designs' },
+  { name: 'Tussar Sarees', fabric: 'Tussar', image: `${BASE}images/sarees/IMG20250515110716.jpg`, itemCounts: '64+ Designs' },
+  { name: 'Georgette', fabric: 'Georgette', image: `${BASE}images/sarees/images (5).jpeg`, itemCounts: '90+ Designs' },
+  { name: 'Vichitra Silk', fabric: 'Vichitra', image: `${BASE}images/sarees/images (6).jpeg`, itemCounts: '45+ Designs' },
+  { name: 'Brocade Silk', fabric: 'Brocade', image: `${BASE}images/sarees/images (10).jpeg`, itemCounts: '110+ Designs' },
+  { name: 'Organza', fabric: 'Organza', image: `${BASE}images/sarees/IMG20250515110716.jpg`, itemCounts: '75+ Designs' },
+  { name: 'Ready to Wear', fabric: 'ReadyToWear', image: `${BASE}images/sarees/folded-kanjivaram-silk-saree-green-golden-pallu.webp`, itemCounts: '50+ Designs' }
 ];
 
 export default function CelebrateOccasion() {

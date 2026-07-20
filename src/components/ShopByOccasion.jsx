@@ -11,7 +11,7 @@ const kalyanOccasions = [
     title: 'Weddings & Grand Events',
     description: 'Opulent Kanjivaram & Banarasi Pure Silk Sarees',
     badge: 'Bridal Heritage',
-    image: `${BASE}image/saree/folded-kanjivaram-silk-saree-green-golden-pallu.webp`,
+    image: `${BASE}images/sarees/folded-kanjivaram-silk-saree-green-golden-pallu.webp`,
     className: 'grid-item-main',
     filterUrl: '/products?category=Kanjeevaram'
   },
@@ -20,7 +20,7 @@ const kalyanOccasions = [
     title: 'Festive & Onam Celebrations',
     description: 'Set Sarees & Handpicked Golden Pallus',
     badge: 'Tradition',
-    image: `${BASE}image/saree/5_73_7415436e-9226-4442-9a42-d47387d04730.webp`,
+    image: `${BASE}images/sarees/5_73_7415436e-9226-4442-9a42-d47387d04730.webp`,
     className: 'grid-item-side-top',
     filterUrl: '/products?category=Banarasi'
   },
@@ -29,7 +29,7 @@ const kalyanOccasions = [
     title: 'Evenings & Celebrations',
     description: 'Designer Organza & Shimmer Brocades',
     badge: 'Cocktail Elegance',
-    image: `${BASE}image/saree/IMG20250515110716.jpg`,
+    image: `${BASE}images/sarees/IMG20250515110716.jpg`,
     className: 'grid-item-side-bottom1',
     filterUrl: '/products?category=Organza'
   },
@@ -38,7 +38,7 @@ const kalyanOccasions = [
     title: 'Work & Everyday Grace',
     description: 'Breathable Pure Cotton & Soft Linen Weaves',
     badge: 'Daily Luxury',
-    image: `${BASE}image/saree/images (9).jpeg`,
+    image: `${BASE}images/sarees/images (9).jpeg`,
     className: 'grid-item-side-bottom2',
     filterUrl: '/products?category=Chanderi'
   }
