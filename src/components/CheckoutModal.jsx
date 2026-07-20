@@ -5,6 +5,8 @@ import { formatPrice } from '../data/products';
 import { triggerRazorpayCheckout } from '../utils/razorpay';
 import './CheckoutModal.css';
 
+import { sendOrderConfirmationEmail } from '../utils/emailService';
+
 export default function CheckoutModal({ isOpen, onClose, items = [], total = 0, onPaymentSuccess }) {
   const [formData, setFormData] = useState({
     name: '',
@@ -37,9 +39,13 @@ export default function CheckoutModal({ isOpen, onClose, items = [], total = 0, 
       amount: total,
       items: items,
       customerInfo: formData,
-      onSuccess: (paymentDetails) => {
+      onSuccess: async (paymentDetails) => {
         setLoading(false);
         setCompletedOrder(paymentDetails);
+        
+        // Automated Order Confirmation Email
+        await sendOrderConfirmationEmail(paymentDetails);
+
         if (onPaymentSuccess) {
           onPaymentSuccess(paymentDetails);
         }
