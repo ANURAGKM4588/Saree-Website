@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ShieldCheck, CreditCard, CheckCircle, ArrowRight, Lock, MapPin, User, Mail, Phone } from 'lucide-react';
+import { X, ShieldCheck, CreditCard, CheckCircle, ArrowRight, Lock, MapPin, User, Mail, Phone, Sparkles } from 'lucide-react';
 import { formatPrice } from '../data/products';
 import { triggerRazorpayCheckout } from '../utils/razorpay';
-import './CheckoutModal.css';
-
 import { sendOrderConfirmationEmail } from '../utils/emailService';
+import './CheckoutModal.css';
 
 export default function CheckoutModal({ isOpen, onClose, items = [], total = 0, onPaymentSuccess }) {
   const [formData, setFormData] = useState({
@@ -18,6 +17,7 @@ export default function CheckoutModal({ isOpen, onClose, items = [], total = 0, 
     pincode: '',
   });
 
+  const [paymentMethod, setPaymentMethod] = useState('razorpay'); // 'razorpay' | 'demo'
   const [loading, setLoading] = useState(false);
   const [completedOrder, setCompletedOrder] = useState(null);
 
@@ -27,7 +27,7 @@ export default function CheckoutModal({ isOpen, onClose, items = [], total = 0, 
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handlePayWithRazorpay = (e) => {
+  const handleSubmitOrder = async (e) => {
     e.preventDefault();
     if (!formData.name || !formData.email || !formData.phone || !formData.address) {
       alert('Please fill in your name, email, phone number, and delivery address.');
@@ -36,6 +36,33 @@ export default function CheckoutModal({ isOpen, onClose, items = [], total = 0, 
 
     setLoading(true);
 
+    if (paymentMethod === 'demo') {
+      // Simulated Instant Demo / Test Payment Mode
+      setTimeout(async () => {
+        const demoDetails = {
+          razorpay_payment_id: `pay_DEMO_${Math.random().toString(36).substring(2, 11).toUpperCase()}`,
+          razorpay_order_id: `order_DEMO_${Date.now()}`,
+          razorpay_signature: 'sig_demo_mode',
+          amount: total,
+          items: items,
+          customer: formData,
+          status: 'Paid (Demo)',
+          method: 'Demo Test Mode',
+          createdAt: new Date().toISOString(),
+        };
+
+        setLoading(false);
+        setCompletedOrder(demoDetails);
+        await sendOrderConfirmationEmail(demoDetails);
+
+        if (onPaymentSuccess) {
+          onPaymentSuccess(demoDetails);
+        }
+      }, 800);
+      return;
+    }
+
+    // Live Razorpay Payment Mode
     triggerRazorpayCheckout({
       amount: total,
       items: items,
@@ -44,7 +71,6 @@ export default function CheckoutModal({ isOpen, onClose, items = [], total = 0, 
         setLoading(false);
         setCompletedOrder(paymentDetails);
         
-        // Automated Order Confirmation Email
         await sendOrderConfirmationEmail(paymentDetails);
 
         if (onPaymentSuccess) {
@@ -87,10 +113,10 @@ export default function CheckoutModal({ isOpen, onClose, items = [], total = 0, 
                 <div className="cm-header">
                   <img src="/logo/herologo.png" alt="Kadha Logo" className="cm-brand-logo" />
                   <h2 className="cm-title">Express Checkout</h2>
-                  <p className="cm-subtitle">Enter your delivery details to initiate secure Razorpay payment.</p>
+                  <p className="cm-subtitle">Enter delivery details and select your payment method.</p>
                 </div>
 
-                <form className="cm-form" onSubmit={handlePayWithRazorpay}>
+                <form className="cm-form" onSubmit={handleSubmitOrder}>
                   <div className="cm-input-group">
                     <label><User size={14} /> Full Name</label>
                     <input
@@ -187,13 +213,37 @@ export default function CheckoutModal({ isOpen, onClose, items = [], total = 0, 
                     </div>
                   </div>
 
+                  {/* Payment Method Selector */}
+                  <div className="cm-method-selector">
+                    <button
+                      type="button"
+                      className={`cm-method-chip ${paymentMethod === 'razorpay' ? 'active' : ''}`}
+                      onClick={() => setPaymentMethod('razorpay')}
+                    >
+                      <CreditCard size={13} /> Razorpay Live
+                    </button>
+                    <button
+                      type="button"
+                      className={`cm-method-chip demo ${paymentMethod === 'demo' ? 'active' : ''}`}
+                      onClick={() => setPaymentMethod('demo')}
+                    >
+                      <Sparkles size={13} /> Demo Test Payment
+                    </button>
+                  </div>
+
                   <button type="submit" disabled={loading} className="cm-pay-btn">
                     {loading ? (
-                      'Connecting to Razorpay...'
+                      paymentMethod === 'demo' ? 'Simulating Demo Payment...' : 'Connecting to Razorpay...'
                     ) : (
-                      <>
-                        <CreditCard size={18} /> Pay {formatPrice(total)} via Razorpay
-                      </>
+                      paymentMethod === 'demo' ? (
+                        <>
+                          <Sparkles size={16} /> Complete Demo Order ({formatPrice(total)})
+                        </>
+                      ) : (
+                        <>
+                          <CreditCard size={18} /> Pay {formatPrice(total)} via Razorpay
+                        </>
+                      )
                     )}
                   </button>
 
