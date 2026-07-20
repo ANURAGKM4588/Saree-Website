@@ -439,7 +439,7 @@ export default function AdminPanel() {
       <div className="admin-login-container">
         <div className="login-glass-card">
           <div className="login-header">
-            <img src="/logo/herologo.png" alt="KADHA Heritage Silks Logo" className="login-brand-logo" />
+            <img src="/logo/logo vertical.png" alt="KADHA Heritage Silks Logo" className="login-brand-logo" />
             <p>Access the KADHA E-Commerce Management Suite</p>
           </div>
 

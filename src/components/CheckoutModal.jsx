@@ -189,7 +189,7 @@ export default function CheckoutModal({ isOpen, onClose, items = [], total = 0, 
           {!customerUser ? (
             <div className="cm-auth-pane">
               <div className="cm-header">
-                <img src="/logo/herologo.png" alt="Kadha Logo" className="cm-brand-logo" />
+                <img src="/logo/logo vertical.png" alt="Kadha Logo" className="cm-brand-logo" />
                 <h2 className="cm-title">Customer Login Required</h2>
                 <p className="cm-subtitle">Please log in or create an account to proceed with your order checkout.</p>
               </div>

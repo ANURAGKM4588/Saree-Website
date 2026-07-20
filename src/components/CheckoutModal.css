@@ -146,10 +146,9 @@
 }
 
 .cm-brand-logo {
-  max-width: 180px;
-  width: 100%;
-  height: auto;
-  margin: 0 auto 0.6rem;
+  height: 52px;
+  width: auto;
+  margin: 0 auto 0.5rem;
   display: block;
   object-fit: contain;
 }
