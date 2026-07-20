@@ -18,22 +18,25 @@ const getFullImagePath = (path) => {
   return `${BASE}${path}`;
 };
 
-const mapProduct = (p) => ({
-  id: p.id,
-  name: p.name,
-  material: p.material,
-  price: Number(p.price),
-  originalPrice: p.original_price ? Number(p.original_price) : null,
-  image: getFullImagePath(p.image),
-  tag: p.tag,
-  rating: Number(p.rating),
-  reviews: Number(p.reviews),
-  category: p.category,
-  description: p.description,
-  inStock: p.in_stock,
-  featured: p.featured,
-  comingSoon: p.coming_soon,
-});
+const mapProduct = (p) => {
+  const isTestOneRupee = [101, 103, 105, 108, 111].includes(Number(p.id));
+  return {
+    id: p.id,
+    name: p.name,
+    material: p.material,
+    price: isTestOneRupee ? 1 : Number(p.price),
+    originalPrice: isTestOneRupee ? (p.original_price ? Number(p.original_price) : Number(p.price)) : (p.original_price ? Number(p.original_price) : null),
+    image: getFullImagePath(p.image),
+    tag: isTestOneRupee ? '₹1 Test Special' : p.tag,
+    rating: Number(p.rating),
+    reviews: Number(p.reviews),
+    category: p.category,
+    description: p.description,
+    inStock: p.in_stock,
+    featured: p.featured,
+    comingSoon: p.coming_soon,
+  };
+};
 
 const mapProductToDb = (p) => ({
   id: Number(p.id),
