@@ -52,7 +52,7 @@ export default function BestsellersPage() {
     }
   }, [location.search, categories]);
 
-  // Filter products for bestsellers (featured or top rating)
+  // Filter products for bestsellers
   const bestsellersList = products.filter((p) => p.featured || p.rating >= 4.8 || p.originalPrice);
 
   const filteredProducts = bestsellersList
@@ -83,7 +83,7 @@ export default function BestsellersPage() {
 
   if (loading) {
     return (
-      <div className="pp-page" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '60vh' }}>
+      <div className="products-page" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '60vh' }}>
         <div style={{ color: 'var(--color-gold)', fontSize: '1.2rem', display: 'flex', gap: '8px', alignItems: 'center' }}>
           <div className="spinner" style={{
             width: '24px',
@@ -105,118 +105,113 @@ export default function BestsellersPage() {
   }
 
   return (
-    <div className="pp-page">
-      <div className="pp-container">
-        {/* Header */}
-        <div className="pp-header" style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: 'var(--color-accent-gold)', fontSize: '0.85rem', fontWeight: '700', letterSpacing: '0.1em', marginBottom: '0.5rem' }}>
-            <Crown size={16} /> MOST TREASURED COLLECTION
-          </div>
-          <h1 className="pp-title">
-            Bestsellers <span className="gold-text">Showroom</span>
-          </h1>
-          <p className="pp-subtitle">
-            Explore our most beloved sarees, handpicked by connoisseurs of fine craftsmanship across the globe.
-          </p>
+    <div className="products-page">
+      {/* Top Header */}
+      <div className="pp-top">
+        <Link to="/" className="pp-back">
+          <ArrowLeft size={16} /> Back to Home
+        </Link>
+        <span className="pp-count">{filteredProducts.length} top-selling pieces</span>
+      </div>
+
+      {/* Title & Banner Header */}
+      <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: 'var(--color-accent-gold)', fontSize: '0.8rem', fontWeight: '700', letterSpacing: '0.12em', marginBottom: '0.5rem' }}>
+          <Crown size={15} /> MOST TREASURED COLLECTION
+        </div>
+        <h1 className="pp-title" style={{ fontSize: '2.5rem' }}>
+          Bestsellers <span className="gold-text">Showroom</span>
+        </h1>
+        <p style={{ color: 'var(--text-light-secondary)', fontSize: '0.95rem', maxWidth: '640px', margin: '0.6rem auto 0', lineHeight: '1.6' }}>
+          Explore our most beloved sarees, handpicked by connoisseurs of fine craftsmanship across the globe.
+        </p>
+      </div>
+
+      {/* Search + Sort Controls */}
+      <div className="pp-controls">
+        <div className="pp-search-wrapper">
+          <Search size={16} className="pp-search-icon" />
+          <input
+            type="text"
+            placeholder="Search bestsellers by name, fabric, or craft..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pp-search-input"
+          />
+          {searchQuery && (
+            <button className="pp-search-clear" onClick={() => setSearchQuery('')}>
+              <X size={16} />
+            </button>
+          )}
         </div>
 
-        {/* Toolbar */}
-        <div className="pp-toolbar">
-          <div className="pp-search">
-            <Search size={18} className="pp-search-icon" />
-            <input
-              type="text"
-              placeholder="Search bestsellers..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pp-search-input"
+        <div className="pp-sort-wrapper">
+          <button className="pp-sort-btn" onClick={() => setShowSort(!showSort)}>
+            Sort by: <strong>{sortBy === 'price-low' ? 'Price: Low to High' : sortBy === 'price-high' ? 'Price: High to Low' : 'Highest Rated'}</strong>
+            <ChevronDown size={14} />
+          </button>
+          {showSort && (
+            <div className="pp-sort-dropdown">
+              {[
+                { value: 'rating', label: 'Highest Rated' },
+                { value: 'price-low', label: 'Price: Low to High' },
+                { value: 'price-high', label: 'Price: High to Low' },
+              ].map((opt) => (
+                <button
+                  key={opt.value}
+                  className={`pp-sort-option ${sortBy === opt.value ? 'active' : ''}`}
+                  onClick={() => {
+                    setSortBy(opt.value);
+                    setShowSort(false);
+                  }}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Category Tabs */}
+      <div className="pp-categories">
+        {categories.map((cat) => (
+          <button
+            key={cat}
+            className={`pp-cat-btn ${activeCategory === cat ? 'active' : ''}`}
+            onClick={() => setActiveCategory(cat)}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
+
+      {/* Products Grid */}
+      {filteredProducts.length === 0 ? (
+        <div className="pp-empty">
+          <h3>No bestsellers found</h3>
+          <p>Try adjusting your search query or category filter.</p>
+          <button
+            className="pp-reset-btn"
+            onClick={() => {
+              setActiveCategory('All');
+              setSearchQuery('');
+            }}
+          >
+            Reset Filters
+          </button>
+        </div>
+      ) : (
+        <div className="products-grid">
+          {filteredProducts.map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              onQuickView={(p) => setQuickViewProduct(p)}
             />
-            {searchQuery && (
-              <button className="pp-search-clear" onClick={() => setSearchQuery('')}>
-                <X size={16} />
-              </button>
-            )}
-          </div>
-
-          <div className="pp-sort-container">
-            <button
-              className="pp-sort-btn"
-              onClick={() => setShowSort(!showSort)}
-            >
-              <span>
-                Sort by: {sortBy === 'price-low' ? 'Price: Low to High' : sortBy === 'price-high' ? 'Price: High to Low' : 'Highest Rated'}
-              </span>
-              <ChevronDown size={16} />
-            </button>
-
-            {showSort && (
-              <div className="pp-sort-menu">
-                {[
-                  { value: 'rating', label: 'Highest Rated' },
-                  { value: 'price-low', label: 'Price: Low to High' },
-                  { value: 'price-high', label: 'Price: High to Low' },
-                ].map((opt) => (
-                  <button
-                    key={opt.value}
-                    className={`pp-sort-option ${sortBy === opt.value ? 'active' : ''}`}
-                    onClick={() => {
-                      setSortBy(opt.value);
-                      setShowSort(false);
-                    }}
-                  >
-                    {opt.label}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Category Tabs */}
-        <div className="pp-categories">
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              className={`pp-cat-btn ${activeCategory === cat ? 'active' : ''}`}
-              onClick={() => setActiveCategory(cat)}
-            >
-              {cat}
-            </button>
           ))}
         </div>
-
-        {/* Product Count */}
-        <div className="pp-results-count">
-          Showing <strong>{filteredProducts.length}</strong> top-selling silk sarees
-        </div>
-
-        {/* Products Grid */}
-        {filteredProducts.length === 0 ? (
-          <div className="pp-empty">
-            <h3>No bestsellers found</h3>
-            <p>Try adjusting your search query or category filter.</p>
-            <button
-              className="pp-reset-btn"
-              onClick={() => {
-                setActiveCategory('All');
-                setSearchQuery('');
-              }}
-            >
-              Reset Filters
-            </button>
-          </div>
-        ) : (
-          <div className="pp-grid">
-            {filteredProducts.map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                onQuickView={(p) => setQuickViewProduct(p)}
-              />
-            ))}
-          </div>
-        )}
-      </div>
+      )}
 
       {/* Quick View Modal */}
       {quickViewProduct && (
