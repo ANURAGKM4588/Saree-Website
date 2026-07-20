@@ -229,7 +229,7 @@ export default function AdminPanel() {
     e.preventDefault();
     setLoginError('');
     if (!supabase) {
-      setLoginError('Supabase is not configured. Use Demo Mode instead.');
+      setLoginError('Authentication service unavailable. Please check your network connection.');
       return;
     }
 
@@ -479,12 +479,6 @@ export default function AdminPanel() {
               {authLoading ? <RefreshCw size={18} className="spin-icon" /> : 'Log In to Dashboard'}
             </button>
           </form>
-
-          <div className="login-divider"><span>or test without backend</span></div>
-
-          <button onClick={() => setDemoMode(true)} className="demo-mode-btn">
-            Skip Login (Offline / Demo Mode)
-          </button>
         </div>
       </div>
     );
