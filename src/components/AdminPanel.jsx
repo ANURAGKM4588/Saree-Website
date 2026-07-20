@@ -5,7 +5,7 @@ import {
   LayoutDashboard, ShoppingBag, Package, Users, Bell, Settings, 
   DollarSign, TrendingUp, Truck, CheckCircle2, Clock, XCircle, 
   Save, Download, Plus, Search, Edit3, Trash2, LogOut, Shield, 
-  AlertTriangle, RefreshCw, Eye
+  AlertTriangle, RefreshCw, Eye, X, Upload, Sparkles, Image as ImageIcon
 } from 'lucide-react';
 import './AdminPanel.css';
 
@@ -1208,182 +1208,230 @@ export default function AdminPanel() {
         </div>
       )}
 
-      {/* ADD / EDIT PRODUCT MODAL */}
+      {/* SLEEK & MINIMAL ADD / EDIT PRODUCT MODAL */}
       {isModalOpen && (
         <div className="modal-backdrop">
-          <div className="modal-content-card">
-            <div className="modal-header">
-              <h2>{editingProduct ? 'Edit Saree Masterpiece' : 'Add New Saree'}</h2>
-              <button onClick={() => setIsModalOpen(false)} className="modal-close-btn">&times;</button>
+          <div className="minimal-modal-card">
+            {/* Modal Header */}
+            <div className="minimal-modal-header">
+              <div className="modal-title-group">
+                <div className="modal-icon-badge">
+                  {editingProduct ? <Edit3 size={18} /> : <Plus size={18} />}
+                </div>
+                <div>
+                  <h2>{editingProduct ? 'Edit Saree Product' : 'Add New Saree'}</h2>
+                  <p>{editingProduct ? `Updating weave details for ID #${editingProduct.id}` : 'Fill in saree details to add to live catalog'}</p>
+                </div>
+              </div>
+              <button onClick={() => setIsModalOpen(false)} className="minimal-close-btn" title="Close">
+                <X size={18} />
+              </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="modal-form">
-              <div className="form-row-2">
-                <div className="form-group">
-                  <label htmlFor="prodId">Product ID (Unique Integer)*</label>
-                  <input 
-                    type="number" 
-                    id="prodId"
-                    value={formData.id}
-                    onChange={(e) => setFormData({ ...formData, id: e.target.value })}
-                    placeholder="e.g. 125"
-                    disabled={Boolean(editingProduct)}
-                    required
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="prodName">Saree Name*</label>
-                  <input 
-                    type="text" 
-                    id="prodName"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    placeholder="e.g. Kanchipuram Gold Brocade"
-                    required
-                  />
-                </div>
-              </div>
+            {/* Modal Form */}
+            <form onSubmit={handleSubmit} className="minimal-modal-form">
+              <div className="minimal-form-grid">
+                
+                {/* Left Column: Image Upload & Preview */}
+                <div className="modal-left-col">
+                  <div className="image-preview-card">
+                    {formData.image ? (
+                      <img 
+                        src={
+                          formData.image.startsWith('data:') || formData.image.startsWith('http') || formData.image.startsWith('/')
+                            ? formData.image
+                            : '/' + formData.image
+                        } 
+                        alt="Preview" 
+                        className="preview-img"
+                        onError={(e) => { e.target.src = '/logo/logo-emblem.png'; }}
+                      />
+                    ) : (
+                      <div className="image-placeholder">
+                        <ImageIcon size={32} />
+                        <span>No image uploaded</span>
+                      </div>
+                    )}
+                    
+                    <div className="upload-actions-bar">
+                      <input 
+                        type="file" 
+                        accept="image/*" 
+                        onChange={handleImageUpload}
+                        id="modalImageFileSelect"
+                        className="hidden-file-input"
+                      />
+                      <label htmlFor="modalImageFileSelect" className="minimal-upload-btn">
+                        <Upload size={14} />
+                        <span>{imageUploading ? 'Uploading...' : 'Upload Image'}</span>
+                      </label>
+                    </div>
+                  </div>
 
-              <div className="form-row-2">
-                <div className="form-group">
-                  <label htmlFor="prodMaterial">Material Description*</label>
-                  <input 
-                    type="text" 
-                    id="prodMaterial"
-                    value={formData.material}
-                    onChange={(e) => setFormData({ ...formData, material: e.target.value })}
-                    placeholder="e.g. Pure Katan Silk, Gold Zari"
-                    required
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="prodCategory">Category*</label>
-                  <select 
-                    id="prodCategory"
-                    value={formData.category}
-                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                  >
-                    <option value="Kanjeevaram">Kanjeevaram</option>
-                    <option value="Banarasi">Banarasi</option>
-                    <option value="Organza">Organza</option>
-                    <option value="Patola">Patola</option>
-                    <option value="Mysore">Mysore</option>
-                    <option value="Paithani">Paithani</option>
-                    <option value="Tussar">Tussar</option>
-                    <option value="Chanderi">Chanderi</option>
-                    <option value="Kota">Kota</option>
-                    <option value="Kasavu">Kasavu</option>
-                    <option value="Muga">Muga</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="form-row-2">
-                <div className="form-group">
-                  <label htmlFor="prodPrice">Price (₹)*</label>
-                  <input 
-                    type="number" 
-                    id="prodPrice"
-                    value={formData.price}
-                    onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                    placeholder="e.g. 45000"
-                    required
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="prodOrigPrice">Original Price (₹ - Optional)</label>
-                  <input 
-                    type="number" 
-                    id="prodOrigPrice"
-                    value={formData.originalPrice}
-                    onChange={(e) => setFormData({ ...formData, originalPrice: e.target.value })}
-                    placeholder="e.g. 58000"
-                  />
-                </div>
-              </div>
-
-              <div className="form-row-2">
-                <div className="form-group">
-                  <label>Saree Image*</label>
-                  <div className="image-input-container">
-                    <input 
-                      type="file" 
-                      accept="image/*" 
-                      onChange={handleImageUpload}
-                      id="imageFileSelect"
-                      className="hidden-file-input"
-                    />
-                    <label htmlFor="imageFileSelect" className="upload-file-label-btn">
-                      {imageUploading ? 'Uploading...' : 'Choose File'}
-                    </label>
+                  <div className="form-group margin-top-12">
+                    <label htmlFor="prodImage">Image Path / URL*</label>
                     <input 
                       type="text" 
+                      id="prodImage"
                       value={formData.image}
                       onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                      placeholder="Or path e.g. image/saree/pic.webp"
+                      placeholder="e.g. image/saree/kanjivaram.webp"
+                      required
+                    />
+                    {imageUploadError && <span className="input-field-error-msg">{imageUploadError}</span>}
+                  </div>
+                </div>
+
+                {/* Right Column: Product Fields */}
+                <div className="modal-right-col">
+                  <div className="form-row-2">
+                    <div className="form-group">
+                      <label htmlFor="prodId">Product ID*</label>
+                      <input 
+                        type="number" 
+                        id="prodId"
+                        value={formData.id}
+                        onChange={(e) => setFormData({ ...formData, id: e.target.value })}
+                        placeholder="e.g. 125"
+                        disabled={Boolean(editingProduct)}
+                        required
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label htmlFor="prodCategory">Category Weave*</label>
+                      <select 
+                        id="prodCategory"
+                        value={formData.category}
+                        onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                      >
+                        <option value="Kanjeevaram">Kanjeevaram</option>
+                        <option value="Banarasi">Banarasi</option>
+                        <option value="Organza">Organza</option>
+                        <option value="Patola">Patola</option>
+                        <option value="Mysore">Mysore</option>
+                        <option value="Paithani">Paithani</option>
+                        <option value="Tussar">Tussar</option>
+                        <option value="Chanderi">Chanderi</option>
+                        <option value="Kota">Kota</option>
+                        <option value="Kasavu">Kasavu</option>
+                        <option value="Muga">Muga</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="form-group">
+                    <label htmlFor="prodName">Saree Title / Name*</label>
+                    <input 
+                      type="text" 
+                      id="prodName"
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      placeholder="e.g. Kanchipuram Gold Brocade Silk"
                       required
                     />
                   </div>
-                  {imageUploadError && <span className="input-field-error-msg">{imageUploadError}</span>}
+
+                  <div className="form-group">
+                    <label htmlFor="prodMaterial">Material & Craft Specs*</label>
+                    <input 
+                      type="text" 
+                      id="prodMaterial"
+                      value={formData.material}
+                      onChange={(e) => setFormData({ ...formData, material: e.target.value })}
+                      placeholder="e.g. Pure Katan Silk, Real Gold Zari Woven"
+                      required
+                    />
+                  </div>
+
+                  <div className="form-row-2">
+                    <div className="form-group">
+                      <label htmlFor="prodPrice">Offer Price (₹)*</label>
+                      <input 
+                        type="number" 
+                        id="prodPrice"
+                        value={formData.price}
+                        onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                        placeholder="e.g. 48500"
+                        required
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label htmlFor="prodOrigPrice">Original Price (₹)</label>
+                      <input 
+                        type="number" 
+                        id="prodOrigPrice"
+                        value={formData.originalPrice}
+                        onChange={(e) => setFormData({ ...formData, originalPrice: e.target.value })}
+                        placeholder="e.g. 62000"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="form-group">
+                    <label htmlFor="prodTag">Badge Label (Optional)</label>
+                    <input 
+                      type="text" 
+                      id="prodTag"
+                      value={formData.tag}
+                      onChange={(e) => setFormData({ ...formData, tag: e.target.value })}
+                      placeholder="e.g. Bestseller, New Arrival, Festive"
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label htmlFor="prodDesc">Short Description</label>
+                    <textarea 
+                      id="prodDesc"
+                      value={formData.description}
+                      onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                      placeholder="Brief weave summary, pallu design details..."
+                      rows="2"
+                    />
+                  </div>
+
+                  {/* Switch Toggles Bar */}
+                  <div className="minimal-toggles-container">
+                    <label className="switch-toggle-item">
+                      <input 
+                        type="checkbox" 
+                        checked={formData.inStock}
+                        onChange={(e) => setFormData({ ...formData, inStock: e.target.checked })}
+                      />
+                      <span className="switch-slider"></span>
+                      <span className="toggle-text">In Stock</span>
+                    </label>
+
+                    <label className="switch-toggle-item">
+                      <input 
+                        type="checkbox" 
+                        checked={formData.featured}
+                        onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
+                      />
+                      <span className="switch-slider"></span>
+                      <span className="toggle-text">Featured</span>
+                    </label>
+
+                    <label className="switch-toggle-item">
+                      <input 
+                        type="checkbox" 
+                        checked={formData.comingSoon}
+                        onChange={(e) => setFormData({ ...formData, comingSoon: e.target.checked })}
+                      />
+                      <span className="switch-slider"></span>
+                      <span className="toggle-text">Coming Soon</span>
+                    </label>
+                  </div>
                 </div>
-                <div className="form-group">
-                  <label htmlFor="prodTag">Label Badge Tag (Optional)</label>
-                  <input 
-                    type="text" 
-                    id="prodTag"
-                    value={formData.tag}
-                    onChange={(e) => setFormData({ ...formData, tag: e.target.value })}
-                    placeholder="e.g. Bestseller, New, Premium"
-                  />
-                </div>
+
               </div>
 
-              <div className="form-group">
-                <label htmlFor="prodDesc">Product Description</label>
-                <textarea 
-                  id="prodDesc"
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  placeholder="Describe the weave history, thread type, border style, etc."
-                  rows="3"
-                />
-              </div>
-
-              <div className="form-toggles-row">
-                <label className="toggle-container">
-                  <input 
-                    type="checkbox" 
-                    checked={formData.inStock}
-                    onChange={(e) => setFormData({ ...formData, inStock: e.target.checked })}
-                  />
-                  <span className="toggle-label">In Stock</span>
-                </label>
-
-                <label className="toggle-container">
-                  <input 
-                    type="checkbox" 
-                    checked={formData.featured}
-                    onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
-                  />
-                  <span className="toggle-label">Featured Masterpiece</span>
-                </label>
-
-                <label className="toggle-container">
-                  <input 
-                    type="checkbox" 
-                    checked={formData.comingSoon}
-                    onChange={(e) => setFormData({ ...formData, comingSoon: e.target.checked })}
-                  />
-                  <span className="toggle-label">Coming Soon</span>
-                </label>
-              </div>
-
-              <div className="modal-footer-btns">
+              {/* Modal Footer */}
+              <div className="minimal-modal-footer">
                 <button type="button" onClick={() => setIsModalOpen(false)} className="cancel-form-btn">
                   Cancel
                 </button>
                 <button type="submit" className="save-form-btn" disabled={formSubmitLoading}>
-                  {formSubmitLoading ? <RefreshCw size={16} className="spin-icon" /> : 'Save Weave'}
+                  {formSubmitLoading ? <RefreshCw size={16} className="spin-icon" /> : (editingProduct ? 'Update Saree' : 'Save & Publish Saree')}
                 </button>
               </div>
             </form>
