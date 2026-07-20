@@ -224,6 +224,70 @@
   color: #031c15;
 }
 
+.cpm-history-section {
+  text-align: left;
+  margin-bottom: 1.5rem;
+}
+
+.cpm-history-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #031c15;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.cpm-empty-history {
+  font-size: 0.76rem;
+  color: #888888;
+  font-style: italic;
+}
+
+.cpm-history-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: 140px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.cpm-history-card {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  background: #f8faf9;
+  border: 1px solid #e8eeeb;
+  padding: 0.4rem 0.6rem;
+  border-radius: 8px;
+}
+
+.cpm-history-img {
+  width: 32px;
+  height: 38px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.cpm-history-meta {
+  display: flex;
+  flex-direction: column;
+}
+
+.cpm-history-name {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #111111;
+}
+
+.cpm-history-price {
+  font-size: 0.72rem;
+  color: #0c7356;
+  font-weight: 700;
+}
+
 .cpm-profile-footer {
   display: flex;
   gap: 0.75rem;

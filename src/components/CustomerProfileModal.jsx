@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, User, Mail, Phone, KeyRound, LogIn, UserPlus, LogOut, ArrowRight, ShieldCheck, MapPin, Sparkles } from 'lucide-react';
+import { X, User, Mail, Phone, KeyRound, LogIn, UserPlus, LogOut, ArrowRight, ShieldCheck, MapPin, Sparkles, ShoppingBag, Heart } from 'lucide-react';
+import { useCart } from '../context/CartContext';
+import { formatPrice, products as allProducts } from '../data/products';
 import './CustomerProfileModal.css';
 
 export default function CustomerProfileModal({ isOpen, onClose }) {
+  const { cartItems, wishlist, cartCount, wishlistCount } = useCart();
   const [customerUser, setCustomerUser] = useState(null);
   const [authTab, setAuthTab] = useState('login'); // 'login' | 'signup'
   const [authForm, setAuthForm] = useState({ name: '', email: '', phone: '', password: '' });
@@ -54,6 +57,7 @@ export default function CustomerProfileModal({ isOpen, onClose }) {
 
     localStorage.setItem('kadha_customer_user', JSON.stringify(userSession));
     setCustomerUser(userSession);
+    window.dispatchEvent(new Event('kadha_user_changed'));
   };
 
   const handleCustomerSignup = (e) => {
@@ -73,12 +77,16 @@ export default function CustomerProfileModal({ isOpen, onClose }) {
 
     localStorage.setItem('kadha_customer_user', JSON.stringify(userSession));
     setCustomerUser(userSession);
+    window.dispatchEvent(new Event('kadha_user_changed'));
   };
 
   const handleCustomerLogout = () => {
     localStorage.removeItem('kadha_customer_user');
     setCustomerUser(null);
+    window.dispatchEvent(new Event('kadha_user_changed'));
   };
+
+  const likedProducts = allProducts.filter((p) => wishlist.includes(p.id));
 
   return (
     <AnimatePresence>
@@ -100,7 +108,7 @@ export default function CustomerProfileModal({ isOpen, onClose }) {
               <div className="cpm-header">
                 <img src="/logo/logo vertical.png" alt="Kadha Logo" className="cpm-brand-logo" />
                 <h2 className="cpm-title">Customer Account</h2>
-                <p className="cpm-subtitle">Log in or create a customer profile for express shopping & orders.</p>
+                <p className="cpm-subtitle">Log in or create a customer profile for express shopping & saved lists.</p>
               </div>
 
               {/* Tab Selector: Login vs Signup */}
@@ -241,6 +249,43 @@ export default function CustomerProfileModal({ isOpen, onClose }) {
                   <div className="cpm-detail-row">
                     <span className="cpm-label"><MapPin size={13} /> Saved Address:</span>
                     <span className="cpm-val">{savedAddress.address}, {savedAddress.city}</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Saved History Lists */}
+              <div className="cpm-history-section">
+                <h3 className="cpm-history-title"><ShoppingBag size={14} /> Saved Shopping Bag ({cartCount})</h3>
+                {cartItems.length === 0 ? (
+                  <p className="cpm-empty-history">No items currently in shopping bag.</p>
+                ) : (
+                  <div className="cpm-history-grid">
+                    {cartItems.map((item) => (
+                      <div key={item.id} className="cpm-history-card">
+                        <img src={item.image} alt={item.name} className="cpm-history-img" />
+                        <div className="cpm-history-meta">
+                          <span className="cpm-history-name">{item.name}</span>
+                          <span className="cpm-history-price">{formatPrice(item.price)} (Qty: {item.qty})</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                <h3 className="cpm-history-title" style={{ marginTop: '1rem' }}><Heart size={14} fill="#dc2626" color="#dc2626" /> Saved Liked Sarees ({wishlistCount})</h3>
+                {likedProducts.length === 0 ? (
+                  <p className="cpm-empty-history">No sarees liked yet.</p>
+                ) : (
+                  <div className="cpm-history-grid">
+                    {likedProducts.map((item) => (
+                      <div key={item.id} className="cpm-history-card">
+                        <img src={item.image} alt={item.name} className="cpm-history-img" />
+                        <div className="cpm-history-meta">
+                          <span className="cpm-history-name">{item.name}</span>
+                          <span className="cpm-history-price">{formatPrice(item.price)}</span>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 )}
               </div>
