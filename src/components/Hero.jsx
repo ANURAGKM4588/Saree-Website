@@ -106,71 +106,16 @@ export default function Hero() {
     canvas.height = window.innerHeight;
     drawFrame(startFrameNum);
 
-    // Hard block user manual scroll events during intro
-    const preventScroll = (e) => {
-      e.preventDefault();
-    };
-
-    // Disable scroll restoration and lock scroll during intro
-    if ('scrollRestoration' in window.history) {
-      window.history.scrollRestoration = 'manual';
-    }
-    window.scrollTo(0, 0);
-    document.documentElement.style.overflow = 'hidden';
-    document.body.style.overflow = 'hidden';
-    window.addEventListener('wheel', preventScroll, { passive: false });
-    window.addEventListener('touchmove', preventScroll, { passive: false });
-
     let scrollTl = null;
-    let entryTl = null;
-    const frObj = { val: startFrameNum };
-    const introFrames = 50;
 
     const ctx = gsap.context(() => {
-      // ---- Auto entry animation ----
-      entryTl = gsap.timeline({ ease: 'none', paused: true });
-
-      // Frame animation: pallu floats upward (frames 5 → 50)
-      entryTl.to(frObj, {
-        val: introFrames,
-        duration: 3.5,
-        ease: 'power2.out',
-        onUpdate: () => drawFrame(Math.round(frObj.val)),
-      }, 0);
-
-      // Phase 1 text appears together after a brief pause
-      entryTl.fromTo('.phase-1', { opacity: 0, y: 40 }, {
-        opacity: 1, y: 0, duration: 1.4, ease: 'power2.out',
-      }, 0.8);
-
-      // Scroll indicator fades in at the end of the entry animation
-      entryTl.fromTo('.scroll-indicator', { opacity: 0 }, {
-        opacity: 1, duration: 0.8, ease: 'power2.out',
-      }, 2.5);
-
-      // Hold at end of entry
-      entryTl.to({}, { duration: 0.5 });
-
-      entryTl.eventCallback('onComplete', () => {
-        // Unlock scroll and initialize scroll timeline
-        document.documentElement.style.overflow = '';
-        document.body.style.overflow = '';
-        window.removeEventListener('wheel', preventScroll);
-        window.removeEventListener('touchmove', preventScroll);
-        if (!scrollTl) initScrollTl();
-      });
-
-      // Play intro animation
-      entryTl.play();
-    }, container);
-
-    function initScrollTl() {
-      const currentStartFrame = Math.round(frObj.val);
-      const frameObj2 = { val: currentStartFrame };
-
-      // Ensure phase-1 is at its active state at the start of scroll Trigger
+      // Ensure phase-1 text is visible instantly on load complete
       gsap.set('.phase-1', { opacity: 1, y: 0 });
+      gsap.set('.scroll-indicator', { opacity: 1 });
 
+      const frameObj2 = { val: startFrameNum };
+
+      // Initialize scrollTrigger immediately
       scrollTl = gsap.timeline({
         scrollTrigger: {
           trigger: container,
@@ -189,7 +134,7 @@ export default function Hero() {
         onUpdate: () => drawFrame(Math.round(frameObj2.val)),
       }, 0);
 
-      // Phase 1: hold briefly, then fade out (Phase 2 starts fading in during this time)
+      // Phase 1: hold briefly, then fade out
       scrollTl.to('.phase-1', { opacity: 0, y: -30, duration: 0.12 }, 0.03);
 
       // Phase 2: fade in overlapping with Phase 1 fade out
@@ -204,7 +149,7 @@ export default function Hero() {
       scrollTl.fromTo('.phase-4', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.12 }, 0.55);
       scrollTl.to('.phase-4', { opacity: 0, y: -30, duration: 0.08 }, 0.75);
 
-      // Phase 5
+      // Phase 5: Final Brand Reveal
       scrollTl.fromTo(
         '.phase-5',
         { opacity: 0 },
@@ -214,8 +159,11 @@ export default function Hero() {
 
       scrollTl.to('.scroll-indicator', { opacity: 0, duration: 0.03 }, 0);
 
-      ScrollTrigger.refresh();
-    }
+      // Force immediate refresh so scrolling works instantly
+      setTimeout(() => {
+        ScrollTrigger.refresh();
+      }, 50);
+    }, container);
 
     const handleResize = () => {
       const canvas = canvasRef.current;
@@ -226,12 +174,10 @@ export default function Hero() {
 
       if (scrollTl) {
         const progress = scrollTl.progress();
-        const startFrame = Math.round(frObj.val);
-        const fi = startFrame + Math.floor(progress * (endFrameNum - startFrame));
+        const fi = startFrameNum + Math.floor(progress * (endFrameNum - startFrameNum));
         drawFrame(Math.min(endFrameNum, fi));
       } else {
-        const fi = Math.min(introFrames, Math.round(frObj.val));
-        drawFrame(fi);
+        drawFrame(startFrameNum);
       }
     };
 
@@ -239,14 +185,6 @@ export default function Hero() {
 
     return () => {
       window.removeEventListener('resize', handleResize);
-      document.documentElement.style.overflow = '';
-      document.body.style.overflow = '';
-      window.removeEventListener('wheel', preventScroll);
-      window.removeEventListener('touchmove', preventScroll);
-      if ('scrollRestoration' in window.history) {
-        window.history.scrollRestoration = 'auto';
-      }
-      if (entryTl) entryTl.kill();
       ctx.revert();
     };
   }, [isReady]);
