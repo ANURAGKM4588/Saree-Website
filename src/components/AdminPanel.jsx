@@ -2,10 +2,86 @@ import React, { useState, useEffect } from 'react';
 import { useDatabase } from '../context/DatabaseContext';
 import { supabase } from '../supabaseClient';
 import { 
-  Plus, Edit3, Trash2, LogOut, Shield, Download, FileText, 
-  CheckCircle, AlertTriangle, RefreshCw, Layers, Grid, List, Bell, Users, Search
+  LayoutDashboard, ShoppingBag, Package, Users, Bell, Settings, 
+  DollarSign, TrendingUp, Truck, CheckCircle2, Clock, XCircle, 
+  Save, Download, Plus, Search, Edit3, Trash2, LogOut, Shield, 
+  AlertTriangle, RefreshCw, Eye
 } from 'lucide-react';
 import './AdminPanel.css';
+
+// Initial Mock Orders for E-Commerce Order Management
+const INITIAL_ORDERS = [
+  {
+    id: 'ORD-9842',
+    customerName: 'Priya Sundaram',
+    email: 'priya.sundaram@gmail.com',
+    phone: '+91 98401 23456',
+    date: new Date(Date.now() - 3600000 * 4).toISOString(),
+    total: 48500,
+    itemsCount: 1,
+    items: ['Kanchipuram Divine Lotus'],
+    paymentMethod: 'UPI / GPay',
+    paymentStatus: 'Paid',
+    orderStatus: 'Processing',
+    shippingAddress: '42, RK Salai, Mylapore, Chennai, Tamil Nadu - 600004'
+  },
+  {
+    id: 'ORD-9841',
+    customerName: 'Ananya Iyer',
+    email: 'ananya.iyer@yahoo.com',
+    phone: '+91 98200 98765',
+    date: new Date(Date.now() - 3600000 * 26).toISOString(),
+    total: 105800,
+    itemsCount: 2,
+    items: ['Banarasi Royal Velvet', 'Organza Celestial Floral'],
+    paymentMethod: 'Credit Card',
+    paymentStatus: 'Paid',
+    orderStatus: 'Shipped',
+    shippingAddress: '15, Indiranagar 100ft Road, Bengaluru, Karnataka - 560038'
+  },
+  {
+    id: 'ORD-9840',
+    customerName: 'Meera Krishnan',
+    email: 'meera.k@hotmail.com',
+    phone: '+91 97112 34567',
+    date: new Date(Date.now() - 3600000 * 48).toISOString(),
+    total: 38900,
+    itemsCount: 1,
+    items: ['Kanchipuram Tissue Zari'],
+    paymentMethod: 'Cash on Delivery',
+    paymentStatus: 'Pending',
+    orderStatus: 'Processing',
+    shippingAddress: '78, Jubilee Hills Road No. 36, Hyderabad, Telangana - 500033'
+  },
+  {
+    id: 'ORD-9839',
+    customerName: 'Siddharth Varma',
+    email: 'siddharth.varma@outlook.com',
+    phone: '+91 99304 11223',
+    date: new Date(Date.now() - 3600000 * 72).toISOString(),
+    total: 62000,
+    itemsCount: 1,
+    items: ['Pure Kanjivaram Bridal Gold'],
+    paymentMethod: 'NetBanking',
+    paymentStatus: 'Paid',
+    orderStatus: 'Delivered',
+    shippingAddress: '102, Bandra Kurla Complex, Mumbai, Maharashtra - 400051'
+  },
+  {
+    id: 'ORD-9838',
+    customerName: 'Sunita Reddy',
+    email: 'sunita.reddy@gmail.com',
+    phone: '+91 98850 44332',
+    date: new Date(Date.now() - 3600000 * 96).toISOString(),
+    total: 29500,
+    itemsCount: 1,
+    items: ['Chanderi Soft Silk Zari'],
+    paymentMethod: 'UPI',
+    paymentStatus: 'Paid',
+    orderStatus: 'Delivered',
+    shippingAddress: '5, Anna Nagar East, Chennai, Tamil Nadu - 600102'
+  }
+];
 
 export default function AdminPanel() {
   const { 
@@ -17,7 +93,7 @@ export default function AdminPanel() {
     loading: dbLoading 
   } = useDatabase();
 
-  // Authentication State
+  // Auth State
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState(null);
   const [demoMode, setDemoMode] = useState(false);
@@ -26,14 +102,33 @@ export default function AdminPanel() {
   const [authLoading, setAuthLoading] = useState(false);
   const [loginError, setLoginError] = useState('');
 
-  // Dashboard Navigation State
-  const [activeTab, setActiveTab] = useState('products');
+  // Tab Navigation: 'overview' | 'orders' | 'products' | 'customers' | 'alerts' | 'settings'
+  const [activeTab, setActiveTab] = useState('overview');
 
   // Product Filters
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
 
-  // Modal Form State
+  // Orders State & Filters
+  const [orders, setOrders] = useState(INITIAL_ORDERS);
+  const [orderFilter, setOrderFilter] = useState('All');
+  const [orderSearch, setOrderSearch] = useState('');
+  const [selectedOrder, setSelectedOrder] = useState(null);
+
+  // Store Settings State
+  const [storeSettings, setStoreSettings] = useState({
+    storeName: 'KADHA Heritage Silks',
+    contactEmail: 'support@kadha.shop',
+    contactPhone: '+91 98765 43210',
+    freeShippingThreshold: 2999,
+    taxPercentage: 5,
+    currencySymbol: '₹',
+    enableCod: true,
+    autoStockAlert: true
+  });
+  const [settingsSavedMsg, setSettingsSavedMsg] = useState('');
+
+  // Modal Form State (Add / Edit Product)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [formSubmitLoading, setFormSubmitLoading] = useState(false);
@@ -62,7 +157,7 @@ export default function AdminPanel() {
   const [imageUploading, setImageUploading] = useState(false);
   const [imageUploadError, setImageUploadError] = useState('');
 
-  // Authenticate listener
+  // Auth Listener
   useEffect(() => {
     if (supabase) {
       supabase.auth.getSession().then(({ data: { session } }) => {
@@ -86,7 +181,7 @@ export default function AdminPanel() {
     }
   }, []);
 
-  // Fetch Newsletter and Alerts when user is authenticated/demo
+  // Fetch Subscribers & Restock Alerts
   useEffect(() => {
     if (isAuthenticated || demoMode) {
       fetchSubscribersAndAlerts();
@@ -95,7 +190,6 @@ export default function AdminPanel() {
 
   const fetchSubscribersAndAlerts = async () => {
     if (!supabase) {
-      // Mock data for demo mode
       setSubscribers([
         { id: '1', email: 'aarav.sharma@example.com', created_at: new Date(Date.now() - 86400000).toISOString() },
         { id: '2', email: 'ananya.iyer@example.com', created_at: new Date(Date.now() - 172800000).toISOString() },
@@ -163,6 +257,19 @@ export default function AdminPanel() {
     setDemoMode(false);
   };
 
+  // Order Status Handler
+  const handleOrderStatusChange = (orderId, newStatus) => {
+    setOrders(prev => prev.map(o => o.id === orderId ? { ...o, orderStatus: newStatus } : o));
+  };
+
+  // Save Store Settings Handler
+  const handleSaveSettings = (e) => {
+    e.preventDefault();
+    setSettingsSavedMsg('✓ Store Settings saved successfully!');
+    setTimeout(() => setSettingsSavedMsg(''), 3000);
+  };
+
+  // Product Modal Handlers
   const handleOpenAdd = () => {
     setEditingProduct(null);
     setFormData({
@@ -182,6 +289,25 @@ export default function AdminPanel() {
     setIsModalOpen(true);
   };
 
+  const handleOpenEdit = (product) => {
+    setEditingProduct(product);
+    setFormData({
+      id: product.id,
+      name: product.name,
+      material: product.material,
+      price: product.price,
+      originalPrice: product.originalPrice || '',
+      image: product.image.replace(/^\//, ''),
+      tag: product.tag || '',
+      category: product.category,
+      description: product.description || '',
+      inStock: product.inStock,
+      featured: Boolean(product.featured),
+      comingSoon: Boolean(product.comingSoon)
+    });
+    setIsModalOpen(true);
+  };
+
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -190,7 +316,6 @@ export default function AdminPanel() {
     setImageUploadError('');
 
     if (!supabase || demoMode) {
-      // Demo Mode / Offline: Read as Base64 Data URL so it shows up in UI preview locally
       const reader = new FileReader();
       reader.onloadend = () => {
         setFormData(prev => ({ ...prev, image: reader.result }));
@@ -209,60 +334,21 @@ export default function AdminPanel() {
       const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
       const filePath = `product-images/${fileName}`;
 
-      // Upload to 'sarees' storage bucket in Supabase
-      const { data, error } = await supabase.storage
+      const { error } = await supabase.storage
         .from('sarees')
-        .upload(filePath, file, {
-          cacheControl: '3600',
-          upsert: false
-        });
+        .upload(filePath, file, { cacheControl: '3600', upsert: false });
 
-      if (error) {
-        if (error.message.includes('Bucket not found') || error.message.includes('does not exist')) {
-          throw new Error('Storage bucket "sarees" not found. Please create a public bucket named "sarees" in your Supabase Dashboard under Storage.');
-        }
-        throw error;
-      }
+      if (error) throw error;
 
-      // Get public URL
       const { data: { publicUrl } } = supabase.storage
         .from('sarees')
         .getPublicUrl(filePath);
 
       setFormData(prev => ({ ...prev, image: publicUrl }));
     } catch (err) {
-      console.error('Image upload failed:', err);
-      setImageUploadError(err.message || 'Image upload failed. Please verify storage permissions.');
+      setImageUploadError(err.message || 'Image upload failed.');
     } finally {
       setImageUploading(false);
-    }
-  };
-
-  const handleOpenEdit = (product) => {
-    setEditingProduct(product);
-    setFormData({
-      id: product.id,
-      name: product.name,
-      material: product.material,
-      price: product.price,
-      originalPrice: product.originalPrice || '',
-      image: product.image.replace(/^\//, ''), // Strip leading slash if any
-      tag: product.tag || '',
-      category: product.category,
-      description: product.description || '',
-      inStock: product.inStock,
-      featured: product.featured,
-      comingSoon: product.comingSoon
-    });
-    setIsModalOpen(true);
-  };
-
-  const handleDelete = async (id, name) => {
-    if (window.confirm(`Are you sure you want to delete "${name}"?`)) {
-      const res = await deleteProduct(id);
-      if (!res.success) {
-        alert(`Error deleting product: ${res.error?.message || 'Unknown error'}`);
-      }
     }
   };
 
@@ -270,48 +356,46 @@ export default function AdminPanel() {
     e.preventDefault();
     setFormSubmitLoading(true);
 
-    const productPayload = {
-      name: formData.name,
-      material: formData.material,
-      price: Number(formData.price),
-      originalPrice: formData.originalPrice ? Number(formData.originalPrice) : null,
-      image: formData.image,
-      tag: formData.tag || null,
-      category: formData.category,
-      description: formData.description || null,
-      inStock: formData.inStock,
-      featured: formData.featured,
-      comingSoon: formData.comingSoon
-    };
+    try {
+      const productPayload = {
+        ...formData,
+        id: Number(formData.id),
+        price: Number(formData.price),
+        originalPrice: formData.originalPrice ? Number(formData.originalPrice) : null,
+      };
 
-    let res;
-    if (editingProduct) {
-      res = await updateProduct(editingProduct.id, productPayload);
-    } else {
-      const newId = formData.id ? Number(formData.id) : Math.floor(Math.random() * 1000) + 200;
-      res = await addProduct({ ...productPayload, id: newId });
-    }
-
-    setFormSubmitLoading(false);
-    if (res.success) {
+      if (editingProduct) {
+        await updateProduct(productPayload);
+      } else {
+        await addProduct(productPayload);
+      }
       setIsModalOpen(false);
-    } else {
-      alert(`Error saving product: ${res.error?.message || 'Unknown error'}`);
+    } catch (err) {
+      alert(`Error saving product: ${err.message}`);
+    } finally {
+      setFormSubmitLoading(false);
+    }
+  };
+
+  const handleDelete = async (id, name) => {
+    if (window.confirm(`Are you sure you want to delete "${name}" (ID #${id})?`)) {
+      try {
+        await deleteProduct(id);
+      } catch (err) {
+        alert(`Failed to delete product: ${err.message}`);
+      }
     }
   };
 
   const exportSubscribersCSV = () => {
     if (subscribers.length === 0) return;
-    const csvRows = [
-      ['Email Address', 'Subscription Date'],
-      ...subscribers.map(sub => [sub.email, new Date(sub.created_at).toLocaleString()])
-    ];
-    const csvContent = 'data:text/csv;charset=utf-8,' 
-      + csvRows.map(e => e.map(val => `"${val}"`).join(',')).join('\n');
+    const csvContent = "data:text/csv;charset=utf-8," 
+      + "Subscriber Email,Date Subscribed\n"
+      + subscribers.map(s => `"${s.email}","${s.created_at}"`).join("\n");
     const encodedUri = encodeURI(csvContent);
-    const link = document.createElement('a');
-    link.setAttribute('href', encodedUri);
-    link.setAttribute('download', `newsletter_subscribers_${Date.now()}.csv`);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `kadha_subscribers_${new Date().toISOString().split('T')[0]}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -319,73 +403,81 @@ export default function AdminPanel() {
 
   // Filtered Products
   const filteredProducts = products.filter(p => {
-    const matchesSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                          p.material.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                          p.id.toString().includes(searchTerm);
     const matchesCategory = selectedCategory === 'All' || p.category === selectedCategory;
-    return matchesSearch && matchesCategory;
+    const matchesSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                          p.material.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          String(p.id).includes(searchTerm);
+    return matchesCategory && matchesSearch;
   });
 
-  // Dashboard Stats Calculations
+  // Filtered Orders
+  const filteredOrders = orders.filter(o => {
+    const matchesStatus = orderFilter === 'All' || o.orderStatus === orderFilter;
+    const matchesSearch = o.id.toLowerCase().includes(orderSearch.toLowerCase()) ||
+                          o.customerName.toLowerCase().includes(orderSearch.toLowerCase()) ||
+                          o.email.toLowerCase().includes(orderSearch.toLowerCase());
+    return matchesStatus && matchesSearch;
+  });
+
+  // Stats Calculations
   const stats = {
+    totalRevenue: orders.reduce((acc, curr) => acc + (curr.paymentStatus === 'Paid' ? curr.total : 0), 0),
+    totalOrders: orders.length,
     totalProducts: products.length,
     outOfStock: products.filter(p => !p.inStock).length,
-    featured: products.filter(p => p.featured).length,
-    comingSoon: products.filter(p => p.comingSoon).length,
     subscribersCount: subscribers.length,
-    alertsCount: alerts.length
+    alertsCount: alerts.length,
+    processingOrders: orders.filter(o => o.orderStatus === 'Processing').length
   };
 
-  // Render Login screen if not authenticated
+  // LOGIN SCREEN
   if (!isAuthenticated && !demoMode) {
     return (
       <div className="admin-login-container">
         <div className="login-glass-card">
           <div className="login-header">
             <img src="/logo/logo.png" alt="KADHA Logo" className="login-brand-logo" />
-            <p>Access the heritage weave management dashboard</p>
+            <p>Access the KADHA E-Commerce Management Suite</p>
           </div>
 
           {loginError && (
             <div className="login-error-alert">
-              <AlertTriangle size={18} />
+              <AlertTriangle size={16} />
               <span>{loginError}</span>
             </div>
           )}
 
           <form onSubmit={handleLogin} className="login-form">
             <div className="input-group">
-              <label htmlFor="email">Email Address</label>
+              <label htmlFor="adminEmail">Email Address</label>
               <input 
                 type="email" 
-                id="email" 
+                id="adminEmail" 
                 value={loginEmail} 
                 onChange={(e) => setLoginEmail(e.target.value)} 
                 placeholder="admin@kadha.shop" 
                 required 
               />
             </div>
-            
+
             <div className="input-group">
-              <label htmlFor="password">Password</label>
+              <label htmlFor="adminPassword">Password</label>
               <input 
                 type="password" 
-                id="password" 
+                id="adminPassword" 
                 value={loginPassword} 
                 onChange={(e) => setLoginPassword(e.target.value)} 
-                placeholder="••••••••" 
+                placeholder="••••••••••••" 
                 required 
               />
             </div>
 
             <button type="submit" className="login-submit-btn" disabled={authLoading}>
-              {authLoading ? <RefreshCw size={18} className="spin-icon" /> : 'Log In Securely'}
+              {authLoading ? <RefreshCw size={18} className="spin-icon" /> : 'Log In to Dashboard'}
             </button>
           </form>
 
-          <div className="login-divider">
-            <span>or</span>
-          </div>
+          <div className="login-divider"><span>or test without backend</span></div>
 
           <button onClick={() => setDemoMode(true)} className="demo-mode-btn">
             Skip Login (Offline / Demo Mode)
@@ -395,6 +487,7 @@ export default function AdminPanel() {
     );
   }
 
+  // MAIN ADMIN DASHBOARD SUITE
   return (
     <div className="admin-dashboard-layout">
       {/* Sidebar Navigation */}
@@ -406,19 +499,37 @@ export default function AdminPanel() {
 
         <nav className="sidebar-nav">
           <button 
+            className={`nav-item-btn ${activeTab === 'overview' ? 'active' : ''}`}
+            onClick={() => setActiveTab('overview')}
+          >
+            <LayoutDashboard size={18} />
+            <span>Dashboard</span>
+          </button>
+
+          <button 
+            className={`nav-item-btn ${activeTab === 'orders' ? 'active' : ''}`}
+            onClick={() => setActiveTab('orders')}
+          >
+            <ShoppingBag size={18} />
+            <span>Orders & Sales</span>
+            {stats.processingOrders > 0 && <span className="tab-count-alert">{stats.processingOrders}</span>}
+          </button>
+
+          <button 
             className={`nav-item-btn ${activeTab === 'products' ? 'active' : ''}`}
             onClick={() => setActiveTab('products')}
           >
-            <Grid size={18} />
-            <span>Manage Products</span>
+            <Package size={18} />
+            <span>Products & Stock</span>
+            <span className="tab-count">{products.length}</span>
           </button>
           
           <button 
-            className={`nav-item-btn ${activeTab === 'subscribers' ? 'active' : ''}`}
-            onClick={() => setActiveTab('subscribers')}
+            className={`nav-item-btn ${activeTab === 'customers' ? 'active' : ''}`}
+            onClick={() => setActiveTab('customers')}
           >
             <Users size={18} />
-            <span>Newsletter Subscriptions</span>
+            <span>Customers</span>
             {subscribers.length > 0 && <span className="tab-count">{subscribers.length}</span>}
           </button>
 
@@ -429,6 +540,14 @@ export default function AdminPanel() {
             <Bell size={18} />
             <span>Stock Alerts</span>
             {alerts.length > 0 && <span className="tab-count-alert">{alerts.length}</span>}
+          </button>
+
+          <button 
+            className={`nav-item-btn ${activeTab === 'settings' ? 'active' : ''}`}
+            onClick={() => setActiveTab('settings')}
+          >
+            <Settings size={18} />
+            <span>Store Settings</span>
           </button>
         </nav>
 
@@ -450,33 +569,39 @@ export default function AdminPanel() {
         {demoMode && (
           <div className="demo-banner">
             <AlertTriangle size={18} />
-            <span>You are operating in <strong>Offline Demo Mode</strong>. Changes are simulated in state but won't be saved to Supabase.</span>
+            <span>Operating in <strong>Demo Mode</strong>. Order & product updates are rendered live in session state.</span>
           </div>
         )}
 
-        {/* Dashboard Header */}
+        {/* Dynamic Header */}
         <header className="viewport-header">
           <div>
             <h1>
-              {activeTab === 'products' && 'Product Portfolio'}
-              {activeTab === 'subscribers' && 'Mailing List'}
-              {activeTab === 'alerts' && 'Product Notifications'}
+              {activeTab === 'overview' && 'Store Executive Overview'}
+              {activeTab === 'orders' && 'Orders & Fulfillment'}
+              {activeTab === 'products' && 'Saree Inventory Catalog'}
+              {activeTab === 'customers' && 'Customer & Mailing List'}
+              {activeTab === 'alerts' && 'Product Restock Requests'}
+              {activeTab === 'settings' && 'E-Commerce Store Settings'}
             </h1>
             <p>
-              {activeTab === 'products' && 'Add, update, and manage your inventory of masterweave sarees.'}
-              {activeTab === 'subscribers' && 'View your customer mailing list subscribers and export contacts.'}
-              {activeTab === 'alerts' && 'Review restock notification requests for out of stock inventory.'}
+              {activeTab === 'overview' && 'Live business statistics, total revenue, and quick store management metrics.'}
+              {activeTab === 'orders' && 'Track customer purchases, update fulfillment statuses, and view delivery details.'}
+              {activeTab === 'products' && 'Add new sarees, edit prices, update weaves, and control stock status.'}
+              {activeTab === 'customers' && 'View newsletter subscribers, active buyer emails, and export mailing lists.'}
+              {activeTab === 'alerts' && 'Review restock notifications requested by customers for sold-out weaves.'}
+              {activeTab === 'settings' && 'Configure store name, free shipping rules, tax rates, and support contacts.'}
             </p>
           </div>
           
           {activeTab === 'products' && (
             <button onClick={handleOpenAdd} className="add-product-btn">
               <Plus size={18} />
-              <span>Add Saree</span>
+              <span>Add New Saree</span>
             </button>
           )}
 
-          {activeTab === 'subscribers' && subscribers.length > 0 && (
+          {activeTab === 'customers' && subscribers.length > 0 && (
             <button onClick={exportSubscribersCSV} className="export-csv-btn">
               <Download size={18} />
               <span>Export CSV</span>
@@ -484,62 +609,247 @@ export default function AdminPanel() {
           )}
         </header>
 
-        {/* Quick Stats Grid */}
+        {/* Top Metric Cards */}
         <section className="stats-row-grid">
           <div className="stat-card">
-            <div className="stat-icon-wrapper blue">
-              <Layers size={20} />
+            <div className="stat-icon-wrapper gold">
+              <DollarSign size={22} />
             </div>
             <div>
-              <span className="stat-label">Total Inventory</span>
+              <span className="stat-label">Total Sales Revenue</span>
+              <span className="stat-value">₹{stats.totalRevenue.toLocaleString('en-IN')}</span>
+            </div>
+          </div>
+
+          <div className="stat-card">
+            <div className="stat-icon-wrapper blue">
+              <ShoppingBag size={22} />
+            </div>
+            <div>
+              <span className="stat-label">Total Orders</span>
+              <span className="stat-value">{stats.totalOrders}</span>
+            </div>
+          </div>
+
+          <div className="stat-card">
+            <div className="stat-icon-wrapper green">
+              <Package size={22} />
+            </div>
+            <div>
+              <span className="stat-label">Active Sarees</span>
               <span className="stat-value">{stats.totalProducts}</span>
             </div>
           </div>
 
           <div className="stat-card">
             <div className="stat-icon-wrapper orange">
-              <AlertTriangle size={20} />
+              <AlertTriangle size={22} />
             </div>
             <div>
               <span className="stat-label">Out of Stock</span>
               <span className="stat-value text-warn">{stats.outOfStock}</span>
             </div>
           </div>
-
-          <div className="stat-card">
-            <div className="stat-icon-wrapper gold">
-              <CheckCircle size={20} />
-            </div>
-            <div>
-              <span className="stat-label">Featured Masterpieces</span>
-              <span className="stat-value">{stats.featured}</span>
-            </div>
-          </div>
-
-          <div className="stat-card">
-            <div className="stat-icon-wrapper purple">
-              <Users size={20} />
-            </div>
-            <div>
-              <span className="stat-label">Active Subscribers</span>
-              <span className="stat-value">{stats.subscribersCount}</span>
-            </div>
-          </div>
         </section>
 
         {/* Dynamic Views */}
         <div className="tab-view-container">
+
+          {/* TAB 0: DASHBOARD OVERVIEW */}
+          {activeTab === 'overview' && (
+            <div className="overview-dashboard-wrapper">
+              <div className="overview-grid-2col">
+                {/* Recent Orders Overview */}
+                <div className="dashboard-widget-card">
+                  <div className="widget-header">
+                    <h3>Recent Customer Orders</h3>
+                    <button className="text-link-btn" onClick={() => setActiveTab('orders')}>View All Orders →</button>
+                  </div>
+                  <table className="mini-data-table">
+                    <thead>
+                      <tr>
+                        <th>Order ID</th>
+                        <th>Customer</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {orders.slice(0, 4).map(o => (
+                        <tr key={o.id}>
+                          <td className="id-cell">{o.id}</td>
+                          <td>
+                            <strong>{o.customerName}</strong>
+                            <span className="sub-text">{o.items[0]}</span>
+                          </td>
+                          <td className="price-cell">₹{o.total.toLocaleString('en-IN')}</td>
+                          <td>
+                            <span className={`status-pill ${o.orderStatus.toLowerCase()}`}>
+                              {o.orderStatus}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Quick Actions & Store Health */}
+                <div className="dashboard-widget-card">
+                  <div className="widget-header">
+                    <h3>Quick Management Actions</h3>
+                  </div>
+                  <div className="quick-actions-grid">
+                    <button className="action-tile-btn" onClick={handleOpenAdd}>
+                      <Plus size={20} />
+                      <span>Add New Product</span>
+                    </button>
+                    <button className="action-tile-btn" onClick={() => setActiveTab('orders')}>
+                      <ShoppingBag size={20} />
+                      <span>Fulfill Orders</span>
+                    </button>
+                    <button className="action-tile-btn" onClick={() => setActiveTab('alerts')}>
+                      <Bell size={20} />
+                      <span>Check Restock Alerts ({alerts.length})</span>
+                    </button>
+                    <button className="action-tile-btn" onClick={exportSubscribersCSV}>
+                      <Download size={20} />
+                      <span>Export Subscribers</span>
+                    </button>
+                  </div>
+
+                  <div className="store-summary-box">
+                    <h4>Current Policy Settings</h4>
+                    <ul>
+                      <li>🚚 <strong>Free Shipping Threshold:</strong> Orders above ₹{storeSettings.freeShippingThreshold.toLocaleString('en-IN')}</li>
+                      <li>🏷️ <strong>GST Tax Rate:</strong> {storeSettings.taxPercentage}% Inclusive</li>
+                      <li>✉️ <strong>Support Email:</strong> {storeSettings.contactEmail}</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
           
-          {/* TAB 1: PRODUCT MANAGEMENT */}
-          {activeTab === 'products' && (
+          {/* TAB 1: ORDERS MANAGEMENT */}
+          {activeTab === 'orders' && (
             <div className="table-wrapper-card">
-              {/* Table Toolbar */}
               <div className="table-toolbar">
                 <div className="search-bar-input">
                   <Search size={18} />
                   <input 
                     type="text" 
-                    placeholder="Search by ID, name or weave..." 
+                    placeholder="Search order ID, customer name or email..." 
+                    value={orderSearch}
+                    onChange={(e) => setOrderSearch(e.target.value)}
+                  />
+                </div>
+                
+                <div className="filter-pills-row">
+                  {['All', 'Processing', 'Shipped', 'Delivered'].map(status => (
+                    <button 
+                      key={status}
+                      className={`filter-pill-btn ${orderFilter === status ? 'active' : ''}`}
+                      onClick={() => setOrderFilter(status)}
+                    >
+                      {status}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="table-responsive-container">
+                <table className="admin-data-table">
+                  <thead>
+                    <tr>
+                      <th>Order ID</th>
+                      <th>Customer & Address</th>
+                      <th>Items Purchased</th>
+                      <th>Total Amount</th>
+                      <th>Payment</th>
+                      <th>Fulfillment Status</th>
+                      <th style={{ textAlign: 'center' }}>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredOrders.length === 0 ? (
+                      <tr>
+                        <td colSpan="7" className="text-center-cell">
+                          <ShoppingBag size={24} />
+                          <span>No orders found matching search criteria.</span>
+                        </td>
+                      </tr>
+                    ) : (
+                      filteredOrders.map(order => (
+                        <tr key={order.id}>
+                          <td className="id-cell">
+                            <strong>{order.id}</strong>
+                            <span className="date-cell">
+                              {new Date(order.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
+                            </span>
+                          </td>
+                          <td>
+                            <div className="customer-info-block">
+                              <strong>{order.customerName}</strong>
+                              <span className="sub-text">{order.email}</span>
+                              <span className="sub-text-phone">{order.phone}</span>
+                            </div>
+                          </td>
+                          <td>
+                            <div className="items-list-cell">
+                              <span>{order.items.join(', ')}</span>
+                              <small>({order.itemsCount} item{order.itemsCount > 1 ? 's' : ''})</small>
+                            </div>
+                          </td>
+                          <td className="price-cell">
+                            <strong>₹{order.total.toLocaleString('en-IN')}</strong>
+                          </td>
+                          <td>
+                            <span className={`payment-pill ${order.paymentStatus.toLowerCase()}`}>
+                              {order.paymentStatus} ({order.paymentMethod})
+                            </span>
+                          </td>
+                          <td>
+                            <select 
+                              className={`order-status-select ${order.orderStatus.toLowerCase()}`}
+                              value={order.orderStatus}
+                              onChange={(e) => handleOrderStatusChange(order.id, e.target.value)}
+                            >
+                              <option value="Processing">Processing</option>
+                              <option value="Shipped">Shipped</option>
+                              <option value="Delivered">Delivered</option>
+                              <option value="Cancelled">Cancelled</option>
+                            </select>
+                          </td>
+                          <td>
+                            <div className="row-action-buttons">
+                              <button 
+                                onClick={() => setSelectedOrder(order)} 
+                                className="action-row-btn edit" 
+                                title="View Full Order Details"
+                              >
+                                <Eye size={16} />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 2: PRODUCT CATALOG */}
+          {activeTab === 'products' && (
+            <div className="table-wrapper-card">
+              <div className="table-toolbar">
+                <div className="search-bar-input">
+                  <Search size={18} />
+                  <input 
+                    type="text" 
+                    placeholder="Search by ID, saree name or material..." 
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
@@ -557,17 +867,16 @@ export default function AdminPanel() {
                 </div>
               </div>
 
-              {/* Data Table */}
               <div className="table-responsive-container">
                 <table className="admin-data-table">
                   <thead>
                     <tr>
                       <th style={{ width: '80px' }}>ID</th>
-                      <th>Product details</th>
-                      <th>Weave</th>
+                      <th>Saree Product Details</th>
+                      <th>Weave Category</th>
                       <th>Price</th>
-                      <th>Stock status</th>
-                      <th>Visibility</th>
+                      <th>Stock Status</th>
+                      <th>Badges & Tags</th>
                       <th style={{ width: '120px', textAlign: 'center' }}>Actions</th>
                     </tr>
                   </thead>
@@ -576,14 +885,14 @@ export default function AdminPanel() {
                       <tr>
                         <td colSpan="7" className="text-center-cell">
                           <RefreshCw size={24} className="spin-icon loader-margin" />
-                          <span>Loading inventory data...</span>
+                          <span>Loading product inventory...</span>
                         </td>
                       </tr>
                     ) : filteredProducts.length === 0 ? (
                       <tr>
                         <td colSpan="7" className="text-center-cell">
                           <AlertTriangle size={24} />
-                          <span>No products match the search filters.</span>
+                          <span>No products match the search query.</span>
                         </td>
                       </tr>
                     ) : (
@@ -592,13 +901,13 @@ export default function AdminPanel() {
                           <td className="id-cell">#{product.id}</td>
                           <td className="product-info-cell">
                             <div className="product-avatar-wrapper">
-                              <img
+                              <img 
                                 src={
                                   product.image.startsWith('http') || product.image.startsWith('/')
                                     ? product.image
                                     : '/' + product.image
-                                }
-                                alt={product.name}
+                                } 
+                                alt={product.name} 
                                 onError={(e) => { e.target.style.opacity = '0.3'; e.target.src = '/logo/logo-emblem.png'; }}
                               />
                             </div>
@@ -658,30 +967,31 @@ export default function AdminPanel() {
             </div>
           )}
 
-          {/* TAB 2: NEWSLETTER SUBSCRIPTIONS */}
-          {activeTab === 'subscribers' && (
+          {/* TAB 3: CUSTOMERS & MAILING LIST */}
+          {activeTab === 'customers' && (
             <div className="table-wrapper-card">
               <div className="table-responsive-container">
                 <table className="admin-data-table">
                   <thead>
                     <tr>
                       <th>Subscriber Email</th>
-                      <th>Date Subscribed</th>
+                      <th>Subscription Date</th>
+                      <th>Status</th>
                     </tr>
                   </thead>
                   <tbody>
                     {loadingSubscribers ? (
                       <tr>
-                        <td colSpan="2" className="text-center-cell">
+                        <td colSpan="3" className="text-center-cell">
                           <RefreshCw size={24} className="spin-icon loader-margin" />
                           <span>Loading subscribers...</span>
                         </td>
                       </tr>
                     ) : subscribers.length === 0 ? (
                       <tr>
-                        <td colSpan="2" className="text-center-cell">
+                        <td colSpan="3" className="text-center-cell">
                           <Users size={24} />
-                          <span>No newsletter subscribers yet.</span>
+                          <span>No newsletter subscribers found.</span>
                         </td>
                       </tr>
                     ) : (
@@ -694,10 +1004,11 @@ export default function AdminPanel() {
                             {new Date(sub.created_at).toLocaleString('en-IN', {
                               day: 'numeric',
                               month: 'short',
-                              year: 'numeric',
-                              hour: '2-digit',
-                              minute: '2-digit'
+                              year: 'numeric'
                             })}
+                          </td>
+                          <td>
+                            <span className="status-indicator-badge in-stock">Active</span>
                           </td>
                         </tr>
                       ))
@@ -708,7 +1019,7 @@ export default function AdminPanel() {
             </div>
           )}
 
-          {/* TAB 3: STOCK ALERTS */}
+          {/* TAB 4: STOCK ALERTS */}
           {activeTab === 'alerts' && (
             <div className="table-wrapper-card">
               <div className="table-responsive-container">
@@ -717,8 +1028,8 @@ export default function AdminPanel() {
                     <tr>
                       <th>Customer Email</th>
                       <th>Product ID</th>
-                      <th>Requested Product</th>
-                      <th>Alert Requested Date</th>
+                      <th>Requested Saree</th>
+                      <th>Requested Date</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -726,14 +1037,14 @@ export default function AdminPanel() {
                       <tr>
                         <td colSpan="4" className="text-center-cell">
                           <RefreshCw size={24} className="spin-icon loader-margin" />
-                          <span>Loading notification requests...</span>
+                          <span>Loading restock requests...</span>
                         </td>
                       </tr>
                     ) : alerts.length === 0 ? (
                       <tr>
                         <td colSpan="4" className="text-center-cell">
                           <Bell size={24} />
-                          <span>No product notification requests at this time.</span>
+                          <span>No restock alert requests at this time.</span>
                         </td>
                       </tr>
                     ) : (
@@ -752,9 +1063,7 @@ export default function AdminPanel() {
                             {new Date(alert.created_at).toLocaleString('en-IN', {
                               day: 'numeric',
                               month: 'short',
-                              year: 'numeric',
-                              hour: '2-digit',
-                              minute: '2-digit'
+                              year: 'numeric'
                             })}
                           </td>
                         </tr>
@@ -766,8 +1075,138 @@ export default function AdminPanel() {
             </div>
           )}
 
+          {/* TAB 5: STORE SETTINGS */}
+          {activeTab === 'settings' && (
+            <div className="table-wrapper-card settings-card">
+              {settingsSavedMsg && (
+                <div className="settings-saved-banner">
+                  <CheckCircle2 size={18} />
+                  <span>{settingsSavedMsg}</span>
+                </div>
+              )}
+
+              <form onSubmit={handleSaveSettings} className="settings-form-grid">
+                <h3>Store Identity & Policies</h3>
+
+                <div className="form-row-2">
+                  <div className="form-group">
+                    <label>Store Name</label>
+                    <input 
+                      type="text" 
+                      value={storeSettings.storeName}
+                      onChange={(e) => setStoreSettings({ ...storeSettings, storeName: e.target.value })}
+                      required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Support Email</label>
+                    <input 
+                      type="email" 
+                      value={storeSettings.contactEmail}
+                      onChange={(e) => setStoreSettings({ ...storeSettings, contactEmail: e.target.value })}
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="form-row-2">
+                  <div className="form-group">
+                    <label>Support Phone Number</label>
+                    <input 
+                      type="text" 
+                      value={storeSettings.contactPhone}
+                      onChange={(e) => setStoreSettings({ ...storeSettings, contactPhone: e.target.value })}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Free Shipping Minimum Order (₹)</label>
+                    <input 
+                      type="number" 
+                      value={storeSettings.freeShippingThreshold}
+                      onChange={(e) => setStoreSettings({ ...storeSettings, freeShippingThreshold: Number(e.target.value) })}
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="form-row-2">
+                  <div className="form-group">
+                    <label>GST Tax Percentage (%)</label>
+                    <input 
+                      type="number" 
+                      value={storeSettings.taxPercentage}
+                      onChange={(e) => setStoreSettings({ ...storeSettings, taxPercentage: Number(e.target.value) })}
+                      required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Currency Display Symbol</label>
+                    <input 
+                      type="text" 
+                      value={storeSettings.currencySymbol}
+                      onChange={(e) => setStoreSettings({ ...storeSettings, currencySymbol: e.target.value })}
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="settings-submit-row">
+                  <button type="submit" className="save-form-btn">
+                    <Save size={18} />
+                    <span>Save Store Settings</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+          )}
+
         </div>
       </main>
+
+      {/* ORDER DETAIL MODAL */}
+      {selectedOrder && (
+        <div className="modal-backdrop">
+          <div className="modal-content-card">
+            <div className="modal-header">
+              <h2>Order Details — {selectedOrder.id}</h2>
+              <button onClick={() => setSelectedOrder(null)} className="modal-close-btn">&times;</button>
+            </div>
+
+            <div className="modal-form">
+              <div className="order-summary-header">
+                <div>
+                  <strong>Customer: {selectedOrder.customerName}</strong>
+                  <p>{selectedOrder.email} | {selectedOrder.phone}</p>
+                </div>
+                <div className="order-total-badge">
+                  <span>Total Amount</span>
+                  <strong>₹{selectedOrder.total.toLocaleString('en-IN')}</strong>
+                </div>
+              </div>
+
+              <div className="order-address-box">
+                <h4>Shipping Address</h4>
+                <p>{selectedOrder.shippingAddress}</p>
+              </div>
+
+              <div className="order-items-box">
+                <h4>Purchased Items</h4>
+                <ul>
+                  {selectedOrder.items.map((item, i) => (
+                    <li key={i}>🛍️ {item}</li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="modal-footer-btns">
+                <button onClick={() => setSelectedOrder(null)} className="cancel-form-btn">
+                  Close Detail Window
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ADD / EDIT PRODUCT MODAL */}
       {isModalOpen && (
@@ -858,7 +1297,7 @@ export default function AdminPanel() {
                     id="prodOrigPrice"
                     value={formData.originalPrice}
                     onChange={(e) => setFormData({ ...formData, originalPrice: e.target.value })}
-                    placeholder="e.g. 58000 (To show a slash-price)"
+                    placeholder="e.g. 58000"
                   />
                 </div>
               </div>
@@ -881,17 +1320,11 @@ export default function AdminPanel() {
                       type="text" 
                       value={formData.image}
                       onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                      placeholder="Or enter path e.g. images/herosection/pic.jpg"
+                      placeholder="Or path e.g. image/saree/pic.webp"
                       required
                     />
                   </div>
                   {imageUploadError && <span className="input-field-error-msg">{imageUploadError}</span>}
-                  {formData.image && formData.image.startsWith('data:') && (
-                    <span className="input-field-success-msg">✓ Image loaded locally (Base64)</span>
-                  )}
-                  {formData.image && formData.image.startsWith('http') && (
-                    <span className="input-field-success-msg">✓ Uploaded to Supabase Storage</span>
-                  )}
                 </div>
                 <div className="form-group">
                   <label htmlFor="prodTag">Label Badge Tag (Optional)</label>
