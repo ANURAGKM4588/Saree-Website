@@ -14,7 +14,7 @@ export default function BridalBanner() {
           alt="Raj Gharana New Collection" 
           className="raj-gharana-bg-image"
           onError={(e) => {
-            e.target.src = `${BASE}images/sarees/folded-kanjivaram-silk-saree-green-golden-pallu.webp`;
+            e.target.src = `${BASE}image/saree/folded-kanjivaram-silk-saree-green-golden-pallu.webp`;
           }}
         />
 

@@ -5,12 +5,12 @@ import './GallerySection.css';
 const BASE = import.meta.env.BASE_URL || '/';
 
 const galleryImages = [
-  `${BASE}images/sarees/images (11).jpeg`,
-  `${BASE}images/sarees/images (8).jpeg`,
-  `${BASE}images/sarees/images (7).jpeg`,
-  `${BASE}images/sarees/images (6).jpeg`,
-  `${BASE}images/sarees/images (5).jpeg`,
-  `${BASE}images/sarees/5_73_7415436e-9226-4442-9a42-d47387d04730.webp`,
+  `${BASE}image/saree/images (11).jpeg`,
+  `${BASE}image/saree/images (8).jpeg`,
+  `${BASE}image/saree/images (7).jpeg`,
+  `${BASE}image/saree/images (6).jpeg`,
+  `${BASE}image/saree/images (5).jpeg`,
+  `${BASE}image/saree/5_73_7415436e-9226-4442-9a42-d47387d04730.webp`,
 ];
 
 const containerVariants = {
