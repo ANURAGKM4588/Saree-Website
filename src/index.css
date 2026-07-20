@@ -12,11 +12,11 @@
   --color-crimson-light: #0b4f3e;
   --color-royal-maroon: #800020;
   
-  /* Sleek Minimal Emerald Green Gradients */
+  /* Brand Dark Green High-Visibility Gradients */
   --gradient-gold: linear-gradient(135deg, #031c15 0%, #073b2d 50%, #04241b 100%);
   --gradient-gold-hover: linear-gradient(135deg, #02120d 0%, #04241b 50%, #02120d 100%);
-  --gradient-gold-text: linear-gradient(90deg, #031c15 0%, #094736 50%, #c89d36 100%);
-  --gradient-royal-gold: linear-gradient(135deg, #c89d36 0%, #e8ca74 50%, #b88a25 100%);
+  --gradient-gold-text: linear-gradient(135deg, #031c15 0%, #07382c 55%, #0c5643 100%);
+  --gradient-royal-gold: linear-gradient(135deg, #07382c 0%, #0c5643 50%, #157960 100%);
 
   --text-dark-primary: #ffffff;
   --text-dark-secondary: #f0e8c8;
