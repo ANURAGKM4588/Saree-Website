@@ -399,6 +399,23 @@
   color: var(--color-gold);
 }
 
+.add-to-cart-quick-btn {
+  background: #031c15;
+  color: #edf4c1;
+  border: 1px solid rgba(200, 157, 54, 0.4);
+  border-radius: 14px;
+  padding: 4px 10px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.add-to-cart-quick-btn:hover {
+  background: #074737;
+  transform: scale(1.03);
+}
+
 .remove-item-btn {
   color: var(--text-muted);
   transition: var(--transition-fast);
