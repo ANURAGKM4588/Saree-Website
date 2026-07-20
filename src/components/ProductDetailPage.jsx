@@ -5,6 +5,7 @@ import { ShoppingBag, Star, Shield, Truck, RotateCcw, CheckCircle2, ThumbsUp, Me
 import { useCart } from '../context/CartContext';
 import { formatPrice } from '../data/products';
 import { useDatabase } from '../context/DatabaseContext';
+import CheckoutModal from './CheckoutModal';
 import './ProductDetailPage.css';
 
 const sampleReviewsList = [
@@ -96,8 +97,7 @@ export default function ProductDetailPage() {
   };
 
   const handleBuyNow = () => {
-    addToCart(product);
-    setIsCartOpen(true);
+    setIsCheckoutOpen(true);
   };
 
   const handleHelpfulClick = (revId) => {
@@ -356,6 +356,14 @@ export default function ProductDetailPage() {
           </motion.div>
         </div>
       </div>
+
+      {/* Razorpay Checkout Modal for Direct Buy Now */}
+      <CheckoutModal 
+        isOpen={isCheckoutOpen}
+        onClose={() => setIsCheckoutOpen(false)}
+        items={[{ ...product, qty: 1 }]}
+        total={product.price}
+      />
     </div>
   );
 }

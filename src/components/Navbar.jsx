@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Heart, ShoppingBag, X, ChevronRight, ChevronDown, Trash2 } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import CheckoutModal from './CheckoutModal';
 import './Navbar.css';
 
 const announcementMessages = [
@@ -18,23 +19,19 @@ const navCategories = [
     subItems: [
       { label: 'Pure Silk', link: '/products?search=Silk' },
       { label: 'Semi Silk', link: '/products?search=Silk' },
-      { label: 'Georgette', link: '/products?category=Organza' },
-      { label: 'Brocade', link: '/products?category=Banarasi' },
-      { label: 'Linen', link: '/products?search=Linen' },
-      { label: 'Organza', link: '/products?category=Organza' },
-      { label: 'Tussar', link: '/products?search=Tussar' },
-      { label: 'Cotton', link: '/products?category=Chanderi' },
-      { label: 'Ready to Wear', link: '/products' },
-      { label: 'Vichitra Silk', link: '/products' }
+      { label: 'Tissue Organza', link: '/products?category=Organza' },
+      { label: 'Soft Linen', link: '/products?category=Cotton' },
+      { label: 'Shimmer Brocade', link: '/products?search=Shimmer' }
     ] 
   },
   { 
-    name: 'Festive', 
+    name: 'Occasion', 
     href: '#occasion-section',
     subItems: [
-      { label: 'Onam Special Silks', link: '/products?category=Banarasi' },
-      { label: 'Kerala Onam Set Saree', link: '/products?category=Banarasi' },
-      { label: 'Onam Kasavu & Zari Pallus', link: '/products?category=Kanjeevaram' }
+      { label: 'Weddings & Grand Events', link: '/products?category=Kanjeevaram' },
+      { label: 'Festive & Onam Celebrations', link: '/products?category=Onam' },
+      { label: 'Evenings & Celebrations', link: '/products?category=Organza' },
+      { label: 'Work & Everyday Grace', link: '/products?category=Cotton' }
     ] 
   },
   { 
@@ -59,9 +56,9 @@ const navCategories = [
       { label: 'Shimmer', link: '/products?search=Shimmer' }
     ] 
   },
-  { name: 'New Arrivals', href: '#arrivals-section' },
-  { name: 'Bestsellers', href: '#bestsellers-section' },
-  { name: 'Reviews', href: '#reviews-section' }
+  { name: 'All Collections', href: '/products' },
+  { name: 'Our Story', href: '#story-section' },
+  { name: 'Contact', href: '#contact' },
 ];
 
 function formatPrice(price) {
@@ -71,13 +68,14 @@ function formatPrice(price) {
 export default function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { cartItems, isCartOpen, setIsCartOpen, removeFromCart, cartTotal, cartCount, wishlistCount } = useCart();
+  const { cartItems, isCartOpen, setIsCartOpen, removeFromCart, cartTotal, cartCount, wishlistCount, clearCart } = useCart();
 
   const [isScrolled, setIsScrolled] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [announcementIdx, setAnnouncementIdx] = useState(0);
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -364,7 +362,13 @@ export default function Navbar() {
                     <span className="subtotal-amount">{formatPrice(cartTotal)}</span>
                   </div>
                   <p className="cart-tax-info">Free shipping applied on all silk sarees.</p>
-                  <button className="checkout-btn">
+                  <button 
+                    className="checkout-btn"
+                    onClick={() => {
+                      setIsCartOpen(false);
+                      setIsCheckoutOpen(true);
+                    }}
+                  >
                     <span>Proceed to Checkout</span>
                     <ChevronRight size={18} />
                   </button>
@@ -374,6 +378,17 @@ export default function Navbar() {
           </>
         )}
       </AnimatePresence>
+
+      {/* Razorpay Checkout Modal */}
+      <CheckoutModal 
+        isOpen={isCheckoutOpen}
+        onClose={() => setIsCheckoutOpen(false)}
+        items={cartItems}
+        total={cartTotal}
+        onPaymentSuccess={() => {
+          clearCart();
+        }}
+      />
     </>
   );
 }
