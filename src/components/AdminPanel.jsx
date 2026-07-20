@@ -342,8 +342,7 @@ export default function AdminPanel() {
       <div className="admin-login-container">
         <div className="login-glass-card">
           <div className="login-header">
-            <span className="brand-emblem">◈</span>
-            <h1>KADHA ADMIN</h1>
+            <img src="/logo/logo.png" alt="KADHA Logo" className="login-brand-logo" />
             <p>Access the heritage weave management dashboard</p>
           </div>
 
@@ -401,8 +400,7 @@ export default function AdminPanel() {
       {/* Sidebar Navigation */}
       <aside className="admin-sidebar">
         <div className="sidebar-brand">
-          <span className="brand-emblem">◈</span>
-          <span>KADHA</span>
+          <img src="/logo/logo vertical white.png" alt="KADHA" className="sidebar-brand-logo" />
           <span className="badge-admin">Admin</span>
         </div>
 
