@@ -146,18 +146,29 @@
   height: 38px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(200, 157, 54, 0.3);
-  color: var(--color-accent-gold);
+  border: 1px solid rgba(237, 244, 193, 0.35);
+  color: #edf4c1;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: var(--transition-fast);
 }
 
+.social-pill svg {
+  color: #edf4c1;
+  stroke: #edf4c1;
+}
+
 .social-pill:hover {
-  background: var(--gradient-royal-gold);
-  color: #120103;
+  background: #edf4c1;
+  border-color: #edf4c1;
+  color: #042219;
   transform: translateY(-3px);
+}
+
+.social-pill:hover svg {
+  color: #042219;
+  stroke: #042219;
 }
 
 .footer-heading {
