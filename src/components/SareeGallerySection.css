@@ -334,7 +334,7 @@
 /* ─── Infinite Right-to-Left Marquee Strip ─────────────────────────────── */
 @keyframes sg-scroll-rtl {
   from { transform: translateX(0); }
-  to   { transform: translateX(-33.333%); }
+  to   { transform: translateX(calc(-1 * var(--one-set-width, 33.333%))); }
 }
 
 .sg-loop-wrapper {
@@ -361,14 +361,10 @@
   display: flex;
   align-items: stretch;
   gap: 1.25rem;
-  /* 3 copies of items so the reset is invisible */
   width: max-content;
-  animation: sg-scroll-rtl 28s linear infinite;
+  /* duration + play-state are injected as inline style from React */
+  animation: sg-scroll-rtl linear infinite;
   will-change: transform;
-}
-
-.sg-loop-wrapper:hover .sg-loop-track {
-  animation-play-state: paused;
 }
 
 .sg-loop-card {
