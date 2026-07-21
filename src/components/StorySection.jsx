@@ -1,7 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
-import { Sparkles, Heart, Award, Users, Clock, ArrowRight, Quote, ShieldCheck, Gem, Package, Feather } from 'lucide-react';
+import { Sparkles, Heart, Award, Users, Clock, ShieldCheck, Gem, Package, Feather } from 'lucide-react';
 import './StorySection.css';
 
 const BASE = import.meta.env.BASE_URL || '/';
@@ -14,8 +13,6 @@ const fadeInUp = {
 };
 
 export default function StorySection() {
-  const navigate = useNavigate();
-
   return (
     <section className="story-section" id="story-section">
       <div id="story" style={{ position: 'relative', top: '-100px' }} />
@@ -173,40 +170,6 @@ export default function StorySection() {
               </div>
             </div>
           </motion.div>
-
-          {/* Luxury Quote Card Banner */}
-          <motion.div 
-            className="story-quote-card"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-          >
-            <div className="quote-bg-glow" />
-            <div className="quote-icon-decor-wrapper">
-              <Quote size={36} className="gold-quote-icon" />
-            </div>
-
-            <p className="story-quote-body">
-              "A saree is the only garment that embraces every woman with unconditional grace, holds every family memory with warmth, and never fades with time."
-            </p>
-
-            <div className="story-quote-author-pill">
-              <span>— Master Weaver S. Rahman, Chief Artisan at KADHA</span>
-            </div>
-
-            <button 
-              className="story-cta-btn"
-              onClick={() => {
-                navigate('/products');
-                window.scrollTo(0, 0);
-              }}
-            >
-              <span>Explore Our Heritage Collections</span>
-              <ArrowRight size={18} className="cta-arrow" />
-            </button>
-          </motion.div>
-
         </div>
       </div>
     </section>
