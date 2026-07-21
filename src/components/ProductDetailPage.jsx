@@ -58,6 +58,7 @@ export default function ProductDetailPage({ isGalleryView = false }) {
     if (e) e.preventDefault();
     sessionStorage.setItem('return_to_gallery', 'true');
     sessionStorage.removeItem('from_gallery');
+    document.documentElement.style.scrollBehavior = 'auto';
     navigate('/');
   };
 
