@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Search, X, ChevronDown, Star, ShoppingBag } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { formatPrice } from '../data/products';
@@ -189,16 +189,26 @@ export default function ProductsPage() {
           </button>
         </div>
       ) : (
-        <div className="pp-grid">
-          {filtered.map((product) => (
-            <div key={product.id} className="pp-card-wrapper">
-              <ProductCard 
-                product={product} 
-                onQuickView={(p) => setQuickViewProduct(p)} 
-              />
-            </div>
-          ))}
-        </div>
+        <motion.div layout className="pp-grid">
+          <AnimatePresence mode="popLayout">
+            {filtered.map((product) => (
+              <motion.div
+                key={product.id}
+                layout
+                initial={{ opacity: 0, scale: 0.92, y: 15 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.92, y: 15 }}
+                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                className="pp-card-wrapper"
+              >
+                <ProductCard 
+                  product={product} 
+                  onQuickView={(p) => setQuickViewProduct(p)} 
+                />
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </motion.div>
       )}
 
       {/* Quick View Modal */}

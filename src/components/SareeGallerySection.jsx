@@ -6,7 +6,7 @@ import { formatPrice } from '../data/products';
 import { useCart } from '../context/CartContext';
 import './SareeGallerySection.css';
 
-// Curated drape lookbook collection mapped to real saree products
+// Curated drape lookbook collection mapped to distinct real saree products
 const galleryItems = [
   {
     id: 'gal-1',
@@ -15,7 +15,7 @@ const galleryItems = [
     category: 'Bridal',
     price: 1,
     originalPrice: 62000,
-    image: '/image/herosection/new_webp/hf_20260718_194543_38905dcd-3226-421c-a8f2-a4fdd40e1b9f005.webp',
+    image: '/image/saree/folded-kanjivaram-silk-saree-green-golden-pallu.webp',
     drapeType: 'Traditional South Indian Drape',
     occasion: 'Wedding & Bridal'
   },
@@ -26,7 +26,7 @@ const galleryItems = [
     category: 'Royal Silk',
     price: 52900,
     originalPrice: 68000,
-    image: '/image/herosection/new_webp/hf_20260718_194543_38905dcd-3226-421c-a8f2-a4fdd40e1b9f012.webp',
+    image: '/image/saree/5_73_7415436e-9226-4442-9a42-d47387d04730.webp',
     drapeType: 'North Indian Bridal Drape',
     occasion: 'Grand Reception'
   },
@@ -37,7 +37,7 @@ const galleryItems = [
     category: 'Festive',
     price: 1,
     originalPrice: 38500,
-    image: '/image/herosection/new_webp/hf_20260718_194543_38905dcd-3226-421c-a8f2-a4fdd40e1b9f018.webp',
+    image: '/image/saree/IMG20250515110716.jpg',
     drapeType: 'Airy Pastel Pleated Drape',
     occasion: 'Daytime Celebrations'
   },
@@ -48,7 +48,7 @@ const galleryItems = [
     category: 'Classic',
     price: 72500,
     originalPrice: 92000,
-    image: '/image/herosection/new_webp/hf_20260718_194543_38905dcd-3226-421c-a8f2-a4fdd40e1b9f025.webp',
+    image: '/image/saree/images (5).jpeg',
     drapeType: 'Double Ikat Royal Drape',
     occasion: 'Heritage Gathering'
   },
@@ -59,7 +59,7 @@ const galleryItems = [
     category: 'Bridal',
     price: 89500,
     originalPrice: 115000,
-    image: '/image/herosection/new_webp/hf_20260718_194543_38905dcd-3226-421c-a8f2-a4fdd40e1b9f030.webp',
+    image: '/image/saree/images (7).jpeg',
     drapeType: 'Grand Temple Korvai Drape',
     occasion: 'Muhurtham Ceremony'
   },
@@ -70,7 +70,7 @@ const galleryItems = [
     category: 'Festive',
     price: 62500,
     originalPrice: 78000,
-    image: '/image/herosection/new_webp/hf_20260718_194543_38905dcd-3226-421c-a8f2-a4fdd40e1b9f040.webp',
+    image: '/image/saree/images (8).jpeg',
     drapeType: 'Metallic Sheen Pallu Drape',
     occasion: 'Sangeet & Evening'
   },
@@ -81,19 +81,19 @@ const galleryItems = [
     category: 'Royal Silk',
     price: 78500,
     originalPrice: 95000,
-    image: '/image/herosection/new_webp/hf_20260718_194543_38905dcd-3226-421c-a8f2-a4fdd40e1b9f048.webp',
+    image: '/image/saree/images (10).jpeg',
     drapeType: 'Maharashtrian Nauvari Style Drape',
     occasion: 'Traditional Pooja'
   },
   {
     id: 'gal-8',
-    productId: 112,
-    title: 'Kanjeevaram Green Paradise',
+    productId: 110,
+    title: 'Tussar Silk Tribal',
     category: 'Classic',
-    price: 69500,
-    originalPrice: 88000,
-    image: '/image/herosection/new_webp/hf_20260718_194543_38905dcd-3226-421c-a8f2-a4fdd40e1b9f055.webp',
-    drapeType: 'Emerald Zari Pleated Drape',
+    price: 26500,
+    originalPrice: 33000,
+    image: '/image/saree/images (11).jpeg',
+    drapeType: 'Natural Handloom Textured Drape',
     occasion: 'Festive Gathering'
   }
 ];
@@ -145,18 +145,18 @@ export default function SareeGallerySection() {
 
         {/* Gallery Grid */}
         <motion.div layout className="sg-grid">
-          <AnimatePresence>
-            {filteredItems.map((item, index) => {
+          <AnimatePresence mode="popLayout">
+            {filteredItems.map((item) => {
               const isLiked = wishlist.includes(item.productId);
 
               return (
                 <motion.div
                   key={item.id}
                   layout
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  transition={{ duration: 0.4, delay: index * 0.05 }}
+                  initial={{ opacity: 0, scale: 0.9, y: 15 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.9, y: 15 }}
+                  transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                   className="sg-card"
                   onClick={() => handleCardClick(item.productId)}
                 >
