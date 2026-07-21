@@ -11,7 +11,9 @@ export default function WishlistPage() {
   const { wishlist, toggleWishlist, addToCart, setIsCartOpen } = useCart();
   const { products: dbProducts } = useDatabase();
 
-  const likedProducts = (dbProducts || []).filter((p) => wishlist.includes(p.id));
+  const likedProducts = (dbProducts || []).filter((p) => 
+    wishlist.some((wId) => String(wId) === String(p.id))
+  );
 
   return (
     <div className="wishlist-page-container">

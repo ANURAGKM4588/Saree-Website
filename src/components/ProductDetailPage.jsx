@@ -1,7 +1,7 @@
-import React, { useState, useLayoutEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { ShoppingBag, Star, Shield, Truck, RotateCcw, CheckCircle2, ThumbsUp, MessageSquarePlus, Quote } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ShoppingBag, Star, Shield, Truck, RotateCcw, CheckCircle2, ThumbsUp, MessageSquarePlus, Quote, X, Sparkles, Upload, Send, User } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { formatPrice } from '../data/products';
 import { useDatabase } from '../context/DatabaseContext';
@@ -51,7 +51,113 @@ export default function ProductDetailPage() {
   const { getProductById, loading } = useDatabase();
   const product = getProductById(id);
 
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const [reviewsList, setReviewsList] = useState(sampleReviewsList);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [hoverRating, setHoverRating] = useState(0);
+  const [reviewSubmitted, setReviewSubmitted] = useState(false);
   const [helpfulCounts, setHelpfulCounts] = useState({ 1: 24, 2: 18, 3: 15 });
+
+  const [currentUser, setCurrentUser] = useState(null);
+  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewComment, setReviewComment] = useState('');
+  const [imagePreview, setImagePreview] = useState(null);
+  const [userHasReviewed, setUserHasReviewed] = useState(false);
+
+  const checkHasReviewed = (productId) => {
+    try {
+      const userKey = currentUser?.email || currentUser?.name || 'guest_device';
+      const stored = localStorage.getItem('kadha_submitted_reviews');
+      if (stored) {
+        const list = JSON.parse(stored);
+        return list.some(
+          (item) => item.userKey === userKey && String(item.productId) === String(productId)
+        );
+      }
+    } catch (e) {
+      console.error(e);
+    }
+    return false;
+  };
+
+  useEffect(() => {
+    const loadUser = () => {
+      try {
+        const stored = localStorage.getItem('kadha_customer_user');
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (parsed && parsed.name) {
+            setCurrentUser(parsed);
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    loadUser();
+    window.addEventListener('kadha_user_changed', loadUser);
+    return () => window.removeEventListener('kadha_user_changed', loadUser);
+  }, []);
+
+  useEffect(() => {
+    if (product?.id) {
+      setUserHasReviewed(checkHasReviewed(product.id));
+    }
+  }, [product?.id, currentUser]);
+
+  const handleOpenReviewModal = () => {
+    setReviewRating(5);
+    setReviewComment('');
+    setImagePreview(null);
+    setReviewSubmitted(false);
+    setIsReviewModalOpen(true);
+  };
+
+  const handleImageFileChange = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const objectUrl = URL.createObjectURL(file);
+      setImagePreview(objectUrl);
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setImagePreview(null);
+  };
+
+  const handleReviewSubmit = (e) => {
+    e.preventDefault();
+    if (!reviewComment.trim()) return;
+
+    const userKey = currentUser?.email || currentUser?.name || 'guest_device';
+    const authorName = currentUser?.name || 'Verified Customer';
+
+    const createdReview = {
+      id: Date.now(),
+      author: authorName,
+      location: 'Verified Buyer',
+      rating: reviewRating,
+      date: 'Just Now',
+      verified: true,
+      title: `${reviewRating}-Star Drape Review`,
+      comment: reviewComment.trim(),
+      image: imagePreview || null
+    };
+
+    // Save submission to localStorage to prevent duplicate reviews for this product
+    try {
+      const stored = localStorage.getItem('kadha_submitted_reviews');
+      const list = stored ? JSON.parse(stored) : [];
+      list.push({ userKey, productId: product.id, timestamp: Date.now() });
+      localStorage.setItem('kadha_submitted_reviews', JSON.stringify(list));
+    } catch (err) {
+      console.error(err);
+    }
+
+    setReviewsList((prev) => [createdReview, ...prev]);
+    setUserHasReviewed(true);
+    setReviewSubmitted(true);
+  };
 
   // Synchronous zero-scroll-animation positioning before screen paint
   useLayoutEffect(() => {
@@ -296,23 +402,26 @@ export default function ProductDetailPage() {
                 <div className="rh-rating-badge">
                   <Star size={18} fill="#c89d36" color="#c89d36" />
                   <span className="rh-rating-num">4.9 / 5.0</span>
-                  <span className="rh-count">({product.reviews || 89} Reviews)</span>
+                  <span className="rh-count">({(product.reviews || 89) + (reviewsList.length - sampleReviewsList.length)} Reviews)</span>
                 </div>
-                <button className="rh-write-btn">
+                <button 
+                  className="rh-write-btn"
+                  onClick={handleOpenReviewModal}
+                >
                   <MessageSquarePlus size={15} /> Write a Review
                 </button>
               </div>
             </div>
 
             <div className="reviews-warm-list">
-              {sampleReviewsList.map((rev) => (
+              {reviewsList.map((rev) => (
                 <div key={rev.id} className="warm-review-card">
                   <Quote size={28} className="warm-quote-icon" />
 
                   <div className="wrc-top-bar">
                     <div className="wrc-user-profile">
                       <div className="wrc-avatar-circle">
-                        {rev.author[0]}
+                        {rev.author ? rev.author[0].toUpperCase() : 'U'}
                       </div>
                       <div className="wrc-user-meta">
                         <div className="wrc-author-name-row">
@@ -327,7 +436,7 @@ export default function ProductDetailPage() {
 
                     <div className="wrc-stars-box">
                       {[1, 2, 3, 4, 5].map((s) => (
-                        <Star key={s} size={15} fill="#c89d36" color="#c89d36" />
+                        <Star key={s} size={15} fill={s <= (rev.rating || 5) ? "#c89d36" : "none"} color="#c89d36" />
                       ))}
                     </div>
                   </div>
@@ -356,6 +465,153 @@ export default function ProductDetailPage() {
           </motion.div>
         </div>
       </div>
+
+      {/* Write a Review Modal */}
+      <AnimatePresence>
+        {isReviewModalOpen && (
+          <div className="write-review-modal-backdrop" onClick={() => setIsReviewModalOpen(false)}>
+            <motion.div 
+              className="write-review-modal-box"
+              initial={{ opacity: 0, scale: 0.92, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.92, y: 20 }}
+              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="review-modal-header">
+                <div className="review-modal-title-group">
+                  <Sparkles size={22} className="gold-sparkle-icon" />
+                  <div>
+                    <h3>Write a Customer Review</h3>
+                    <p className="review-modal-subtitle">Share your authentic drape experience for {product.name}</p>
+                  </div>
+                </div>
+                <button className="review-modal-close-btn" onClick={() => setIsReviewModalOpen(false)}>
+                  <X size={18} />
+                </button>
+              </div>
+
+              {userHasReviewed && !reviewSubmitted ? (
+                <div className="review-already-submitted-state">
+                  <div className="already-icon-wrap">
+                    <CheckCircle2 size={40} className="already-check-icon" />
+                  </div>
+                  <span className="already-subtitle">REVIEW ALREADY SUBMITTED</span>
+                  <h4 className="already-title">One Review Allowed Per Account</h4>
+                  <p className="already-message">
+                    You have already submitted a verified review for <strong>{product.name}</strong> from your account ({currentUser ? currentUser.name : 'your profile'}). Thank you for sharing your feedback with our community!
+                  </p>
+                  <button className="review-done-btn" onClick={() => setIsReviewModalOpen(false)}>
+                    Close
+                  </button>
+                </div>
+              ) : reviewSubmitted ? (
+                <motion.div 
+                  className="review-success-state"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <div className="success-icon-wrap">
+                    <CheckCircle2 size={36} className="success-check-icon" />
+                  </div>
+                  <span className="success-subtitle">FEEDBACK RECEIVED</span>
+                  <h4 className="success-title">Thank You for Your Review!</h4>
+                  <p className="success-message">
+                    Your authentic review has been published successfully and is now displayed in the customer stories section.
+                  </p>
+                  <button className="review-done-btn" onClick={() => setIsReviewModalOpen(false)}>
+                    Done
+                  </button>
+                </motion.div>
+              ) : (
+                <form className="simple-review-form" onSubmit={handleReviewSubmit}>
+                  {/* Account Name Indicator */}
+                  <div className="review-user-badge-row">
+                    <div className="review-user-avatar">
+                      <User size={16} />
+                    </div>
+                    <div className="review-user-info">
+                      <span className="review-user-label">Reviewing as</span>
+                      <h4 className="review-user-name">{currentUser ? currentUser.name : 'Verified Customer'}</h4>
+                    </div>
+                  </div>
+
+                  {/* Star Selection */}
+                  <div className="star-rating-block">
+                    <label className="star-picker-title">Select Star Rating</label>
+                    <div className="star-picker-row">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <button
+                          type="button"
+                          key={star}
+                          className={`star-pick-btn ${star <= (hoverRating || reviewRating) ? 'active' : ''}`}
+                          onClick={() => setReviewRating(star)}
+                          onMouseEnter={() => setHoverRating(star)}
+                          onMouseLeave={() => setHoverRating(0)}
+                        >
+                          <Star 
+                            size={28} 
+                            fill={(hoverRating || reviewRating) >= star ? '#c89d36' : 'none'} 
+                            color="#c89d36" 
+                          />
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Review Writing Textarea */}
+                  <div className="review-textarea-group">
+                    <label className="review-textarea-label">Write Your Review *</label>
+                    <textarea
+                      rows={5}
+                      required
+                      placeholder="Write your thoughts about this saree, silk texture, drape comfort, or zari sheen..."
+                      value={reviewComment}
+                      onChange={(e) => setReviewComment(e.target.value)}
+                      className="review-textarea"
+                    />
+                  </div>
+
+                  {/* Image Uploading Option */}
+                  <div className="image-upload-group">
+                    <label className="image-upload-label">Upload Drape Photo (Optional)</label>
+                    {imagePreview ? (
+                      <div className="uploaded-img-preview-box">
+                        <img src={imagePreview} alt="Drape preview" className="uploaded-img-preview" />
+                        <button type="button" className="remove-img-btn" onClick={handleRemoveImage} title="Remove Image">
+                          <X size={14} /> Remove Photo
+                        </button>
+                      </div>
+                    ) : (
+                      <label htmlFor="review-photo-file" className="custom-file-upload-btn">
+                        <Upload size={18} /> Choose Photo File
+                        <input
+                          type="file"
+                          id="review-photo-file"
+                          accept="image/*"
+                          onChange={handleImageFileChange}
+                          style={{ display: 'none' }}
+                        />
+                      </label>
+                    )}
+                  </div>
+
+                  {/* Submit & Cancel Buttons */}
+                  <div className="review-modal-actions">
+                    <button type="button" className="cancel-review-btn" onClick={() => setIsReviewModalOpen(false)}>
+                      Cancel
+                    </button>
+                    <button type="submit" className="submit-review-btn">
+                      <Send size={16} /> Submit Review
+                    </button>
+                  </div>
+                </form>
+              )}
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
       {/* Razorpay Checkout Modal for Direct Buy Now */}
       <CheckoutModal 

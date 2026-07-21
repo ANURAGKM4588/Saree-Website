@@ -249,7 +249,7 @@ export default function Navbar() {
                     onKeyDown={handleSearchSubmit}
                     className="search-input"
                     initial={{ width: 0, opacity: 0 }}
-                    animate={{ width: 200, opacity: 1 }}
+                    animate={{ width: 170, opacity: 1 }}
                     exit={{ width: 0, opacity: 0 }}
                     transition={{ duration: 0.3 }}
                     autoFocus

@@ -135,7 +135,15 @@ export function DatabaseProvider({ children }) {
   const onSaleProducts = useMemo(() => products.filter((p) => p.originalPrice), [products]);
 
   const getProductById = useCallback((id) => {
-    return products.find((p) => p.id === Number(id));
+    if (id === undefined || id === null) return null;
+    const targetStr = String(id).trim();
+    const targetNum = Number(id);
+    return products.find((p) => {
+      if (p.id === id) return true;
+      if (String(p.id).trim() === targetStr) return true;
+      if (!isNaN(targetNum) && Number(p.id) === targetNum) return true;
+      return false;
+    });
   }, [products]);
 
   // Save newsletter subscription to Supabase

@@ -1,11 +1,12 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Heart, ShoppingBag, Eye } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { formatPrice } from '../data/products';
 import './ProductCard.css';
 
 export default function ProductCard({ product, onQuickView }) {
+  const navigate = useNavigate();
   const { addToCart, setIsCartOpen, wishlist, toggleWishlist } = useCart();
 
   const isWishlisted = wishlist.includes(product.id);
@@ -14,6 +15,16 @@ export default function ProductCard({ product, onQuickView }) {
   const handleProductClick = () => {
     sessionStorage.setItem('last_viewed_product_id', product.id.toString());
     sessionStorage.setItem('last_scroll_pos', window.scrollY.toString());
+  };
+
+  const handleCardClick = (e) => {
+    // If click was inside a button or anchor link, let that element handle its own action
+    if (e.target.closest('button') || e.target.closest('a')) {
+      return;
+    }
+    handleProductClick();
+    navigate(`/product/${product.id}`);
+    window.scrollTo(0, 0);
   };
 
   const handleToggleWishlist = (e) => {
@@ -40,7 +51,12 @@ export default function ProductCard({ product, onQuickView }) {
   };
 
   return (
-    <div className="kalyan-product-card" id={`product-card-${product.id}`}>
+    <div 
+      className="kalyan-product-card" 
+      id={`product-card-${product.id}`}
+      onClick={handleCardClick}
+      style={{ cursor: 'pointer' }}
+    >
       {/* Image Container */}
       <div className="kalyan-img-box">
         <Link 

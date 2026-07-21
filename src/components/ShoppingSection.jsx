@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion, useInView } from 'framer-motion';
 import { ShoppingBag, Star, Clock, ArrowRight } from 'lucide-react';
 import { useCart } from '../context/CartContext';
@@ -15,6 +15,7 @@ const fadeUp = {
 };
 
 export default function ShoppingSection() {
+  const navigate = useNavigate();
   const { addToCart, setIsCartOpen } = useCart();
   const { 
     featuredProducts, 
@@ -36,11 +37,21 @@ export default function ShoppingSection() {
     setIsCartOpen(true);
   };
 
+  const handleCardClick = (productId, e) => {
+    if (e.target.closest('button') || e.target.closest('a')) return;
+    sessionStorage.setItem('last_viewed_product_id', productId.toString());
+    sessionStorage.setItem('last_scroll_pos', window.scrollY.toString());
+    navigate(`/product/${productId}`);
+    window.scrollTo(0, 0);
+  };
+
   const productCards = (list) =>
     list.map((product, index) => (
       <motion.div
         key={product.id}
         className="product-card"
+        onClick={(e) => handleCardClick(product.id, e)}
+        style={{ cursor: 'pointer' }}
         initial={{ opacity: 0, y: 60 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: false, margin: '-60px' }}
