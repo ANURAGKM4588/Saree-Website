@@ -60,7 +60,7 @@ export default function ProductCard({ product, onQuickView }) {
           onClick={handleToggleWishlist}
           aria-label="Add to Wishlist"
         >
-          <Heart size={16} fill={isWishlisted ? "#c89d36" : "none"} color={isWishlisted ? "#c89d36" : "currentColor"} />
+          <Heart size={16} fill={isWishlisted ? "#ef4444" : "none"} color={isWishlisted ? "#ef4444" : "currentColor"} />
         </button>
 
         {/* Quick View Button on Hover */}

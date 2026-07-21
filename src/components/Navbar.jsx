@@ -99,19 +99,22 @@ export default function Navbar() {
 
     const targetId = item.href.replace('#', '');
 
-    if (location.pathname !== '/') {
-      navigate('/');
-      setTimeout(() => {
-        const el = document.getElementById(targetId);
-        if (el) {
-          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      }, 200);
-    } else {
-      const el = document.getElementById(targetId);
+    const scrollToTarget = () => {
+      const el = document.getElementById(targetId) || (targetId === 'contact' ? document.querySelector('footer') : null);
       if (el) {
         el.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
+    };
+
+    if (targetId === 'contact') {
+      scrollToTarget();
+    } else if (location.pathname !== '/') {
+      navigate('/');
+      setTimeout(() => {
+        scrollToTarget();
+      }, 200);
+    } else {
+      scrollToTarget();
     }
     setActiveDropdown(null);
   };
@@ -282,7 +285,7 @@ export default function Navbar() {
               aria-label="Wishlist"
               title="View Liked Sarees"
             >
-              <Heart size={18} fill={wishlistCount > 0 ? "var(--color-accent-gold)" : "none"} color={wishlistCount > 0 ? "var(--color-accent-gold)" : "currentColor"} />
+              <Heart size={18} fill={wishlistCount > 0 ? "#ffffff" : "none"} color={wishlistCount > 0 ? "#ffffff" : "currentColor"} />
               {wishlistCount > 0 && (
                 <span className="badge">{wishlistCount}</span>
               )}

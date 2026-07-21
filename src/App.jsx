@@ -18,6 +18,7 @@ import BestsellersPage from './components/BestsellersPage';
 import ProductDetailPage from './components/ProductDetailPage';
 import WishlistPage from './components/WishlistPage';
 import AdminPanel from './components/AdminPanel';
+import StorySection from './components/StorySection';
 
 function ScrollToTop() {
   const { pathname, search } = useLocation();
@@ -52,6 +53,7 @@ function HomePage() {
       <Navbar />
       <Hero />
       <CelebrateOccasion />
+      <StorySection />
       <ShopByOccasion />
       <BridalBanner />
       <NewArrivals />

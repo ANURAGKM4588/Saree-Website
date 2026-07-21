@@ -441,10 +441,10 @@ export default function CheckoutModal({ isOpen, onClose, items = [], total = 0, 
 
                   <button type="submit" disabled={loading} className="cm-pay-btn">
                     {loading ? (
-                      'Connecting to Razorpay...'
+                      'Processing...'
                     ) : (
                       <>
-                        <CreditCard size={18} /> Pay {formatPrice(total)} via Razorpay
+                        <CreditCard size={18} /> Checkout Now
                       </>
                     )}
                   </button>

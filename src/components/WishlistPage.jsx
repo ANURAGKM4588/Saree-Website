@@ -20,7 +20,7 @@ export default function WishlistPage() {
           <ArrowLeft size={18} /> Back to Catalog
         </button>
         <div className="wishlist-page-title-wrap">
-          <Heart size={32} fill="var(--color-accent-gold)" color="var(--color-accent-gold)" />
+          <Heart size={32} fill="#ef4444" color="#ef4444" />
           <h1 className="wishlist-page-title">My Liked Sarees ({likedProducts.length})</h1>
         </div>
         <p className="wishlist-page-subtitle">
