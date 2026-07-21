@@ -25,6 +25,25 @@ function ScrollToTop() {
   const { pathname, search } = useLocation();
 
   useLayoutEffect(() => {
+    // Check if returning from gallery product details
+    const returnToGallery = sessionStorage.getItem('return_to_gallery');
+    if (returnToGallery === 'true' && pathname === '/') {
+      sessionStorage.removeItem('return_to_gallery');
+      document.documentElement.style.scrollBehavior = 'auto';
+      setTimeout(() => {
+        const galEl = document.getElementById('saree-drape-lookbook');
+        if (galEl) {
+          galEl.scrollIntoView({ block: 'start', behavior: 'instant' });
+        } else {
+          const lastScroll = sessionStorage.getItem('last_scroll_pos');
+          if (lastScroll) {
+            window.scrollTo({ top: parseInt(lastScroll, 10), left: 0, behavior: 'instant' });
+          }
+        }
+      }, 30);
+      return;
+    }
+
     // Check if we are returning to the products catalog page from a product detail page
     const lastId = sessionStorage.getItem('last_viewed_product_id');
     const lastScroll = sessionStorage.getItem('last_scroll_pos');

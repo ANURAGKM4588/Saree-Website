@@ -56,14 +56,9 @@ export default function ProductDetailPage({ isGalleryView = false }) {
 
   const handleBackToGallery = (e) => {
     if (e) e.preventDefault();
+    sessionStorage.setItem('return_to_gallery', 'true');
     sessionStorage.removeItem('from_gallery');
     navigate('/');
-    setTimeout(() => {
-      const galEl = document.getElementById('saree-drape-lookbook');
-      if (galEl) {
-        galEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    }, 120);
   };
 
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
