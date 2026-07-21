@@ -42,7 +42,6 @@ export default function ShoppingSection() {
     sessionStorage.setItem('last_viewed_product_id', productId.toString());
     sessionStorage.setItem('last_scroll_pos', window.scrollY.toString());
     navigate(`/product/${productId}`);
-    window.scrollTo(0, 0);
   };
 
   const productCards = (list) =>

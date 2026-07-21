@@ -30,7 +30,6 @@ export default function ProductCard({ product, onQuickView }) {
     }
     handleProductClick(e);
     navigate(`/product/${product.id}`);
-    window.scrollTo(0, 0);
   };
 
   const handleToggleWishlist = (e) => {
