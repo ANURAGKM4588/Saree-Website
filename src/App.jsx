@@ -19,6 +19,7 @@ import ProductDetailPage from './components/ProductDetailPage';
 import WishlistPage from './components/WishlistPage';
 import AdminPanel from './components/AdminPanel';
 import StorySection from './components/StorySection';
+import SareeGallerySection from './components/SareeGallerySection';
 
 function ScrollToTop() {
   const { pathname, search } = useLocation();
@@ -56,6 +57,7 @@ function HomePage() {
       <StorySection />
       <ShopByOccasion />
       <BridalBanner />
+      <SareeGallerySection />
       <NewArrivals />
       <BestSellers />
       <FeaturedCollections />
