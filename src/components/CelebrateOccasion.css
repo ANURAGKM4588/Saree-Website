@@ -41,39 +41,15 @@
   background: #ffffff;
   border-radius: 20px;
   padding: 10px 10px 14px 10px;
-  border: 1.5px solid rgba(200, 157, 54, 0.35);
-  box-shadow: 0 8px 24px rgba(3, 28, 21, 0.08);
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-/* Glowing Gold Outer Halo on Mouse Enter */
-.fabric-card::before {
-  content: '';
-  position: absolute;
-  inset: -3px;
-  border-radius: 23px;
-  background: linear-gradient(135deg, rgba(200, 157, 54, 0.7) 0%, rgba(255, 215, 0, 0.4) 50%, rgba(200, 157, 54, 0.7) 100%);
-  z-index: -1;
-  opacity: 0;
-  filter: blur(10px);
-  transition: opacity 0.4s ease;
-  pointer-events: none;
-}
-
-.fabric-card:hover::before {
-  opacity: 1;
-  animation: goldHaloPulse 2s infinite ease-in-out;
-}
-
-@keyframes goldHaloPulse {
-  0%, 100% { opacity: 0.7; filter: blur(8px); }
-  50% { opacity: 1; filter: blur(14px); }
+  border: 1.5px solid rgba(200, 157, 54, 0.3);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .fabric-card:hover {
-  transform: translateY(-9px) scale(1.02);
-  border-color: #c89d36;
-  box-shadow: 0 20px 45px rgba(3, 28, 21, 0.2), 0 0 30px rgba(200, 157, 54, 0.35);
+  transform: translateY(-5px);
+  border-color: rgba(200, 157, 54, 0.7);
+  box-shadow: 0 12px 30px rgba(3, 28, 21, 0.12), 0 0 15px rgba(200, 157, 54, 0.15);
 }
 
 .fabric-arch-frame {
@@ -85,24 +61,23 @@
   background-color: #f7f4ee;
 }
 
-/* Shimmer Light Sweep Flare across Image on Mouse Enter */
+/* Subtle Minimal Light Sweep Flare across Image on Mouse Enter */
 .fabric-arch-frame::after {
   content: '';
   position: absolute;
   top: 0;
-  left: -120%;
-  width: 70%;
+  left: -100%;
+  width: 50%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
-  transform: skewX(-22deg);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transform: skewX(-20deg);
   pointer-events: none;
   z-index: 3;
-  transition: none;
 }
 
 .fabric-card:hover .fabric-arch-frame::after {
-  left: 190%;
-  transition: left 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+  left: 170%;
+  transition: left 0.75s ease;
 }
 
 .fabric-img {
