@@ -58,6 +58,40 @@
   color: var(--color-gold);
 }
 
+.pdp-gallery-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: linear-gradient(135deg, #022c22 0%, #064e3b 100%);
+  color: #ffffff !important;
+  border: 1px solid var(--color-accent-gold, #c89d36);
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 10px rgba(2, 44, 34, 0.2);
+}
+
+.pdp-gallery-back-btn:hover {
+  background: linear-gradient(135deg, #064e3b 0%, #086b51 100%);
+  transform: translateX(-2px);
+  box-shadow: 0 6px 15px rgba(2, 44, 34, 0.3);
+}
+
+.pdp-breadcrumb-sep {
+  color: #94a3b8;
+  margin: 0 0.35rem;
+  font-weight: 400;
+}
+
+.pdp-breadcrumb-dash {
+  color: var(--color-accent-gold, #c89d36);
+  font-weight: 700;
+  margin: 0 0.35rem;
+}
+
 .pdp-back-breadcrumb-btn .pdp-back-icon {
   color: var(--color-gold);
   transition: transform 0.2s ease;

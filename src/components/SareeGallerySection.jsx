@@ -111,7 +111,8 @@ export default function SareeGallerySection() {
 
   const handleCardClick = (productId) => {
     sessionStorage.setItem('last_scroll_pos', window.scrollY.toString());
-    navigate(`/product/${productId}`);
+    sessionStorage.setItem('from_gallery', 'true');
+    navigate(`/gallery/product/${productId}`);
   };
 
   return (

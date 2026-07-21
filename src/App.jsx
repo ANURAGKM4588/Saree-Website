@@ -79,6 +79,7 @@ function App() {
             <Route path="/products" element={<><Navbar /><ProductsPage /><Footer /></>} />
             <Route path="/bestsellers" element={<><Navbar /><BestsellersPage /><Footer /></>} />
             <Route path="/product/:id" element={<><Navbar /><ProductDetailPage /><Footer /></>} />
+            <Route path="/gallery/product/:id" element={<><Navbar /><ProductDetailPage isGalleryView={true} /><Footer /></>} />
             <Route path="/wishlist" element={<><Navbar /><WishlistPage /><Footer /></>} />
             <Route path="/admin" element={<AdminPanel />} />
           </Routes>

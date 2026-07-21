@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingBag, Star, Shield, Truck, RotateCcw, CheckCircle2, ThumbsUp, MessageSquarePlus, Quote, X, Sparkles, Upload, Send, User, Pencil, Trash2 } from 'lucide-react';
+import { ShoppingBag, Star, Shield, Truck, RotateCcw, CheckCircle2, ThumbsUp, MessageSquarePlus, Quote, X, Sparkles, Upload, Send, User, Pencil, Trash2, ArrowLeft } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { formatPrice } from '../data/products';
 import { useDatabase } from '../context/DatabaseContext';
@@ -44,12 +44,27 @@ const sampleReviewsList = [
   }
 ];
 
-export default function ProductDetailPage() {
+export default function ProductDetailPage({ isGalleryView = false }) {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const { addToCart, setIsCartOpen } = useCart();
   const { getProductById, loading } = useDatabase();
   const product = getProductById(id);
+
+  const isFromGallery = isGalleryView || location.pathname.startsWith('/gallery/') || sessionStorage.getItem('from_gallery') === 'true';
+
+  const handleBackToGallery = (e) => {
+    if (e) e.preventDefault();
+    sessionStorage.removeItem('from_gallery');
+    navigate('/');
+    setTimeout(() => {
+      const galEl = document.getElementById('saree-drape-lookbook');
+      if (galEl) {
+        galEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 120);
+  };
 
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [reviewsList, setReviewsList] = useState(sampleReviewsList);
@@ -340,15 +355,39 @@ export default function ProductDetailPage() {
   return (
     <div className="pdp-page" key={product.id}>
       <div className="pdp-container">
-        {/* Clean Breadcrumb Path Navigation without Back Icon */}
+        {/* Top Breadcrumb Path Navigation */}
         <div className="pdp-breadcrumb">
-          <Link to="/">Home</Link>
-          <span>/</span>
-          <Link to="/products" className="pdp-breadcrumb-link">
-            All Sarees
-          </Link>
-          <span>/</span>
-          <span className="pdp-current">{product.name}</span>
+          {isFromGallery ? (
+            <>
+              <button
+                type="button"
+                className="pdp-gallery-back-btn"
+                onClick={handleBackToGallery}
+              >
+                <ArrowLeft size={15} /> Back to Gallery
+              </button>
+              <span className="pdp-breadcrumb-sep">|</span>
+              <Link to="/" onClick={handleBackToGallery} className="pdp-breadcrumb-link">
+                Gallery
+              </Link>
+              <span className="pdp-breadcrumb-dash">—</span>
+              <Link to="/" onClick={handleBackToGallery} className="pdp-breadcrumb-link">
+                Collections
+              </Link>
+              <span className="pdp-breadcrumb-sep">/</span>
+              <span className="pdp-current">{product.name}</span>
+            </>
+          ) : (
+            <>
+              <Link to="/">Home</Link>
+              <span>/</span>
+              <Link to="/products" className="pdp-breadcrumb-link">
+                All Sarees
+              </Link>
+              <span>/</span>
+              <span className="pdp-current">{product.name}</span>
+            </>
+          )}
         </div>
 
         {/* Top Product Main Grid */}
