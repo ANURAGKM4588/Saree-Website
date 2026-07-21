@@ -1328,3 +1328,50 @@
   color: #64748b;
   max-width: 440px;
 }
+
+/* User Review Owner Actions (Edit & Delete) */
+.user-review-owner-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
+.owner-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.owner-action-btn.edit-btn {
+  background: rgba(200, 157, 54, 0.12);
+  color: #a17822;
+  border-color: rgba(200, 157, 54, 0.3);
+}
+
+.owner-action-btn.edit-btn:hover {
+  background: #c89d36;
+  color: #ffffff;
+  border-color: #c89d36;
+  transform: translateY(-1px);
+}
+
+.owner-action-btn.delete-btn {
+  background: rgba(239, 68, 68, 0.1);
+  color: #dc2626;
+  border-color: rgba(239, 68, 68, 0.25);
+}
+
+.owner-action-btn.delete-btn:hover {
+  background: #dc2626;
+  color: #ffffff;
+  border-color: #dc2626;
+  transform: translateY(-1px);
+}

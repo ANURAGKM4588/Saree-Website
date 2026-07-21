@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingBag, Star, Shield, Truck, RotateCcw, CheckCircle2, ThumbsUp, MessageSquarePlus, Quote, X, Sparkles, Upload, Send, User } from 'lucide-react';
+import { ShoppingBag, Star, Shield, Truck, RotateCcw, CheckCircle2, ThumbsUp, MessageSquarePlus, Quote, X, Sparkles, Upload, Send, User, Pencil, Trash2 } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { formatPrice } from '../data/products';
 import { useDatabase } from '../context/DatabaseContext';
@@ -63,6 +63,17 @@ export default function ProductDetailPage() {
   const [reviewComment, setReviewComment] = useState('');
   const [imagePreview, setImagePreview] = useState(null);
   const [userHasReviewed, setUserHasReviewed] = useState(false);
+  const [editingReviewId, setEditingReviewId] = useState(null);
+
+  const isOwnerOfReview = (rev) => {
+    if (!rev) return false;
+    if (rev.isUserOwned) return true;
+    const currentUserKey = currentUser?.email || currentUser?.name;
+    if (!currentUserKey) return false;
+    if (rev.userKey && rev.userKey === currentUserKey) return true;
+    if (rev.author && rev.author === currentUser?.name) return true;
+    return false;
+  };
 
   const checkHasReviewed = (productId) => {
     try {
@@ -106,11 +117,43 @@ export default function ProductDetailPage() {
   }, [product?.id, currentUser]);
 
   const handleOpenReviewModal = () => {
+    setEditingReviewId(null);
     setReviewRating(5);
     setReviewComment('');
     setImagePreview(null);
     setReviewSubmitted(false);
     setIsReviewModalOpen(true);
+  };
+
+  const handleEditReview = (rev) => {
+    setEditingReviewId(rev.id);
+    setReviewRating(rev.rating || 5);
+    setReviewComment(rev.comment || '');
+    setImagePreview(rev.image || null);
+    setReviewSubmitted(false);
+    setIsReviewModalOpen(true);
+  };
+
+  const handleDeleteReview = (reviewId) => {
+    if (!window.confirm('Are you sure you want to delete your review?')) return;
+
+    setReviewsList((prev) => prev.filter((r) => r.id !== reviewId));
+
+    try {
+      const userKey = currentUser?.email || currentUser?.name || 'guest_device';
+      const stored = localStorage.getItem('kadha_submitted_reviews');
+      if (stored) {
+        const list = JSON.parse(stored);
+        const filtered = list.filter(
+          (item) => !(item.userKey === userKey && String(item.productId) === String(product.id))
+        );
+        localStorage.setItem('kadha_submitted_reviews', JSON.stringify(filtered));
+      }
+    } catch (err) {
+      console.error(err);
+    }
+
+    setUserHasReviewed(false);
   };
 
   const handleImageFileChange = (e) => {
@@ -132,8 +175,29 @@ export default function ProductDetailPage() {
     const userKey = currentUser?.email || currentUser?.name || 'guest_device';
     const authorName = currentUser?.name || 'Verified Customer';
 
+    if (editingReviewId) {
+      setReviewsList((prev) =>
+        prev.map((rev) =>
+          rev.id === editingReviewId
+            ? {
+                ...rev,
+                rating: reviewRating,
+                title: `${reviewRating}-Star Drape Review`,
+                comment: reviewComment.trim(),
+                image: imagePreview || null,
+              }
+            : rev
+        )
+      );
+      setEditingReviewId(null);
+      setReviewSubmitted(true);
+      return;
+    }
+
     const createdReview = {
       id: Date.now(),
+      userKey: userKey,
+      isUserOwned: true,
       author: authorName,
       location: 'Verified Buyer',
       rating: reviewRating,
@@ -144,7 +208,6 @@ export default function ProductDetailPage() {
       image: imagePreview || null
     };
 
-    // Save submission to localStorage to prevent duplicate reviews for this product
     try {
       const stored = localStorage.getItem('kadha_submitted_reviews');
       const list = stored ? JSON.parse(stored) : [];
@@ -458,6 +521,25 @@ export default function ProductDetailPage() {
                     >
                       <ThumbsUp size={13} /> Helpful ({helpfulCounts[rev.id] || 0})
                     </button>
+
+                    {isOwnerOfReview(rev) && (
+                      <div className="user-review-owner-actions">
+                        <button 
+                          className="owner-action-btn edit-btn"
+                          onClick={() => handleEditReview(rev)}
+                          title="Edit Your Review"
+                        >
+                          <Pencil size={13} /> Edit
+                        </button>
+                        <button 
+                          className="owner-action-btn delete-btn"
+                          onClick={() => handleDeleteReview(rev.id)}
+                          title="Delete Your Review"
+                        >
+                          <Trash2 size={13} /> Delete
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}
