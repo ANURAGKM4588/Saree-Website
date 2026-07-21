@@ -12,9 +12,15 @@ export default function ProductCard({ product, onQuickView }) {
   const isWishlisted = wishlist.includes(product.id);
   const badgeText = product.tag || (product.featured ? 'Exclusive Piece' : 'New Arrival');
 
-  const handleProductClick = () => {
+  const handleProductClick = (e) => {
     sessionStorage.setItem('last_viewed_product_id', product.id.toString());
     sessionStorage.setItem('last_scroll_pos', window.scrollY.toString());
+    if (e && e.target) {
+      const section = e.target.closest('section') || e.target.closest('[id]');
+      if (section && section.id) {
+        sessionStorage.setItem('origin_section', section.id);
+      }
+    }
   };
 
   const handleCardClick = (e) => {
@@ -22,7 +28,7 @@ export default function ProductCard({ product, onQuickView }) {
     if (e.target.closest('button') || e.target.closest('a')) {
       return;
     }
-    handleProductClick();
+    handleProductClick(e);
     navigate(`/product/${product.id}`);
     window.scrollTo(0, 0);
   };

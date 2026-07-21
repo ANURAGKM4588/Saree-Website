@@ -26,29 +26,59 @@ function ScrollToTop() {
   const { pathname, search } = useLocation();
 
   useLayoutEffect(() => {
-    // Check if returning from gallery product details
-    const returnToGallery = sessionStorage.getItem('return_to_gallery');
-    if (returnToGallery === 'true' && pathname === '/') {
-      sessionStorage.removeItem('return_to_gallery');
-      document.documentElement.style.scrollBehavior = 'auto';
-      const galEl = document.getElementById('saree-drape-lookbook');
+    document.documentElement.style.scrollBehavior = 'auto';
+
+    if (pathname === '/') {
+      const returnToGallery = sessionStorage.getItem('return_to_gallery');
+      const originSection = sessionStorage.getItem('origin_section');
+      const lastId = sessionStorage.getItem('last_viewed_product_id');
       const lastScroll = sessionStorage.getItem('last_scroll_pos');
-      if (galEl) {
-        galEl.scrollIntoView({ block: 'start', behavior: 'instant' });
-      } else if (lastScroll) {
-        window.scrollTo({ top: parseInt(lastScroll, 10), left: 0, behavior: 'instant' });
-      } else {
-        window.scrollTo({ top: 1200, left: 0, behavior: 'instant' });
+
+      if (returnToGallery === 'true') {
+        sessionStorage.removeItem('return_to_gallery');
+        const galEl = document.getElementById('saree-drape-lookbook');
+        if (galEl) {
+          galEl.scrollIntoView({ block: 'start', behavior: 'instant' });
+          return;
+        }
       }
+
+      if (originSection) {
+        sessionStorage.removeItem('origin_section');
+        const secEl = document.getElementById(originSection);
+        if (secEl) {
+          secEl.scrollIntoView({ block: 'start', behavior: 'instant' });
+          return;
+        }
+      }
+
+      if (lastId) {
+        const prodEl = document.getElementById(`product-card-${lastId}`);
+        if (prodEl) {
+          prodEl.scrollIntoView({ block: 'center', behavior: 'instant' });
+          sessionStorage.removeItem('last_viewed_product_id');
+          return;
+        }
+      }
+
+      if (lastScroll) {
+        const pos = parseInt(lastScroll, 10);
+        if (!isNaN(pos) && pos > 0) {
+          window.scrollTo({ top: pos, left: 0, behavior: 'instant' });
+          sessionStorage.removeItem('last_scroll_pos');
+          return;
+        }
+      }
+
+      window.scrollTo(0, 0);
       return;
     }
 
-    // Check if we are returning to the products catalog page from a product detail page
+    // Catalog page return scroll
     const lastId = sessionStorage.getItem('last_viewed_product_id');
     const lastScroll = sessionStorage.getItem('last_scroll_pos');
 
     if ((pathname === '/products' || pathname === '/bestsellers') && lastId) {
-      document.documentElement.style.scrollBehavior = 'auto';
       const targetElement = document.getElementById(`product-card-${lastId}`);
       if (targetElement) {
         targetElement.scrollIntoView({ block: 'center', behavior: 'instant' });
@@ -58,7 +88,6 @@ function ScrollToTop() {
       sessionStorage.removeItem('last_viewed_product_id');
       sessionStorage.removeItem('last_scroll_pos');
     } else {
-      document.documentElement.style.scrollBehavior = 'auto';
       window.scrollTo(0, 0);
     }
   }, [pathname, search]);
