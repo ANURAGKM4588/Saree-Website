@@ -1,6 +1,6 @@
 /* Saree Wearing Collection Gallery Styles */
 .saree-gallery-section {
-  padding: 5rem 2rem;
+  padding: 5rem 0;
   background: linear-gradient(180deg, #fdfbf7 0%, #f7f3ea 100%);
   position: relative;
   overflow: hidden;
@@ -20,6 +20,7 @@
 .sg-container {
   max-width: 1380px;
   margin: 0 auto;
+  padding: 0 2rem;
 }
 
 .sg-header {
@@ -337,9 +338,16 @@
   to   { transform: translateX(calc(-1 * var(--one-set-width, 33.333%))); }
 }
 
+/* Break out of .sg-container to fill full viewport width */
 .sg-loop-wrapper {
-  width: 100%;
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
   overflow: hidden;
+  padding: 1rem 0;
 }
 
 .sg-loop-track {
