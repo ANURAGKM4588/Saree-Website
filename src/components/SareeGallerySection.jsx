@@ -159,13 +159,13 @@ export default function SareeGallerySection() {
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.9, y: 15 }}
                   transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                  className="sg-card"
+                  className="sg-card pure-lookbook-card"
                   onClick={() => handleCardClick(item.productId)}
                 >
                   <div className="sg-image-wrapper">
                     <img
                       src={item.image}
-                      alt={item.title}
+                      alt={item.drapeType}
                       className="sg-image"
                       loading="lazy"
                     />
@@ -190,17 +190,10 @@ export default function SareeGallerySection() {
                     <div className="sg-overlay">
                       <div className="sg-overlay-content">
                         <span className="sg-drape-type">{item.drapeType}</span>
-                        <h3 className="sg-item-name">{item.title}</h3>
-
-                        <div className="sg-price-row">
-                          <span className="sg-price">{formatPrice(item.price)}</span>
-                          {item.originalPrice && (
-                            <span className="sg-orig-price">{formatPrice(item.originalPrice)}</span>
-                          )}
-                        </div>
+                        <h3 className="sg-item-name">{item.drapeType}</h3>
 
                         <button type="button" className="sg-buy-access-btn">
-                          <span>View Details & Buy Saree</span>
+                          <span>Explore Drape & Angles</span>
                           <ArrowRight size={16} />
                         </button>
                       </div>
@@ -208,13 +201,8 @@ export default function SareeGallerySection() {
 
                     {/* Bottom Quick Indicator */}
                     <div className="sg-bottom-indicator">
-                      <Eye size={14} /> Click to View & Buy
+                      <Eye size={14} /> Click to View Drape & Angles
                     </div>
-                  </div>
-
-                  <div className="sg-card-meta-bar">
-                    <h4 className="sg-meta-title">{item.title}</h4>
-                    <span className="sg-meta-price">{formatPrice(item.price)}</span>
                   </div>
                 </motion.div>
               );

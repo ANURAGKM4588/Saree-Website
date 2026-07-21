@@ -359,3 +359,13 @@
     height: 340px;
   }
 }
+
+/* Pure Lookbook Image Card Adjustments */
+.pure-lookbook-card .sg-image-wrapper {
+  height: 440px;
+  border-radius: 16px;
+}
+
+.pure-lookbook-card .sg-card-meta-bar {
+  display: none !important;
+}

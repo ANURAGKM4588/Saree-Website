@@ -68,6 +68,26 @@ export default function ProductDetailPage({ isGalleryView = false }) {
     navigate('/');
   };
 
+  const getProductAngleImages = (p) => {
+    if (!p) return [];
+    if (p.images && p.images.length > 0) return p.images;
+    const defaultAngles = [
+      p.image,
+      '/image/saree/Folded_pure_kanjivaram_silk_saree_crimson_red_gold_zari.webp',
+      '/image/saree/folded-kanjivaram-silk-saree-green-golden-pallu.webp',
+      '/image/saree/5_73_7415436e-9226-4442-9a42-d47387d04730.webp',
+      '/image/saree/IMG20250515110716.jpg'
+    ];
+    return Array.from(new Set([p.image, ...defaultAngles])).slice(0, 4);
+  };
+
+  const angleImages = getProductAngleImages(product);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+
+  useEffect(() => {
+    setActiveImageIndex(0);
+  }, [id]);
+
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [reviewsList, setReviewsList] = useState(sampleReviewsList);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
@@ -371,7 +391,7 @@ export default function ProductDetailPage({ isGalleryView = false }) {
 
         {/* Top Product Main Grid */}
         <div className="pdp-layout">
-          {/* Product Image: Clean Horizontal Slide from LEFT to RIGHT with Fade */}
+          {/* Product Image Column with Multiple Angles */}
           <motion.div
             key={`img-${product.id}`}
             className="pdp-image-col"
@@ -382,7 +402,39 @@ export default function ProductDetailPage({ isGalleryView = false }) {
             <div className="pdp-image-wrapper">
               {product.tag && <div className="pdp-tag">{product.tag}</div>}
               {discount > 0 && <div className="pdp-discount">-{discount}%</div>}
-              <img src={product.image} alt={product.name} className="pdp-image" />
+              <AnimatePresence mode="wait">
+                <motion.img
+                  key={activeImageIndex}
+                  src={angleImages[activeImageIndex] || product.image}
+                  alt={`${product.name} Angle ${activeImageIndex + 1}`}
+                  className="pdp-image"
+                  initial={{ opacity: 0, scale: 0.97 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.97 }}
+                  transition={{ duration: 0.25 }}
+                />
+              </AnimatePresence>
+            </div>
+
+            {/* Multiple Angles Gallery Selector Strip */}
+            <div className="pdp-angle-gallery-strip">
+              <span className="pdp-angle-strip-title">Saree Drape Angles & Details:</span>
+              <div className="pdp-thumbs-row">
+                {angleImages.map((imgUrl, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    className={`pdp-angle-thumb-btn ${activeImageIndex === idx ? 'active' : ''}`}
+                    onClick={() => setActiveImageIndex(idx)}
+                    title={`View Angle ${idx + 1}`}
+                  >
+                    <img src={imgUrl} alt={`Angle ${idx + 1}`} />
+                    <span className="pdp-angle-badge">
+                      {idx === 0 ? 'Full View' : idx === 1 ? 'Pallu Zari' : idx === 2 ? 'Border Work' : 'Fold Display'}
+                    </span>
+                  </button>
+                ))}
+              </div>
             </div>
           </motion.div>
 
@@ -471,6 +523,56 @@ export default function ProductDetailPage({ isGalleryView = false }) {
               </div>
             </div>
           </motion.div>
+        </div>
+
+        {/* Royal Heritage Craft & Feature Poster Banner */}
+        <div className="pdp-feature-poster-banner">
+          <div className="pdp-poster-content-wrapper">
+            <div className="pdp-poster-header text-center">
+              <div className="pdp-poster-badge">
+                <Sparkles size={14} className="sparkle-gold" />
+                <span>HERITAGE WEAVE SPECIFICATIONS & CRAFT POSTER</span>
+              </div>
+              <h2 className="pdp-poster-title">Authentic Handcrafted Masterpiece</h2>
+              <p className="pdp-poster-subtitle">
+                Woven by Master Artisans in South India using centuries-old silk preservation techniques
+              </p>
+            </div>
+
+            <div className="pdp-poster-grid">
+              <div className="pdp-poster-item">
+                <div className="pdp-poster-icon">🏆</div>
+                <div className="pdp-poster-text">
+                  <h3>100% Silk Mark Certified</h3>
+                  <p>Guaranteed authentic 100% natural Mulberry & Kanchipuram silk thread with Government certification tag.</p>
+                </div>
+              </div>
+
+              <div className="pdp-poster-item">
+                <div className="pdp-poster-icon">✨</div>
+                <div className="pdp-poster-text">
+                  <h3>Pure Gold-Tested Zari Weave</h3>
+                  <p>Intricate temple border, floral jaal, and grand pallu motifs woven with authentic tested gold zari threads.</p>
+                </div>
+              </div>
+
+              <div className="pdp-poster-item">
+                <div className="pdp-poster-icon">🧵</div>
+                <div className="pdp-poster-text">
+                  <h3>Traditional Korvai Interlock</h3>
+                  <p>Dual-shuttle handloom technique seamlessly joining heavy contrasting body, rich border, and ceremonial pallu.</p>
+                </div>
+              </div>
+
+              <div className="pdp-poster-item">
+                <div className="pdp-poster-icon">👚</div>
+                <div className="pdp-poster-text">
+                  <h3>Matching Unstitched Blouse Piece</h3>
+                  <p>Includes an 80cm authentic matching silk blouse fabric complete with heavy zari border work.</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Clean Listing Section: Specifications & Customer Reviews Stacked */}

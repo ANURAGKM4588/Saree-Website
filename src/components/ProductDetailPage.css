@@ -1409,3 +1409,158 @@
   border-color: #dc2626;
   transform: translateY(-1px);
 }
+
+/* --- MULTIPLE ANGLE GALLERY STRIP --- */
+.pdp-angle-gallery-strip {
+  margin-top: 1.25rem;
+  padding: 1rem;
+  background: #fafaf9;
+  border: 1px solid #e7e5e4;
+  border-radius: 12px;
+}
+
+.pdp-angle-strip-title {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #78716c;
+  margin-bottom: 0.6rem;
+}
+
+.pdp-thumbs-row {
+  display: flex;
+  gap: 0.75rem;
+  overflow-x: auto;
+  padding-bottom: 0.3rem;
+}
+
+.pdp-angle-thumb-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  background: #ffffff;
+  border: 2px solid #e7e5e4;
+  border-radius: 8px;
+  padding: 4px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  width: 78px;
+  flex-shrink: 0;
+}
+
+.pdp-angle-thumb-btn img {
+  width: 100%;
+  height: 78px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.pdp-angle-badge {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #57534e;
+  white-space: nowrap;
+}
+
+.pdp-angle-thumb-btn:hover {
+  border-color: #c89d36;
+  transform: translateY(-2px);
+}
+
+.pdp-angle-thumb-btn.active {
+  border-color: #064e3b;
+  box-shadow: 0 0 0 2px rgba(6, 78, 59, 0.2);
+}
+
+.pdp-angle-thumb-btn.active .pdp-angle-badge {
+  color: #064e3b;
+}
+
+/* --- FEATURE ADDED POSTER BANNER --- */
+.pdp-feature-poster-banner {
+  margin: 3rem 0 2.5rem;
+  background: linear-gradient(135deg, #042f2e 0%, #064e3b 60%, #022c22 100%);
+  border-radius: 18px;
+  padding: 2.5rem 2rem;
+  color: #ffffff;
+  box-shadow: 0 16px 36px rgba(4, 47, 46, 0.25);
+  border: 1px solid rgba(200, 157, 54, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.pdp-poster-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(200, 157, 54, 0.15);
+  border: 1px solid rgba(200, 157, 54, 0.4);
+  color: #fef08a;
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  margin-bottom: 0.75rem;
+}
+
+.pdp-poster-title {
+  font-family: 'Cinzel', serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 0.4rem;
+}
+
+.pdp-poster-subtitle {
+  font-size: 0.92rem;
+  color: #a7f3d0;
+  max-width: 680px;
+  margin: 0 auto 2rem;
+}
+
+.pdp-poster-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 1.25rem;
+}
+
+.pdp-poster-item {
+  display: flex;
+  gap: 0.85rem;
+  align-items: flex-start;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 1.15rem;
+  border-radius: 12px;
+  backdrop-filter: blur(8px);
+  transition: all 0.3s ease;
+}
+
+.pdp-poster-item:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(200, 157, 54, 0.5);
+  transform: translateY(-3px);
+}
+
+.pdp-poster-icon {
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.pdp-poster-text h3 {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 0.25rem;
+}
+
+.pdp-poster-text p {
+  font-size: 0.78rem;
+  color: #d1fae5;
+  line-height: 1.5;
+  margin: 0;
+}
