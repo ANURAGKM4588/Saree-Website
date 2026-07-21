@@ -4,7 +4,7 @@
   border-radius: 16px;
   border: 1px solid rgba(7, 56, 44, 0.12);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
-  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease, border-color 0.4s ease;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -12,9 +12,9 @@
 }
 
 .kalyan-product-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 30px rgba(7, 56, 44, 0.12), 0 0 15px rgba(200, 157, 54, 0.15);
-  border-color: rgba(200, 157, 54, 0.5);
+  transform: translateY(-6px);
+  box-shadow: 0 16px 36px rgba(7, 56, 44, 0.12);
+  border-color: rgba(200, 157, 54, 0.4);
 }
 
 .kalyan-img-box {
@@ -23,25 +23,6 @@
   aspect-ratio: 3 / 4;
   overflow: hidden;
   background-color: var(--bg-cream-gold);
-}
-
-/* Subtle Light Sweep Flare */
-.kalyan-img-box::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 50%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-  transform: skewX(-20deg);
-  pointer-events: none;
-  z-index: 3;
-}
-
-.kalyan-product-card:hover .kalyan-img-box::after {
-  left: 170%;
-  transition: left 0.75s ease;
 }
 
 .kalyan-img-link {
