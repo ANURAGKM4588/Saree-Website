@@ -76,7 +76,13 @@ export default function ProductsPage() {
     <div className="products-page">
       {/* Top Bar */}
       <div className="pp-top">
-        <Link to="/" className="pp-back">
+        <Link 
+          to="/" 
+          className="pp-back"
+          onClick={() => {
+            document.documentElement.style.scrollBehavior = 'auto';
+          }}
+        >
           <ArrowLeft size={20} /> Back to Home
         </Link>
         <h1 className="pp-title">All Sarees</h1>

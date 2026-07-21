@@ -85,7 +85,13 @@ export default function BestsellersPage() {
     <div className="products-page">
       {/* Top Header */}
       <div className="pp-top">
-        <Link to="/" className="pp-back">
+        <Link 
+          to="/" 
+          className="pp-back"
+          onClick={() => {
+            document.documentElement.style.scrollBehavior = 'auto';
+          }}
+        >
           <ArrowLeft size={16} /> Back to Home
         </Link>
         <span className="pp-count">{filteredProducts.length} top-selling pieces</span>

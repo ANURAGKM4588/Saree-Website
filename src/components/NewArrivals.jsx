@@ -52,7 +52,14 @@ export default function NewArrivals() {
               New <span className="gold-text">Arrivals</span>
             </h2>
           </div>
-          <Link to="/products" className="kalyan-view-all-btn">
+          <Link 
+            to="/products" 
+            className="kalyan-view-all-btn"
+            onClick={() => {
+              sessionStorage.setItem('origin_section', 'arrivals-section');
+              sessionStorage.setItem('last_scroll_pos', window.scrollY.toString());
+            }}
+          >
             View All Collections ›
           </Link>
         </div>

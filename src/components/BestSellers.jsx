@@ -55,7 +55,14 @@ export default function BestSellers() {
         </div>
 
         <div className="bs-view-all">
-          <button onClick={() => navigate('/bestsellers')} className="bs-view-all-link">
+          <button 
+            onClick={() => {
+              sessionStorage.setItem('origin_section', 'bestsellers-section');
+              sessionStorage.setItem('last_scroll_pos', window.scrollY.toString());
+              navigate('/bestsellers');
+            }} 
+            className="bs-view-all-link"
+          >
             Explore All Bestsellers <ArrowRight size={16} />
           </button>
         </div>
