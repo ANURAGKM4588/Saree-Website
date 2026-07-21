@@ -145,68 +145,30 @@ export default function SareeGallerySection() {
           </div>
         </div>
 
-        {/* Gallery Grid */}
+        {/* Pure Image-Only Gallery Grid */}
         <motion.div layout className="sg-grid">
           <AnimatePresence mode="popLayout">
-            {filteredItems.map((item) => {
-              const isLiked = wishlist.includes(item.productId);
-
-              return (
-                <motion.div
-                  key={item.id}
-                  layout
-                  initial={{ opacity: 0, scale: 0.9, y: 15 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.9, y: 15 }}
-                  transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                  className="sg-card pure-lookbook-card"
-                  onClick={() => handleCardClick(item.productId)}
-                >
-                  <div className="sg-image-wrapper">
-                    <img
-                      src={item.image}
-                      alt={item.drapeType}
-                      className="sg-image"
-                      loading="lazy"
-                    />
-
-                    {/* Top Badges */}
-                    <div className="sg-card-top-bar">
-                      <span className="sg-occasion-badge">{item.occasion}</span>
-                      <button
-                        type="button"
-                        className={`sg-wish-btn ${isLiked ? 'liked' : ''}`}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          toggleWishlist(item.productId);
-                        }}
-                        title={isLiked ? 'Remove from Wishlist' : 'Add to Wishlist'}
-                      >
-                        <Heart size={16} fill={isLiked ? '#dc2626' : 'none'} color={isLiked ? '#dc2626' : '#ffffff'} />
-                      </button>
-                    </div>
-
-                    {/* Hover Overlay */}
-                    <div className="sg-overlay">
-                      <div className="sg-overlay-content">
-                        <span className="sg-drape-type">{item.drapeType}</span>
-                        <h3 className="sg-item-name">{item.drapeType}</h3>
-
-                        <button type="button" className="sg-buy-access-btn">
-                          <span>Explore Drape & Angles</span>
-                          <ArrowRight size={16} />
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Bottom Quick Indicator */}
-                    <div className="sg-bottom-indicator">
-                      <Eye size={14} /> Click to View Drape & Angles
-                    </div>
-                  </div>
-                </motion.div>
-              );
-            })}
+            {filteredItems.map((item) => (
+              <motion.div
+                key={item.id}
+                layout
+                initial={{ opacity: 0, scale: 0.92, y: 15 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.92, y: 15 }}
+                transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                className="sg-card pure-image-card"
+                onClick={() => handleCardClick(item.productId)}
+              >
+                <div className="sg-image-wrapper">
+                  <img
+                    src={item.image}
+                    alt="Saree Drape"
+                    className="sg-image"
+                    loading="lazy"
+                  />
+                </div>
+              </motion.div>
+            ))}
           </AnimatePresence>
         </motion.div>
       </div>
