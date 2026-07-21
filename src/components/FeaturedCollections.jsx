@@ -54,6 +54,7 @@ export default function FeaturedCollections() {
 
   return (
     <section className="kalyan-pattern-section" id="pattern-section">
+      <div id="shop-by-fabric" style={{ position: 'relative', top: '-80px' }} />
       <div className="pattern-container">
         <div className="kalyan-section-header">
           <h2 className="kalyan-section-title">
@@ -89,7 +90,11 @@ export default function FeaturedCollections() {
         <div className="pattern-footer-cta">
           <button 
             className="kalyan-all-patterns-btn"
-            onClick={() => navigate('/products')}
+            onClick={() => {
+              sessionStorage.setItem('origin_section', 'pattern-section');
+              sessionStorage.setItem('last_scroll_pos', window.scrollY.toString());
+              navigate('/products');
+            }}
           >
             Explore All {selectedPattern} Sarees ›
           </button>

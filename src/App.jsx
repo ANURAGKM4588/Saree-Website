@@ -45,7 +45,9 @@ function ScrollToTop() {
 
       if (originSection) {
         sessionStorage.removeItem('origin_section');
-        const secEl = document.getElementById(originSection);
+        const secEl = document.getElementById(originSection) ||
+                      document.getElementById(originSection.replace('-section', '')) ||
+                      (originSection.includes('fabric') || originSection.includes('pattern') ? document.getElementById('pattern-section') : null);
         if (secEl) {
           secEl.scrollIntoView({ block: 'start', behavior: 'instant' });
           return;
