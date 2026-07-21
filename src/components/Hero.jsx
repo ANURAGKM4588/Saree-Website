@@ -42,18 +42,27 @@ const drawImageProp = (ctx, img, x, y, w, h, offsetX = 0.5, offsetY = 0) => {
   ctx.drawImage(img, cx, cy, cw, ch, x, y, w, h);
 };
 
+let globalHeroImagesCache = {};
+let isHeroPreloaded = false;
+
 export default function Hero() {
   const containerRef = useRef(null);
   const wrapperRef = useRef(null);
   const canvasRef = useRef(null);
-  const imagesRef = useRef({});
+  const imagesRef = useRef(globalHeroImagesCache);
 
-  const [loadedCount, setLoadedCount] = useState(0);
-  const [isReady, setIsReady] = useState(false);
+  const [loadedCount, setLoadedCount] = useState(isHeroPreloaded ? totalFrames : 0);
+  const [isReady, setIsReady] = useState(isHeroPreloaded);
 
   const loadPercentage = Math.round((loadedCount / totalFrames) * 100);
 
   useEffect(() => {
+    if (isHeroPreloaded) {
+      imagesRef.current = globalHeroImagesCache;
+      setIsReady(true);
+      return;
+    }
+
     let loaded = 0;
 
     const preloadImages = async () => {
@@ -65,6 +74,7 @@ export default function Hero() {
           img.onload = () => {
             loaded++;
             setLoadedCount(loaded);
+            globalHeroImagesCache[frameNum] = img;
             imagesRef.current[frameNum] = img;
             resolve();
           };
@@ -77,6 +87,7 @@ export default function Hero() {
       });
 
       await Promise.all(promises);
+      isHeroPreloaded = true;
       setIsReady(true);
     };
 
