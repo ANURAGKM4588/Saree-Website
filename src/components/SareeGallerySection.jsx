@@ -6,95 +6,63 @@ import { formatPrice } from '../data/products';
 import { useCart } from '../context/CartContext';
 import './SareeGallerySection.css';
 
-// Curated drape lookbook collection mapped to distinct real saree products
+// Curated drape lookbook collection with editorial collage spans
 const galleryItems = [
   {
     id: 'gal-1',
     productId: 101,
-    title: 'Kanchipuram Divine Lotus',
     category: 'Bridal',
-    price: 1,
-    originalPrice: 62000,
     image: '/image/saree/folded-kanjivaram-silk-saree-green-golden-pallu.webp',
-    drapeType: 'Traditional South Indian Drape',
-    occasion: 'Wedding & Bridal'
+    spanClass: 'collage-tall'
   },
   {
     id: 'gal-2',
     productId: 102,
-    title: 'Banarasi Royal Velvet',
     category: 'Royal Silk',
-    price: 52900,
-    originalPrice: 68000,
     image: '/image/saree/5_73_7415436e-9226-4442-9a42-d47387d04730.webp',
-    drapeType: 'North Indian Bridal Drape',
-    occasion: 'Grand Reception'
+    spanClass: 'collage-wide'
   },
   {
     id: 'gal-3',
     productId: 103,
-    title: 'Organza Floral Dream',
     category: 'Festive',
-    price: 1,
-    originalPrice: 38500,
     image: '/image/saree/IMG20250515110716.jpg',
-    drapeType: 'Airy Pastel Pleated Drape',
-    occasion: 'Daytime Celebrations'
+    spanClass: 'collage-normal'
   },
   {
     id: 'gal-4',
     productId: 104,
-    title: 'Patola Heritage Weave',
     category: 'Classic',
-    price: 72500,
-    originalPrice: 92000,
     image: '/image/saree/images (5).jpeg',
-    drapeType: 'Double Ikat Royal Drape',
-    occasion: 'Heritage Gathering'
+    spanClass: 'collage-normal'
   },
   {
     id: 'gal-5',
     productId: 106,
-    title: 'Kanjeevaram Temple Rich',
     category: 'Bridal',
-    price: 89500,
-    originalPrice: 115000,
     image: '/image/saree/images (7).jpeg',
-    drapeType: 'Grand Temple Korvai Drape',
-    occasion: 'Muhurtham Ceremony'
+    spanClass: 'collage-large'
   },
   {
     id: 'gal-6',
     productId: 107,
-    title: 'Banarasi Tissue Gold',
     category: 'Festive',
-    price: 62500,
-    originalPrice: 78000,
     image: '/image/saree/images (8).jpeg',
-    drapeType: 'Metallic Sheen Pallu Drape',
-    occasion: 'Sangeet & Evening'
+    spanClass: 'collage-tall'
   },
   {
     id: 'gal-7',
     productId: 109,
-    title: 'Paithani Peacock Glory',
     category: 'Royal Silk',
-    price: 78500,
-    originalPrice: 95000,
     image: '/image/saree/images (10).jpeg',
-    drapeType: 'Maharashtrian Nauvari Style Drape',
-    occasion: 'Traditional Pooja'
+    spanClass: 'collage-normal'
   },
   {
     id: 'gal-8',
     productId: 110,
-    title: 'Tussar Silk Tribal',
     category: 'Classic',
-    price: 26500,
-    originalPrice: 33000,
     image: '/image/saree/images (11).jpeg',
-    drapeType: 'Natural Handloom Textured Drape',
-    occasion: 'Festive Gathering'
+    spanClass: 'collage-wide'
   }
 ];
 
@@ -102,7 +70,6 @@ const categories = ['All Drapes', 'Bridal', 'Royal Silk', 'Festive', 'Classic'];
 
 export default function SareeGallerySection() {
   const navigate = useNavigate();
-  const { wishlist, toggleWishlist } = useCart();
   const [activeCategory, setActiveCategory] = useState('All Drapes');
 
   const filteredItems = activeCategory === 'All Drapes'
@@ -123,11 +90,11 @@ export default function SareeGallerySection() {
         <div className="sg-header text-center">
           <div className="sg-badge">
             <Sparkles size={14} className="sparkle-gold" />
-            <span>REAL DRAPE LOOKBOOK</span>
+            <span>EDITORIAL DRAPE LOOKBOOK</span>
           </div>
           <h2 className="sg-title">Saree Wearing Collection Gallery</h2>
           <p className="sg-subtitle">
-            Explore how our handcrafted pure silk drapes look in real life. Click on any drape image to open the complete saree details & buy directly.
+            Immerse yourself in our haute couture real saree drape lookbook gallery. Click any drape photograph to explore details & angles.
           </p>
 
           {/* Filter Tabs */}
@@ -145,27 +112,38 @@ export default function SareeGallerySection() {
           </div>
         </div>
 
-        {/* Pure Image-Only Gallery Grid */}
-        <motion.div layout className="sg-grid">
+        {/* Pure Image Editorial Collage Grid with Framer Motion */}
+        <motion.div layout className="sg-collage-grid">
           <AnimatePresence mode="popLayout">
-            {filteredItems.map((item) => (
+            {filteredItems.map((item, index) => (
               <motion.div
                 key={item.id}
                 layout
-                initial={{ opacity: 0, scale: 0.92, y: 15 }}
+                initial={{ opacity: 0, scale: 0.88, y: 25 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.92, y: 15 }}
-                transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                className="sg-card pure-image-card"
+                exit={{ opacity: 0, scale: 0.88, y: 15 }}
+                transition={{
+                  duration: 0.45,
+                  delay: index * 0.04,
+                  ease: [0.16, 1, 0.3, 1],
+                  layout: { duration: 0.4, ease: [0.16, 1, 0.3, 1] }
+                }}
+                whileHover={{ scale: 1.02, y: -4 }}
+                whileTap={{ scale: 0.98 }}
+                className={`sg-collage-card ${item.spanClass}`}
                 onClick={() => handleCardClick(item.productId)}
               >
-                <div className="sg-image-wrapper">
+                <div className="sg-collage-img-wrapper">
                   <img
                     src={item.image}
-                    alt="Saree Drape"
-                    className="sg-image"
+                    alt="Saree Drape Lookbook"
+                    className="sg-collage-image"
                     loading="lazy"
                   />
+                  <div className="sg-collage-hover-badge">
+                    <Sparkles size={14} className="sparkle-gold" />
+                    <span>View Drape Look</span>
+                  </div>
                 </div>
               </motion.div>
             ))}
