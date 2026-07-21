@@ -52,7 +52,7 @@ export default function ProductsPage() {
     }
   }, [location.search, categories]);
 
-  if (loading) {
+  if (loading && products.length === 0) {
     return (
       <div className="products-page">
         <div className="pp-top">

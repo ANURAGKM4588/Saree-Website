@@ -282,7 +282,7 @@ export default function ProductDetailPage({ isGalleryView = false }) {
     window.scrollTo(0, 0);
   }, [id]);
 
-  if (loading) {
+  if (loading && !product) {
     return (
       <div className="pdp-page" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '60vh' }}>
         <div style={{ color: 'var(--color-gold)', fontSize: '1.2rem', display: 'flex', gap: '8px', alignItems: 'center' }}>
