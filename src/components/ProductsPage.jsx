@@ -52,43 +52,6 @@ export default function ProductsPage() {
     }
   }, [location.search, categories]);
 
-  if (loading && products.length === 0) {
-    return (
-      <div className="products-page">
-        <div className="pp-top">
-          <Link to="/" className="pp-back">
-            <ArrowLeft size={20} /> Back to Home
-          </Link>
-          <h1 className="pp-title">All Sarees</h1>
-          <span className="pp-count">Loading...</span>
-        </div>
-        <div className="pp-grid">
-          {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div key={i} className="pp-card skeleton-card" style={{ opacity: 0.6 }}>
-              <div className="pp-card-image-wrapper" style={{ height: '350px', background: '#222', borderRadius: '8px', position: 'relative', overflow: 'hidden' }}>
-                <div className="shimmer" style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  width: '100%',
-                  height: '100%',
-                  background: 'linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.1), transparent)',
-                  animation: 'shimmer 1.5s infinite'
-                }} />
-              </div>
-            </div>
-          ))}
-        </div>
-        <style>{`
-          @keyframes shimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-          }
-        `}</style>
-      </div>
-    );
-  }
-
   const filtered = products
     .filter((p) => activeCategory === 'All' || p.category === activeCategory)
     .filter(

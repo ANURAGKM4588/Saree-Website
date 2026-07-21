@@ -20,6 +20,7 @@ import WishlistPage from './components/WishlistPage';
 import AdminPanel from './components/AdminPanel';
 import StorySection from './components/StorySection';
 import SareeGallerySection from './components/SareeGallerySection';
+import FirstTimeSiteLoader from './components/FirstTimeSiteLoader';
 
 function ScrollToTop() {
   const { pathname, search } = useLocation();
@@ -92,6 +93,7 @@ function App() {
     <DatabaseProvider>
       <CartProvider>
         <HashRouter>
+          <FirstTimeSiteLoader />
           <ScrollToTop />
           <Routes>
             <Route path="/" element={<HomePage />} />

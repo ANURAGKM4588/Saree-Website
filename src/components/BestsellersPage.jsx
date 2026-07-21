@@ -81,29 +81,6 @@ export default function BestsellersPage() {
     setIsCartOpen(true);
   };
 
-  if (loading) {
-    return (
-      <div className="products-page" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '60vh' }}>
-        <div style={{ color: 'var(--color-gold)', fontSize: '1.2rem', display: 'flex', gap: '8px', alignItems: 'center' }}>
-          <div className="spinner" style={{
-            width: '24px',
-            height: '24px',
-            border: '2px solid var(--color-gold)',
-            borderTopColor: 'transparent',
-            borderRadius: '50%',
-            animation: 'spin 1s linear infinite'
-          }} />
-          Loading Bestsellers...
-        </div>
-        <style>{`
-          @keyframes spin {
-            to { transform: rotate(360deg); }
-          }
-        `}</style>
-      </div>
-    );
-  }
-
   return (
     <div className="products-page">
       {/* Top Header */}
