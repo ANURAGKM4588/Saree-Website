@@ -608,7 +608,7 @@ export default function ProductDetailPage() {
                 <div className="review-modal-title-group">
                   <Sparkles size={22} className="gold-sparkle-icon" />
                   <div>
-                    <h3>Write a Customer Review</h3>
+                    <h3>{editingReviewId ? 'Edit Your Customer Review' : 'Write a Customer Review'}</h3>
                     <p className="review-modal-subtitle">Share your authentic drape experience for {product.name}</p>
                   </div>
                 </div>
@@ -617,19 +617,33 @@ export default function ProductDetailPage() {
                 </button>
               </div>
 
-              {userHasReviewed && !reviewSubmitted ? (
+              {userHasReviewed && !editingReviewId && !reviewSubmitted ? (
                 <div className="review-already-submitted-state">
                   <div className="already-icon-wrap">
                     <CheckCircle2 size={40} className="already-check-icon" />
                   </div>
-                  <span className="already-subtitle">REVIEW ALREADY SUBMITTED</span>
-                  <h4 className="already-title">One Review Allowed Per Account</h4>
+                  <span className="already-subtitle">REVIEW SUBMITTED</span>
+                  <h4 className="already-title">You Have Reviewed This Saree</h4>
                   <p className="already-message">
-                    You have already submitted a verified review for <strong>{product.name}</strong> from your account ({currentUser ? currentUser.name : 'your profile'}). Thank you for sharing your feedback with our community!
+                    You have submitted a verified review for <strong>{product.name}</strong> from your account ({currentUser ? currentUser.name : 'your profile'}). You can edit your existing review or delete it anytime.
                   </p>
-                  <button className="review-done-btn" onClick={() => setIsReviewModalOpen(false)}>
-                    Close
-                  </button>
+                  <div className="already-actions-row" style={{ display: 'flex', gap: '0.75rem', marginTop: '1rem' }}>
+                    {reviewsList.find((r) => isOwnerOfReview(r)) && (
+                      <button 
+                        className="review-done-btn" 
+                        style={{ background: 'var(--gradient-gold)', color: '#ffffff' }}
+                        onClick={() => {
+                          const myRev = reviewsList.find((r) => isOwnerOfReview(r));
+                          if (myRev) handleEditReview(myRev);
+                        }}
+                      >
+                        <Pencil size={15} /> Edit My Review
+                      </button>
+                    )}
+                    <button className="review-done-btn" onClick={() => setIsReviewModalOpen(false)}>
+                      Close
+                    </button>
+                  </div>
                 </div>
               ) : reviewSubmitted ? (
                 <motion.div 
@@ -641,10 +655,10 @@ export default function ProductDetailPage() {
                   <div className="success-icon-wrap">
                     <CheckCircle2 size={36} className="success-check-icon" />
                   </div>
-                  <span className="success-subtitle">FEEDBACK RECEIVED</span>
-                  <h4 className="success-title">Thank You for Your Review!</h4>
+                  <span className="success-subtitle">FEEDBACK SAVED</span>
+                  <h4 className="success-title">{editingReviewId ? 'Review Updated Successfully!' : 'Thank You for Your Review!'}</h4>
                   <p className="success-message">
-                    Your authentic review has been published successfully and is now displayed in the customer stories section.
+                    Your authentic review has been published and updated in the customer stories section.
                   </p>
                   <button className="review-done-btn" onClick={() => setIsReviewModalOpen(false)}>
                     Done
@@ -729,7 +743,7 @@ export default function ProductDetailPage() {
                       Cancel
                     </button>
                     <button type="submit" className="submit-review-btn">
-                      <Send size={16} /> Submit Review
+                      <Send size={16} /> {editingReviewId ? 'Update Review' : 'Submit Review'}
                     </button>
                   </div>
                 </form>
