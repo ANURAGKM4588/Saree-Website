@@ -31,6 +31,8 @@ export default function CelebrateOccasion() {
   };
 
   const handleFabricClick = (fabricName) => {
+    sessionStorage.setItem('origin_section', 'fabric-section');
+    sessionStorage.setItem('last_scroll_pos', window.scrollY.toString());
     navigate(`/products?search=${encodeURIComponent(fabricName)}`);
     window.scrollTo(0, 0);
   };
