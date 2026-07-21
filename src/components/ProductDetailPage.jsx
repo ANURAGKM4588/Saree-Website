@@ -75,22 +75,6 @@ export default function ProductDetailPage() {
     return false;
   };
 
-  const checkHasReviewed = (productId) => {
-    try {
-      const userKey = currentUser?.email || currentUser?.name || 'guest_device';
-      const stored = localStorage.getItem('kadha_submitted_reviews');
-      if (stored) {
-        const list = JSON.parse(stored);
-        return list.some(
-          (item) => item.userKey === userKey && String(item.productId) === String(productId)
-        );
-      }
-    } catch (e) {
-      console.error(e);
-    }
-    return false;
-  };
-
   useEffect(() => {
     const loadUser = () => {
       try {
@@ -110,9 +94,29 @@ export default function ProductDetailPage() {
     return () => window.removeEventListener('kadha_user_changed', loadUser);
   }, []);
 
+  // Load and merge persisted user reviews for this product
   useEffect(() => {
-    if (product?.id) {
-      setUserHasReviewed(checkHasReviewed(product.id));
+    if (!product?.id) return;
+
+    try {
+      const stored = localStorage.getItem('kadha_all_user_reviews');
+      const allSavedReviews = stored ? JSON.parse(stored) : [];
+      const productReviews = allSavedReviews.filter(
+        (r) => String(r.productId) === String(product.id)
+      );
+
+      // Set combined reviews list
+      setReviewsList([...productReviews, ...sampleReviewsList]);
+
+      // Check if current user has already reviewed this product
+      const userKey = currentUser?.email || currentUser?.name || 'guest_device';
+      const hasRev = productReviews.some(
+        (r) => r.userKey === userKey || (currentUser?.name && r.author === currentUser.name)
+      );
+      setUserHasReviewed(hasRev);
+    } catch (e) {
+      console.error(e);
+      setReviewsList(sampleReviewsList);
     }
   }, [product?.id, currentUser]);
 
@@ -140,10 +144,19 @@ export default function ProductDetailPage() {
     setReviewsList((prev) => prev.filter((r) => r.id !== reviewId));
 
     try {
-      const userKey = currentUser?.email || currentUser?.name || 'guest_device';
-      const stored = localStorage.getItem('kadha_submitted_reviews');
+      // Remove from kadha_all_user_reviews
+      const stored = localStorage.getItem('kadha_all_user_reviews');
       if (stored) {
         const list = JSON.parse(stored);
+        const filtered = list.filter((r) => r.id !== reviewId);
+        localStorage.setItem('kadha_all_user_reviews', JSON.stringify(filtered));
+      }
+
+      // Remove lock from kadha_submitted_reviews
+      const userKey = currentUser?.email || currentUser?.name || 'guest_device';
+      const storedLocks = localStorage.getItem('kadha_submitted_reviews');
+      if (storedLocks) {
+        const list = JSON.parse(storedLocks);
         const filtered = list.filter(
           (item) => !(item.userKey === userKey && String(item.productId) === String(product.id))
         );
@@ -189,6 +202,28 @@ export default function ProductDetailPage() {
             : rev
         )
       );
+
+      try {
+        const stored = localStorage.getItem('kadha_all_user_reviews');
+        if (stored) {
+          const list = JSON.parse(stored);
+          const updatedList = list.map((r) =>
+            r.id === editingReviewId
+              ? {
+                  ...r,
+                  rating: reviewRating,
+                  title: `${reviewRating}-Star Drape Review`,
+                  comment: reviewComment.trim(),
+                  image: imagePreview || null,
+                }
+              : r
+          );
+          localStorage.setItem('kadha_all_user_reviews', JSON.stringify(updatedList));
+        }
+      } catch (err) {
+        console.error(err);
+      }
+
       setEditingReviewId(null);
       setReviewSubmitted(true);
       return;
@@ -196,6 +231,7 @@ export default function ProductDetailPage() {
 
     const createdReview = {
       id: Date.now(),
+      productId: product.id,
       userKey: userKey,
       isUserOwned: true,
       author: authorName,
@@ -209,10 +245,18 @@ export default function ProductDetailPage() {
     };
 
     try {
-      const stored = localStorage.getItem('kadha_submitted_reviews');
+      const stored = localStorage.getItem('kadha_all_user_reviews');
       const list = stored ? JSON.parse(stored) : [];
-      list.push({ userKey, productId: product.id, timestamp: Date.now() });
-      localStorage.setItem('kadha_submitted_reviews', JSON.stringify(list));
+      const updatedList = list.filter(
+        (item) => !(item.userKey === userKey && String(item.productId) === String(product.id))
+      );
+      updatedList.unshift(createdReview);
+      localStorage.setItem('kadha_all_user_reviews', JSON.stringify(updatedList));
+
+      const storedLocks = localStorage.getItem('kadha_submitted_reviews');
+      const locksList = storedLocks ? JSON.parse(storedLocks) : [];
+      locksList.push({ userKey, productId: product.id, timestamp: Date.now() });
+      localStorage.setItem('kadha_submitted_reviews', JSON.stringify(locksList));
     } catch (err) {
       console.error(err);
     }
