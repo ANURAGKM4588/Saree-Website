@@ -8,13 +8,16 @@ export default function FirstTimeSiteLoader() {
   useEffect(() => {
     try {
       const alreadyVisited = sessionStorage.getItem('kadha_first_visit_loaded');
-      if (!alreadyVisited) {
+      const returningToGal = sessionStorage.getItem('return_to_gallery');
+      if (!alreadyVisited && returningToGal !== 'true') {
         setShowLoader(true);
         const timer = setTimeout(() => {
           setShowLoader(false);
           sessionStorage.setItem('kadha_first_visit_loaded', 'true');
         }, 1300);
         return () => clearTimeout(timer);
+      } else {
+        sessionStorage.setItem('kadha_first_visit_loaded', 'true');
       }
     } catch (e) {
       console.error(e);

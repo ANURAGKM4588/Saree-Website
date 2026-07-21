@@ -31,17 +31,15 @@ function ScrollToTop() {
     if (returnToGallery === 'true' && pathname === '/') {
       sessionStorage.removeItem('return_to_gallery');
       document.documentElement.style.scrollBehavior = 'auto';
-      setTimeout(() => {
-        const galEl = document.getElementById('saree-drape-lookbook');
-        if (galEl) {
-          galEl.scrollIntoView({ block: 'start', behavior: 'instant' });
-        } else {
-          const lastScroll = sessionStorage.getItem('last_scroll_pos');
-          if (lastScroll) {
-            window.scrollTo({ top: parseInt(lastScroll, 10), left: 0, behavior: 'instant' });
-          }
-        }
-      }, 30);
+      const galEl = document.getElementById('saree-drape-lookbook');
+      const lastScroll = sessionStorage.getItem('last_scroll_pos');
+      if (galEl) {
+        galEl.scrollIntoView({ block: 'start', behavior: 'instant' });
+      } else if (lastScroll) {
+        window.scrollTo({ top: parseInt(lastScroll, 10), left: 0, behavior: 'instant' });
+      } else {
+        window.scrollTo({ top: 1200, left: 0, behavior: 'instant' });
+      }
       return;
     }
 

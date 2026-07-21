@@ -45,20 +45,32 @@ const drawImageProp = (ctx, img, x, y, w, h, offsetX = 0.5, offsetY = 0) => {
 let globalHeroImagesCache = {};
 let isHeroPreloaded = false;
 
+const checkIsAlreadyPreloaded = () => {
+  if (isHeroPreloaded) return true;
+  try {
+    if (sessionStorage.getItem('hero_preloaded') === 'true' || sessionStorage.getItem('return_to_gallery') === 'true') {
+      return true;
+    }
+  } catch (e) {}
+  return false;
+};
+
 export default function Hero() {
   const containerRef = useRef(null);
   const wrapperRef = useRef(null);
   const canvasRef = useRef(null);
   const imagesRef = useRef(globalHeroImagesCache);
 
-  const [loadedCount, setLoadedCount] = useState(isHeroPreloaded ? totalFrames : 0);
-  const [isReady, setIsReady] = useState(isHeroPreloaded);
+  const initiallyReady = checkIsAlreadyPreloaded();
+  const [loadedCount, setLoadedCount] = useState(initiallyReady ? totalFrames : 0);
+  const [isReady, setIsReady] = useState(initiallyReady);
 
   const loadPercentage = Math.round((loadedCount / totalFrames) * 100);
 
   useEffect(() => {
-    if (isHeroPreloaded) {
+    if (checkIsAlreadyPreloaded()) {
       imagesRef.current = globalHeroImagesCache;
+      isHeroPreloaded = true;
       setIsReady(true);
       return;
     }
@@ -88,6 +100,9 @@ export default function Hero() {
 
       await Promise.all(promises);
       isHeroPreloaded = true;
+      try {
+        sessionStorage.setItem('hero_preloaded', 'true');
+      } catch (e) {}
       setIsReady(true);
     };
 
