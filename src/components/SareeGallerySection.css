@@ -340,21 +340,6 @@
 .sg-loop-wrapper {
   width: 100%;
   overflow: hidden;
-  /* fade edges */
-  -webkit-mask-image: linear-gradient(
-    to right,
-    transparent 0%,
-    #000 6%,
-    #000 94%,
-    transparent 100%
-  );
-  mask-image: linear-gradient(
-    to right,
-    transparent 0%,
-    #000 6%,
-    #000 94%,
-    transparent 100%
-  );
 }
 
 .sg-loop-track {
