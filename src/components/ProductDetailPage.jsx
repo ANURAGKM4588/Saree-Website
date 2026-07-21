@@ -62,6 +62,12 @@ export default function ProductDetailPage({ isGalleryView = false }) {
     navigate('/');
   };
 
+  const handleBackToHome = (e) => {
+    if (e) e.preventDefault();
+    document.documentElement.style.scrollBehavior = 'auto';
+    navigate('/');
+  };
+
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [reviewsList, setReviewsList] = useState(sampleReviewsList);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
@@ -352,7 +358,7 @@ export default function ProductDetailPage({ isGalleryView = false }) {
             </>
           ) : (
             <>
-              <Link to="/">Home</Link>
+              <Link to="/" onClick={handleBackToHome}>Home</Link>
               <span>/</span>
               <Link to="/products" className="pdp-breadcrumb-link">
                 All Sarees

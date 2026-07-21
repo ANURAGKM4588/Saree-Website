@@ -62,6 +62,8 @@ export default function ShopByOccasion() {
               key={occ.id}
               className={`occasion-tile ${occ.className}`}
               onClick={() => {
+                sessionStorage.setItem('origin_section', 'occasion-section');
+                sessionStorage.setItem('last_scroll_pos', window.scrollY.toString());
                 navigate(occ.filterUrl);
                 window.scrollTo(0, 0);
               }}

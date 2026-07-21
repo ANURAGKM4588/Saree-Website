@@ -112,6 +112,7 @@ export default function SareeGallerySection() {
   const handleCardClick = (productId) => {
     sessionStorage.setItem('last_scroll_pos', window.scrollY.toString());
     sessionStorage.setItem('from_gallery', 'true');
+    sessionStorage.setItem('origin_section', 'saree-drape-lookbook');
     navigate(`/gallery/product/${productId}`);
   };
 

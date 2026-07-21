@@ -46,7 +46,14 @@ export default function BridalBanner() {
           <p className="rg-tagline">REGAL. REFINED. REMARKABLE.</p>
 
           {/* Red Pill Button */}
-          <Link to="/products?category=Bridal" className="rg-explore-btn">
+          <Link 
+            to="/products?category=Bridal" 
+            className="rg-explore-btn"
+            onClick={() => {
+              sessionStorage.setItem('origin_section', 'bridal-section');
+              sessionStorage.setItem('last_scroll_pos', window.scrollY.toString());
+            }}
+          >
             EXPLORE NOW
           </Link>
         </div>
