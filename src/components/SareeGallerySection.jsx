@@ -112,43 +112,33 @@ export default function SareeGallerySection() {
           </div>
         </div>
 
-        {/* Pure Image Editorial Collage Grid with Framer Motion */}
-        <motion.div layout className="sg-collage-grid">
-          <AnimatePresence mode="popLayout">
-            {filteredItems.map((item, index) => (
+        {/* Infinite Right-to-Left Continuous Loop Marquee Track */}
+        <div className="sg-loop-wrapper">
+          <div className="sg-loop-track">
+            {[...filteredItems, ...filteredItems, ...filteredItems].map((item, index) => (
               <motion.div
-                key={item.id}
-                layout
-                initial={{ opacity: 0, scale: 0.88, y: 25 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.88, y: 15 }}
-                transition={{
-                  duration: 0.45,
-                  delay: index * 0.04,
-                  ease: [0.16, 1, 0.3, 1],
-                  layout: { duration: 0.4, ease: [0.16, 1, 0.3, 1] }
-                }}
-                whileHover={{ scale: 1.02, y: -4 }}
+                key={`${item.id}-${index}`}
+                whileHover={{ scale: 1.03, y: -5 }}
                 whileTap={{ scale: 0.98 }}
-                className={`sg-collage-card ${item.spanClass}`}
+                className="sg-loop-card"
                 onClick={() => handleCardClick(item.productId)}
               >
-                <div className="sg-collage-img-wrapper">
+                <div className="sg-loop-img-wrapper">
                   <img
                     src={item.image}
                     alt="Saree Drape Lookbook"
-                    className="sg-collage-image"
+                    className="sg-loop-image"
                     loading="lazy"
                   />
-                  <div className="sg-collage-hover-badge">
+                  <div className="sg-loop-hover-badge">
                     <Sparkles size={14} className="sparkle-gold" />
                     <span>View Drape Look</span>
                   </div>
                 </div>
               </motion.div>
             ))}
-          </AnimatePresence>
-        </motion.div>
+          </div>
+        </div>
       </div>
     </section>
   );
