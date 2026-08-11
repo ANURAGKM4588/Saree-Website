@@ -4,8 +4,16 @@ import path from "path";
 const outputPublic = path.resolve(".output/public");
 
 if (!fs.existsSync(outputPublic)) {
-  console.error(".output/public directory does not exist!");
-  process.exit(1);
+  fs.mkdirSync(outputPublic, { recursive: true });
+}
+
+// Check if index.html was generated in .output/public or root
+let indexPath = path.join(outputPublic, "index.html");
+if (!fs.existsSync(indexPath)) {
+  const rootIndex = path.resolve("index.html");
+  if (fs.existsSync(rootIndex)) {
+    fs.copyFileSync(rootIndex, indexPath);
+  }
 }
 
 const assetsDir = path.join(outputPublic, "assets");
