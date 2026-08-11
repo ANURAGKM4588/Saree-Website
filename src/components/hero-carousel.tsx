@@ -56,6 +56,8 @@ const slides: Slide[] = [
 
 export function HeroCarousel() {
   const [index, setIndex] = useState(0);
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
+
   const go = useCallback((n: number) => setIndex((i) => (i + n + slides.length) % slides.length), []);
 
   useEffect(() => {
@@ -63,9 +65,29 @@ export function HeroCarousel() {
     return () => clearInterval(t);
   }, [index]);
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStartX(e.touches[0].clientX);
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX === null) return;
+    const touchEndX = e.changedTouches[0].clientX;
+    const diff = touchStartX - touchEndX;
+    if (diff > 40) {
+      go(1);
+    } else if (diff < -40) {
+      go(-1);
+    }
+    setTouchStartX(null);
+  };
+
   return (
     <section className="mx-auto max-w-[1400px] px-5 pt-6 lg:px-8">
-      <div className="relative min-h-[460px] overflow-hidden rounded-[2rem] sm:min-h-[560px] lg:min-h-[640px]">
+      <div
+        className="relative min-h-[460px] overflow-hidden rounded-[2rem] sm:min-h-[560px] lg:min-h-[640px] touch-pan-y"
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
         {slides.map((s, i) => {
           const Heading = i === index ? "h1" : ("h2" as const);
           return (
@@ -99,8 +121,8 @@ export function HeroCarousel() {
                 s.align === "right" ? "items-end text-right" : "items-start"
               }`}
             >
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-xs font-medium text-white backdrop-blur-md">
-                <span className="h-1.5 w-1.5 rounded-full bg-gold" />
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-xs font-medium text-white backdrop-blur-md whitespace-nowrap">
+                <span className="h-1.5 w-1.5 rounded-full bg-gold shrink-0" />
                 {s.eyebrow}
               </span>
               <Heading className="mt-6 max-w-xl font-display text-[2.5rem] font-semibold leading-[0.98] tracking-[-0.03em] text-white drop-shadow-[0_2px_20px_rgba(0,0,0,0.45)] sm:text-6xl lg:text-[4.25rem]">
@@ -118,13 +140,13 @@ export function HeroCarousel() {
               >
                 <Link
                   to="/shop"
-                  className="rounded-full bg-white px-8 py-4 text-sm font-medium text-ink transition-transform hover:scale-[1.02]"
+                  className="rounded-full bg-white px-8 py-4 text-sm font-medium text-ink transition-transform hover:scale-[1.02] whitespace-nowrap shrink-0"
                 >
                   Shop the collection
                 </Link>
                 <Link
                   to="/booking"
-                  className="rounded-full border border-white/40 bg-white/10 px-8 py-4 text-sm font-medium text-white backdrop-blur-md transition-colors hover:bg-white/20"
+                  className="rounded-full border border-white/40 bg-white/10 px-8 py-4 text-sm font-medium text-white backdrop-blur-md transition-colors hover:bg-white/20 whitespace-nowrap shrink-0"
                 >
                   Book a fitting
                 </Link>

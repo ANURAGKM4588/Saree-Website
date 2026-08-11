@@ -37,7 +37,7 @@ function Bag() {
           <p className="text-sm text-muted-foreground">Your bag is empty.</p>
           <Link
             to="/shop"
-            className="mt-6 inline-block rounded-full border border-brand px-8 py-3 text-[11px] uppercase tracking-[0.22em] text-brand transition-colors hover:bg-brand hover:text-primary-foreground"
+            className="mt-6 inline-block rounded-full border border-brand px-8 py-3 text-[11px] uppercase tracking-[0.22em] text-brand transition-colors hover:bg-brand hover:text-primary-foreground whitespace-nowrap shrink-0"
           >
             Browse sarees
           </Link>
@@ -63,7 +63,7 @@ function Bag() {
                         {item.saree.weave}
                       </p>
                     </div>
-                    <p className="text-sm tabular-nums">
+                    <p className="text-sm tabular-nums whitespace-nowrap">
                       {formatPrice(item.saree.price * item.qty)}
                     </p>
                   </div>
@@ -72,7 +72,7 @@ function Bag() {
                     <button
                       type="button"
                       onClick={() => remove(item.slug)}
-                      className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground hover:text-destructive"
+                      className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground hover:text-destructive whitespace-nowrap"
                     >
                       Remove
                     </button>
@@ -83,13 +83,13 @@ function Bag() {
           </ul>
 
           <div className="mt-8 flex items-center justify-between rounded-xl bg-cream px-6 py-5">
-            <p className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">Subtotal</p>
-            <p className="font-display text-2xl tabular-nums text-brand-soft">{formatPrice(subtotal)}</p>
+            <p className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground whitespace-nowrap">Subtotal</p>
+            <p className="font-display text-2xl tabular-nums text-brand-soft whitespace-nowrap">{formatPrice(subtotal)}</p>
           </div>
 
           <Link
             to="/booking"
-            className="mt-8 inline-block rounded-full bg-brand px-10 py-3 text-[11px] uppercase tracking-[0.22em] text-primary-foreground transition-colors hover:bg-brand-soft"
+            className="mt-8 inline-block rounded-full bg-brand px-10 py-3 text-[11px] uppercase tracking-[0.22em] text-primary-foreground transition-colors hover:bg-brand-soft whitespace-nowrap shrink-0"
           >
             Proceed to booking
           </Link>

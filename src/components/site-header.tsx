@@ -32,14 +32,14 @@ export function SiteHeader() {
               <Link
                 key={item.to}
                 to={item.to}
-                className="hidden text-muted-foreground transition-colors hover:text-brand sm:block"
+                className="hidden text-muted-foreground transition-colors hover:text-brand sm:block whitespace-nowrap shrink-0"
               >
                 {item.label}
               </Link>
             ))}
             <Link
               to="/bag"
-              className="inline-flex shrink-0 items-center gap-2 rounded-full bg-brand px-4 py-2 text-primary-foreground transition-colors hover:bg-brand-soft"
+              className="inline-flex shrink-0 items-center gap-2 rounded-full bg-brand px-4 py-2 text-primary-foreground transition-colors hover:bg-brand-soft whitespace-nowrap"
             >
               Bag
               <span className="grid h-5 min-w-5 place-items-center rounded-full bg-gold px-1 text-[10px] font-semibold text-brand-soft">

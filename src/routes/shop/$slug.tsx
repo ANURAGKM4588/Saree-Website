@@ -189,7 +189,7 @@ function Product() {
       <section className="mt-24">
         <h2 className="font-display text-3xl text-brand-soft">You may also like</h2>
         <div className="ornament-rule mt-4 w-32" />
-        <div className="mt-8 grid gap-4 sm:grid-cols-3">
+        <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3">
           {related.map((item) => (
             <SareeCard key={item.slug} saree={item} />
           ))}

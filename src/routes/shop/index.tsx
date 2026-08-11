@@ -102,7 +102,7 @@ function Shop() {
         <h2 className="mt-14 text-center font-display text-2xl text-brand-soft">
           {weave ? `${weave} sarees` : "Every saree in the collection"}
         </h2>
-        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {list.map((saree) => (
           <SareeCard key={saree.slug} saree={saree} />
         ))}

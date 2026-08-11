@@ -123,11 +123,9 @@ function Index() {
             All sarees →
           </Link>
         </div>
-        <div className="no-scrollbar -mx-5 mt-8 flex snap-x snap-mandatory gap-5 overflow-x-auto px-5 pb-2 lg:mx-0 lg:grid lg:grid-cols-3 lg:px-0">
+        <div className="mt-8 grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-3">
           {[featured, ...rest].map((saree) => (
-            <div key={saree.slug} className="w-[70vw] shrink-0 snap-start sm:w-[42vw] lg:w-auto">
-              <SareeCard saree={saree} />
-            </div>
+            <SareeCard key={saree.slug} saree={saree} />
           ))}
         </div>
       </section>
