@@ -14,6 +14,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { CartProvider } from "../lib/cart";
 import { SiteHeader } from "../components/site-header";
 import { SiteFooter } from "../components/site-footer";
+import { PageLoader } from "../components/page-loader";
 
 function NotFoundComponent() {
   return (
@@ -102,7 +103,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: appCss,
       },
-      { rel: "icon", href: "/favicon.png", type: "image/png" },
+      { rel: "icon", href: "/logo/Favicon.png", type: "image/png" },
     ],
     scripts: [
       {
@@ -145,6 +146,7 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <CartProvider>
+        <PageLoader />
         <div className="flex min-h-screen flex-col font-sans">
           <SiteHeader />
           <main className="flex-1">

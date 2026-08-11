@@ -56,6 +56,22 @@
   border: 1px solid color-mix(in oklab, var(--gold) 20%, transparent);
 }
 
+@utility favicon-spin {
+  animation: kadha-spin 3s ease-in-out infinite;
+}
+
+@keyframes kadha-spin {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    transform: rotate(180deg) scale(1.08);
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+  }
+}
+
 @keyframes kadha-marquee {
   from {
     transform: translateX(0);
