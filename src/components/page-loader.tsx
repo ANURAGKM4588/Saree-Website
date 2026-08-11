@@ -34,13 +34,6 @@ export function PageLoader() {
           className="favicon-spin absolute h-14 w-14 object-contain drop-shadow-md"
         />
       </div>
-
-      <p className="mt-8 font-serif text-2xl font-semibold tracking-widest text-brand-soft uppercase">
-        KADHA
-      </p>
-      <p className="mt-1.5 text-[10px] uppercase tracking-[0.3em] text-gold font-sans font-medium">
-        The story begins here
-      </p>
     </div>
   );
 }
