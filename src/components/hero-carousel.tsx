@@ -117,7 +117,7 @@ export function HeroCarousel() {
               }`}
             />
             <div
-              className={`relative flex h-full min-h-[460px] flex-col justify-center px-5 py-16 sm:min-h-[560px] sm:px-8 lg:min-h-[640px] lg:px-16 ${
+              className={`relative flex h-full min-h-[480px] flex-col justify-center px-4 py-12 pb-16 sm:min-h-[560px] sm:px-8 sm:py-16 lg:min-h-[640px] lg:px-16 ${
                 s.align === "right" ? "items-end text-right" : "items-start"
               }`}
             >
@@ -134,19 +134,19 @@ export function HeroCarousel() {
                 {s.copy}
               </p>
               <div
-                className={`mt-6 sm:mt-8 flex flex-nowrap items-center gap-2 sm:gap-3 ${
-                  s.align === "right" ? "justify-end" : ""
+                className={`mt-6 flex w-full flex-row items-center gap-2 sm:mt-8 sm:w-auto sm:gap-3 ${
+                  s.align === "right" ? "sm:justify-end" : "sm:justify-start"
                 }`}
               >
                 <Link
                   to="/shop"
-                  className="rounded-full bg-white px-4 py-3 text-xs font-medium text-ink transition-transform hover:scale-[1.02] whitespace-nowrap shrink-0 sm:px-8 sm:py-4 sm:text-sm"
+                  className="flex-1 shrink-0 inline-flex items-center justify-center rounded-full bg-white px-3 py-3 text-xs font-medium text-ink transition-transform hover:scale-[1.02] whitespace-nowrap sm:flex-none sm:px-8 sm:py-4 sm:text-sm"
                 >
                   Shop the collection
                 </Link>
                 <Link
                   to="/booking"
-                  className="rounded-full border border-white/40 bg-white/10 px-4 py-3 text-xs font-medium text-white backdrop-blur-md transition-colors hover:bg-white/20 whitespace-nowrap shrink-0 sm:px-8 sm:py-4 sm:text-sm"
+                  className="flex-1 shrink-0 inline-flex items-center justify-center rounded-full border border-white/40 bg-white/10 px-3 py-3 text-xs font-medium text-white backdrop-blur-md transition-colors hover:bg-white/20 whitespace-nowrap sm:flex-none sm:px-8 sm:py-4 sm:text-sm"
                 >
                   Book a fitting
                 </Link>
