@@ -1,0 +1,265 @@
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { HeroCarousel } from "@/components/hero-carousel";
+import weaver from "@/assets/weaver.jpg";
+import { SareeCard } from "@/components/saree-card";
+import { sarees, weaves } from "@/data/sarees";
+
+export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "Kadha — Handwoven Sarees, Quietly Made" },
+      {
+        name: "description",
+        content:
+          "Kadha offers a small, considered collection of handwoven Kanjivaram, Banarasi, Chanderi and linen sarees. Simple to browse, simple to book.",
+      },
+      { property: "og:title", content: "Kadha — Handwoven Sarees, Quietly Made" },
+      {
+        property: "og:description",
+        content: "A small, considered collection of handwoven sarees. The story begins here.",
+      },
+    ],
+  }),
+  component: Index,
+});
+
+function Index() {
+  const featured = sarees[0]!;
+  const rest = sarees.slice(1);
+
+  return (
+    <div className="pb-4">
+      <HeroCarousel />
+
+      {/* Piece of the week */}
+      <section className="mx-auto max-w-[1400px] px-5 pt-6 lg:px-8">
+        <Link
+          to="/shop/$slug"
+          params={{ slug: featured.slug }}
+          className="glass-panel flex items-center gap-4 rounded-3xl p-4 transition-transform hover:-translate-y-1 sm:w-fit"
+        >
+          <img
+            src={featured.image}
+            alt={featured.name}
+            width={912}
+            height={1200}
+            loading="lazy"
+            className="h-16 w-14 shrink-0 rounded-2xl object-cover"
+          />
+          <div className="min-w-0">
+            <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-brand">
+              Piece of the week
+            </p>
+            <p className="truncate font-display text-lg font-medium text-brand-soft">
+              {featured.name}
+            </p>
+          </div>
+          <span className="ml-auto shrink-0 rounded-full bg-ink px-4 py-2 text-xs text-primary-foreground">
+            View
+          </span>
+        </Link>
+      </section>
+
+      {/* Marquee */}
+      <section className="mt-14 overflow-hidden bg-ink py-4">
+        <div className="marquee-track flex w-max gap-10 whitespace-nowrap text-sm text-primary-foreground/85">
+          {Array.from({ length: 2 }).map((_, i) => (
+            <span key={i} className="flex gap-10">
+              {[
+                "Real zari",
+                "Weaver named on every label",
+                "Insured shipping",
+                "Made to order",
+                "7-day exchange",
+                "Handloom mark certified",
+              ].map((item) => (
+                <span key={item} className="flex items-center gap-10">
+                  {item}
+                  <span className="text-gold">✦</span>
+                </span>
+              ))}
+            </span>
+          ))}
+        </div>
+      </section>
+
+      {/* Weave pills */}
+      <section className="mx-auto max-w-[1400px] px-5 pt-16 lg:px-8">
+        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-end gap-4">
+          <div className="min-w-0">
+            <p className="text-xs font-medium uppercase tracking-[0.2em] text-brand">Shop by weave</p>
+            <h2 className="mt-3 font-display text-3xl font-semibold tracking-tight text-brand-soft sm:text-4xl">
+              Find your drape
+            </h2>
+          </div>
+        </div>
+        <div className="mt-7 flex flex-wrap gap-3">
+          {weaves.map((weave) => (
+            <Link
+              key={weave}
+              to="/shop"
+              search={{ weave }}
+              className="rounded-full border border-border bg-card px-6 py-3 text-sm text-brand-soft transition-colors hover:border-ink hover:bg-ink hover:text-primary-foreground"
+            >
+              {weave}
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* Collection rail */}
+      <section className="mx-auto max-w-[1400px] px-5 pt-16 lg:px-8">
+        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-end gap-4">
+          <div className="min-w-0">
+            <p className="text-xs font-medium uppercase tracking-[0.2em] text-brand">New drapes</p>
+            <h2 className="mt-3 font-display text-3xl font-semibold tracking-tight text-brand-soft sm:text-4xl">
+              This month at the house
+            </h2>
+          </div>
+          <Link
+            to="/shop"
+            className="shrink-0 rounded-full border border-border px-6 py-3 text-sm text-brand-soft transition-colors hover:bg-secondary"
+          >
+            All sarees →
+          </Link>
+        </div>
+        <div className="no-scrollbar -mx-5 mt-8 flex snap-x snap-mandatory gap-5 overflow-x-auto px-5 pb-2 lg:mx-0 lg:grid lg:grid-cols-3 lg:px-0">
+          {[featured, ...rest].map((saree) => (
+            <div key={saree.slug} className="w-[70vw] shrink-0 snap-start sm:w-[42vw] lg:w-auto">
+              <SareeCard saree={saree} />
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Story */}
+      <section className="mt-20 bg-cream py-20">
+        <div className="mx-auto grid max-w-[1400px] items-center gap-12 px-5 lg:grid-cols-2 lg:px-8">
+          <div className="relative">
+            <img
+              src={weaver}
+              alt="A weaver working green silk thread on a wooden handloom"
+              width={1408}
+              height={912}
+              loading="lazy"
+              className="aspect-[4/3] w-full rounded-[2rem] object-cover"
+            />
+            <div className="absolute -bottom-6 -right-2 hidden rounded-3xl bg-ink px-7 py-6 text-primary-foreground sm:block">
+              <p className="font-display text-3xl font-semibold tracking-tight text-gold">
+                Since 1998
+              </p>
+              <p className="mt-1 text-xs text-primary-foreground/70">Three generations</p>
+            </div>
+          </div>
+          <div>
+            <p className="text-xs font-medium uppercase tracking-[0.2em] text-brand">
+              The house of Kadha
+            </p>
+            <h2 className="mt-3 font-display text-3xl font-semibold leading-[1.05] tracking-[-0.02em] text-brand-soft sm:text-[2.75rem]">
+              Every saree carries the name of{" "}
+              <span className="font-serif font-normal italic">the hands that made it</span>
+            </h2>
+            <p className="mt-6 max-w-md text-base leading-relaxed text-muted-foreground">
+              Kadha works with six family workshops across Kanchipuram, Banaras and Chanderi. We
+              take a handful of pieces each month, pay the weaver before the saree sells, and send
+              you the loom story with your order.
+            </p>
+            <div className="mt-9 grid gap-3 sm:grid-cols-3">
+              {[
+                { k: "Real zari", v: "Tested purity" },
+                { k: "Small batch", v: "Never mass-made" },
+                { k: "Fair pay", v: "Paid upfront" },
+              ].map((item) => (
+                <div key={item.k} className="rounded-2xl bg-background p-5">
+                  <p className="font-display text-base font-medium text-brand-soft">{item.k}</p>
+                  <p className="mt-1 text-xs text-muted-foreground">{item.v}</p>
+                </div>
+              ))}
+            </div>
+            <Link
+              to="/about"
+              className="mt-9 inline-block rounded-full bg-ink px-8 py-4 text-sm font-medium text-primary-foreground transition-transform hover:scale-[1.02]"
+            >
+              Read our story
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* How booking works */}
+      <section className="mx-auto max-w-[1400px] px-5 pt-20 lg:px-8">
+        <h2 className="max-w-lg font-display text-3xl font-semibold tracking-[-0.02em] text-brand-soft sm:text-4xl">
+          Booking a saree takes three steps
+        </h2>
+        <div className="mt-9 grid gap-px overflow-hidden rounded-[2rem] bg-border sm:grid-cols-3">
+          {[
+            { n: "01", t: "Pick your drape", d: "Browse the month's pieces and add to your bag." },
+            { n: "02", t: "Share the occasion", d: "One short form — date, city, blouse notes." },
+            { n: "03", t: "We reserve it", d: "Confirmation within a day, insured door delivery." },
+          ].map((s) => (
+            <div key={s.n} className="bg-card p-8">
+              <span className="font-display text-sm font-medium text-gold">{s.n}</span>
+              <p className="mt-4 font-display text-xl font-medium tracking-tight text-brand-soft">
+                {s.t}
+              </p>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{s.d}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Voices */}
+      <section className="mx-auto max-w-[1400px] px-5 pt-20 lg:px-8">
+        <p className="text-xs font-medium uppercase tracking-[0.2em] text-brand">In their words</p>
+        <h2 className="mt-3 max-w-lg font-display text-3xl font-semibold tracking-[-0.02em] text-brand-soft sm:text-4xl">
+          Worn at weddings, kept for daughters
+        </h2>
+        <div className="mt-9 grid gap-5 md:grid-cols-3">
+          {[
+            {
+              q: "The zari is the real thing. My mother noticed before I said a word.",
+              n: "Meera S., Chennai",
+            },
+            {
+              q: "Booking took two minutes and the saree arrived wrapped in muslin.",
+              n: "Ananya R., Pune",
+            },
+            {
+              q: "Light enough to wear all day at work, grand enough for a reception.",
+              n: "Divya K., Bengaluru",
+            },
+          ].map((t) => (
+            <figure
+              key={t.n}
+              className="rounded-[2rem] bg-secondary p-8 transition-colors hover:bg-cream"
+            >
+              <p className="font-serif text-2xl leading-snug text-brand-soft">“{t.q}”</p>
+              <figcaption className="mt-6 text-xs text-muted-foreground">{t.n}</figcaption>
+            </figure>
+          ))}
+        </div>
+      </section>
+
+      {/* Booking CTA */}
+      <section className="mx-auto mt-20 max-w-[1400px] px-5 lg:px-8">
+        <div className="grid items-center gap-8 overflow-hidden rounded-[2.5rem] bg-ink px-8 py-14 text-primary-foreground sm:px-12 lg:grid-cols-[1.2fr_auto]">
+          <div>
+            <p className="text-xs font-medium uppercase tracking-[0.2em] text-gold">
+              Two-minute booking
+            </p>
+            <h2 className="mt-4 max-w-xl font-display text-3xl font-semibold leading-[1.05] tracking-[-0.02em] sm:text-[2.75rem]">
+              Tell us the occasion, we'll{" "}
+              <span className="font-serif font-normal italic text-gold">reserve the drape</span>
+            </h2>
+          </div>
+          <Link
+            to="/booking"
+            className="w-fit rounded-full bg-primary-foreground px-9 py-4 text-sm font-medium text-ink transition-transform hover:scale-[1.03]"
+          >
+            Book a saree →
+          </Link>
+        </div>
+      </section>
+    </div>
+  );
+}
