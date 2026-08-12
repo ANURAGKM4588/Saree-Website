@@ -72,7 +72,7 @@ type ShopStoreContextType = {
   resetStore: () => void;
 };
 
-const PRODUCTS_KEY = "kadha_admin_products_v2";
+const PRODUCTS_KEY = "kadha_admin_products_v3";
 const ORDERS_KEY = "kadha_admin_orders_v1";
 const NOTIFY_KEY = "kadha_admin_notify_v1";
 
@@ -82,8 +82,6 @@ const initialProducts: ExtendedSaree[] = defaultSarees.map((saree, idx) => {
   let cartAdds = Math.floor(Math.random() * 20) + 5;
 
   if (
-    saree.slug === "mustard-kanchi-cotton" ||
-    saree.slug === "kumkum-chettinad-cotton" ||
     saree.slug === "sungudi-cotton-brown" ||
     saree.slug === "sungudi-cotton-red" ||
     saree.slug === "sapphire-chanderi-silk" ||
@@ -93,8 +91,6 @@ const initialProducts: ExtendedSaree[] = defaultSarees.map((saree, idx) => {
     stockQty = 0;
     cartAdds += 15;
   } else if (
-    saree.slug === "olive-ikat-handloom" ||
-    saree.slug === "rainbow-check-cotton" ||
     saree.slug === "sungudi-cotton-orange" ||
     saree.slug === "sungudi-cotton-yellow" ||
     saree.slug === "emerald-banarasi-tussar" ||
