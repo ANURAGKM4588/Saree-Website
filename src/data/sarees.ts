@@ -176,9 +176,145 @@ export const sarees: Saree[] = [
     blouse: "Blouse piece not included",
     care: "Machine wash cold, separately.",
   },
+  {
+    slug: "sungudi-cotton-brown",
+    name: "Earth & Copper Sungudi",
+    weave: "Cotton",
+    colour: "Brown",
+    price: 3800,
+    image: "/Product/Sungudi cotton brown.png",
+    views: views(
+      "/Product/Sungudi cotton brown.png",
+      "/Product/coffee-peacock-chettinad-model.png",
+      "/Product/Sungudi cotton brown.png"
+    ),
+    blurb: "Deep earth-toned Sungudi cotton with traditional ring-dyed dots and a contrasting copper zari border.",
+    fabric: "100% Handloom Sungudi Cotton",
+    blouse: "0.8m unstitched blouse piece included",
+    care: "Hand wash cold separately.",
+  },
+  {
+    slug: "sungudi-cotton-orange",
+    name: "Marigold Sunrise Sungudi",
+    weave: "Cotton",
+    colour: "Orange",
+    price: 4100,
+    image: "/Product/Sungudi cotton orange.png",
+    views: views(
+      "/Product/Sungudi cotton orange.png",
+      "/Product/turmeric-zari-brocade-model.png",
+      "/Product/Sungudi cotton orange.png"
+    ),
+    blurb: "Vibrant marigold orange tie-dye Sungudi saree crafted by Madurai weavers with gold zari pallu.",
+    fabric: "Handwoven Sungudi Cotton",
+    blouse: "0.8m unstitched blouse piece included",
+    care: "Dry clean first wash, gentle hand wash thereafter.",
+  },
+  {
+    slug: "sungudi-cotton-red",
+    name: "Crimson Temple Sungudi",
+    weave: "Chettinad",
+    colour: "Red",
+    price: 4500,
+    image: "/Product/Sungudi cotton red.png",
+    views: views(
+      "/Product/Sungudi cotton red.png",
+      "/Product/kumkum-chettinad-cotton-model.png",
+      "/Product/Sungudi cotton red.png"
+    ),
+    blurb: "Classic crimson red with intricate geometric temple borders hand-crafted using traditional knotting.",
+    fabric: "Soft handloom Sungudi cotton",
+    blouse: "0.8m unstitched contrast blouse piece included",
+    care: "Hand wash in cold water with mild detergent.",
+  },
+  {
+    slug: "sungudi-cotton-yellow",
+    name: "Saffron Gold Sungudi",
+    weave: "Cotton",
+    colour: "Yellow",
+    price: 3900,
+    image: "/Product/Sungudi cotton yellow.png",
+    views: views(
+      "/Product/Sungudi cotton yellow.png",
+      "/Product/mustard-kanchi-cotton-model.png",
+      "/Product/Sungudi cotton yellow.png"
+    ),
+    blurb: "Bright saffron yellow drape adorned with fine white bandhani dots and a lustrous gold border.",
+    fabric: "High-count handloom cotton",
+    blouse: "Blouse piece not included",
+    care: "Dry clean recommended.",
+  },
+  {
+    slug: "emerald-banarasi-tussar",
+    name: "Emerald Banarasi Tussar",
+    weave: "Banarasi",
+    colour: "Green",
+    price: 7800,
+    image: "/Product/ChatGPT Image Aug 11, 2026, 12_01_09 AM.png",
+    views: views(
+      "/Product/ChatGPT Image Aug 11, 2026, 12_01_09 AM.png",
+      "/Product/turmeric-zari-brocade-model.png",
+      "/Product/ChatGPT Image Aug 11, 2026, 12_01_09 AM.png"
+    ),
+    blurb: "Rich emerald green raw tussar silk woven in Banaras with intricate kadwa floral zari motifs.",
+    fabric: "Pure Handloom Tussar Silk with tested zari",
+    blouse: "0.8m unstitched tussar silk blouse included",
+    care: "Dry clean only. Store wrapped in cotton cloth.",
+  },
+  {
+    slug: "sapphire-chanderi-silk",
+    name: "Sapphire Chanderi Silk",
+    weave: "Chanderi",
+    colour: "Blue",
+    price: 6900,
+    image: "/Product/ChatGPT Image Aug 11, 2026, 12_01_20 AM.png",
+    views: views(
+      "/Product/ChatGPT Image Aug 11, 2026, 12_01_20 AM.png",
+      "/Product/amber-peacock-silk-cotton-model.png",
+      "/Product/ChatGPT Image Aug 11, 2026, 12_01_20 AM.png"
+    ),
+    blurb: "Sheer sapphire blue Chanderi silk cotton with gold tissue zari stripes and coin ashrafi bootis.",
+    fabric: "Handwoven Chanderi silk cotton",
+    blouse: "0.8m unstitched Chanderi blouse piece included",
+    care: "Dry clean only.",
+  },
+  {
+    slug: "plum-kanchi-tissue-zari",
+    name: "Plum Kanchi Tissue Zari",
+    weave: "Kanjivaram",
+    colour: "Plum",
+    price: 8500,
+    image: "/Product/ChatGPT Image Aug 11, 2026, 12_06_24 AM.png",
+    views: views(
+      "/Product/ChatGPT Image Aug 11, 2026, 12_06_24 AM.png",
+      "/Product/turmeric-zari-brocade-model.png",
+      "/Product/ChatGPT Image Aug 11, 2026, 12_06_24 AM.png"
+    ),
+    blurb: "Royal plum silk interwoven with gold tissue thread, featuring Korvai peacocks and traditional temple border.",
+    fabric: "Pure Kanchipuram silk with half-fine gold zari",
+    blouse: "0.8m unstitched tissue silk blouse piece included",
+    care: "Dry clean only.",
+  },
+  {
+    slug: "ruby-banarasi-brocade",
+    name: "Ruby Red Banarasi Brocade",
+    weave: "Banarasi",
+    colour: "Red",
+    price: 9200,
+    image: "/Product/ChatGPT Image Aug 11, 2026, 12_00_56 AM.png",
+    views: views(
+      "/Product/ChatGPT Image Aug 11, 2026, 12_00_56 AM.png",
+      "/Product/kumkum-chettinad-cotton-model.png",
+      "/Product/ChatGPT Image Aug 11, 2026, 12_00_56 AM.png"
+    ),
+    blurb: "Opulent ruby red Banarasi katan silk woven with full-body gold zari jaal for bridal splendor.",
+    fabric: "Pure Katan Silk with gold brocade work",
+    blouse: "0.8m unstitched brocade blouse piece included",
+    care: "Dry clean only.",
+  },
 ];
 
-export const weaves = ["Kanjivaram", "Chettinad", "Ikat", "Cotton"];
+export const weaves = ["Kanjivaram", "Banarasi", "Chanderi", "Chettinad", "Ikat", "Cotton"];
 
 export const getSaree = (slug: string) => sarees.find((s) => s.slug === slug);
 

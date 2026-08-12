@@ -3,6 +3,7 @@ import { HeroCarousel } from "@/components/hero-carousel";
 import weaver from "@/assets/weaver.jpg";
 import { SareeCard } from "@/components/saree-card";
 import { sarees, weaves } from "@/data/sarees";
+import { useShopStore } from "@/lib/shop-store";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -24,8 +25,9 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  const featured = sarees[0]!;
-  const rest = sarees.slice(1);
+  const { products } = useShopStore();
+  const list = products.length > 0 ? products : sarees;
+  const featured = list[0]!;
 
   return (
     <div className="pb-4">
@@ -124,7 +126,7 @@ function Index() {
           </Link>
         </div>
         <div className="mt-8 grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-3">
-          {[featured, ...rest].map((saree) => (
+          {list.map((saree) => (
             <SareeCard key={saree.slug} saree={saree} />
           ))}
         </div>
