@@ -72,40 +72,16 @@ type ShopStoreContextType = {
   resetStore: () => void;
 };
 
-const PRODUCTS_KEY = "kadha_admin_products_v3";
+const PRODUCTS_KEY = "kadha_admin_products_v4";
 const ORDERS_KEY = "kadha_admin_orders_v1";
 const NOTIFY_KEY = "kadha_admin_notify_v1";
 
 const initialProducts: ExtendedSaree[] = defaultSarees.map((saree, idx) => {
-  let status: ProductStatus = "in_stock";
-  let stockQty = 1;
-  let cartAdds = Math.floor(Math.random() * 20) + 5;
-
-  if (
-    saree.slug === "sungudi-cotton-brown" ||
-    saree.slug === "sungudi-cotton-red" ||
-    saree.slug === "sapphire-chanderi-silk" ||
-    saree.slug === "plum-kanchi-tissue-zari"
-  ) {
-    status = "out_of_stock";
-    stockQty = 0;
-    cartAdds += 15;
-  } else if (
-    saree.slug === "sungudi-cotton-orange" ||
-    saree.slug === "sungudi-cotton-yellow" ||
-    saree.slug === "emerald-banarasi-tussar" ||
-    saree.slug === "ruby-banarasi-brocade"
-  ) {
-    status = "coming_soon";
-    stockQty = 0;
-    cartAdds += 8;
-  }
-
   return {
     ...saree,
-    status,
-    stockQty,
-    cartAddsCount: cartAdds,
+    status: "in_stock" as ProductStatus,
+    stockQty: 1,
+    cartAddsCount: Math.floor(Math.random() * 20) + 5,
     publishedAt: new Date(Date.now() - (idx + 1) * 86400000 * 3).toISOString().split("T")[0],
   };
 });
