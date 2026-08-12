@@ -88,21 +88,6 @@ export function AdminPanel() {
   // Modals state
   const [showAddProductModal, setShowAddProductModal] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
-  const [editingProduct, setEditingProduct] = useState<ExtendedSaree | null>(null);
-
-  // New Product Form State
-  const [newSaree, setNewSaree] = useState({
-    name: "",
-    weave: "Kanjivaram",
-    colour: "Gold",
-    price: 4500,
-    status: "in_stock" as ProductStatus,
-    image: "/Product/turmeric-zari-brocade.png",
-    blurb: "Handcrafted master piece woven with rich heritage craftsmanship.",
-    fabric: "Handwoven pure silk cotton",
-    blouse: "0.8m unstitched blouse piece included",
-    care: "Dry clean only.",
-  });
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
@@ -144,13 +129,6 @@ export function AdminPanel() {
       price: p.price,
     }));
 
-  const orderStatusDistribution = [
-    { name: "Pending", count: pendingOrdersCount },
-    { name: "Processing", count: processingOrdersCount },
-    { name: "Completed", count: completedOrdersCount },
-    { name: "Cancelled", count: orders.filter((o) => o.status === "Cancelled").length },
-  ];
-
   // Filtered Lists
   const filteredOrders = orders.filter((o) => {
     const matchesFilter = orderFilter === "all" || o.status.toLowerCase() === orderFilter.toLowerCase();
@@ -182,51 +160,6 @@ export function AdminPanel() {
       r.sareeName.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesFilter && matchesSearch;
   });
-
-  const handleCreateProductSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newSaree.name) return;
-
-    const slug = newSaree.name
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/(^-|-$)+/g, "");
-
-    addProduct({
-      slug,
-      name: newSaree.name,
-      weave: newSaree.weave,
-      colour: newSaree.colour,
-      price: Number(newSaree.price),
-      status: newSaree.status,
-      stockQty: newSaree.status === "in_stock" ? 1 : 0,
-      image: newSaree.image,
-      views: [
-        { url: newSaree.image, label: "Full drape" },
-        { url: newSaree.image, label: "On the model" },
-        { url: newSaree.image, label: "Weave detail" },
-      ],
-      blurb: newSaree.blurb,
-      fabric: newSaree.fabric,
-      blouse: newSaree.blouse,
-      care: newSaree.care,
-    });
-
-    setShowAddProductModal(false);
-    showToast(`Product "${newSaree.name}" created successfully as ${newSaree.status.replace("_", " ")}!`);
-    setNewSaree({
-      name: "",
-      weave: "Kanjivaram",
-      colour: "Gold",
-      price: 4500,
-      status: "in_stock",
-      image: "/Product/turmeric-zari-brocade.png",
-      blurb: "Handcrafted master piece woven with rich heritage craftsmanship.",
-      fabric: "Handwoven pure silk cotton",
-      blouse: "0.8m unstitched blouse piece included",
-      care: "Dry clean only.",
-    });
-  };
 
   return (
     <div className="min-h-screen bg-background pb-16 font-sans text-foreground">
@@ -1050,143 +983,12 @@ export function AdminPanel() {
       </div>
 
       {/* MODAL: ADD NEW PRODUCT */}
-      {showAddProductModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs animate-in fade-in">
-          <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl border border-gold/30 bg-background p-6 sm:p-8 shadow-2xl">
-            <div className="flex items-center justify-between border-b border-border pb-4">
-              <div>
-                <p className="text-[10px] uppercase tracking-[0.25em] text-gold">Catalog Management</p>
-                <h2 className="font-display text-2xl text-brand-soft">Add New Saree Product</h2>
-              </div>
-              <button
-                type="button"
-                onClick={() => setShowAddProductModal(false)}
-                className="rounded-full p-2 text-muted-foreground hover:bg-muted"
-              >
-                ✕
-              </button>
-            </div>
-
-            <form onSubmit={handleCreateProductSubmit} className="mt-6 space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-[11px] uppercase tracking-[0.18em] text-muted-foreground mb-1">
-                    Saree Name *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="e.g. Sapphire Kanjivaram Zari"
-                    value={newSaree.name}
-                    onChange={(e) => setNewSaree({ ...newSaree, name: e.target.value })}
-                    className="w-full rounded-xl border border-border bg-card px-4 py-2.5 text-sm outline-none focus:border-gold"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-[11px] uppercase tracking-[0.18em] text-muted-foreground mb-1">
-                    Initial Stock Status *
-                  </label>
-                  <select
-                    value={newSaree.status}
-                    onChange={(e) => setNewSaree({ ...newSaree, status: e.target.value as ProductStatus })}
-                    className="w-full rounded-xl border border-border bg-card px-4 py-2.5 text-sm outline-none focus:border-gold cursor-pointer"
-                  >
-                    <option value="in_stock">In Stock (Available)</option>
-                    <option value="out_of_stock">Out of Stock (Request Notify)</option>
-                    <option value="coming_soon">Coming Soon (Register Interest)</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div>
-                  <label className="block text-[11px] uppercase tracking-[0.18em] text-muted-foreground mb-1">
-                    Weave Type
-                  </label>
-                  <select
-                    value={newSaree.weave}
-                    onChange={(e) => setNewSaree({ ...newSaree, weave: e.target.value })}
-                    className="w-full rounded-xl border border-border bg-card px-4 py-2.5 text-sm outline-none focus:border-gold cursor-pointer"
-                  >
-                    {weaves.map((w) => (
-                      <option key={w} value={w}>{w}</option>
-                    ))}
-                    <option value="Banarasi">Banarasi</option>
-                    <option value="Chanderi">Chanderi</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-[11px] uppercase tracking-[0.18em] text-muted-foreground mb-1">
-                    Primary Colour
-                  </label>
-                  <input
-                    type="text"
-                    value={newSaree.colour}
-                    onChange={(e) => setNewSaree({ ...newSaree, colour: e.target.value })}
-                    className="w-full rounded-xl border border-border bg-card px-4 py-2.5 text-sm outline-none focus:border-gold"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-[11px] uppercase tracking-[0.18em] text-muted-foreground mb-1">
-                    Price (INR ₹) *
-                  </label>
-                  <input
-                    type="number"
-                    required
-                    min={500}
-                    value={newSaree.price}
-                    onChange={(e) => setNewSaree({ ...newSaree, price: Number(e.target.value) })}
-                    className="w-full rounded-xl border border-border bg-card px-4 py-2.5 text-sm outline-none focus:border-gold"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-[11px] uppercase tracking-[0.18em] text-muted-foreground mb-1">
-                  Product Image URL
-                </label>
-                <input
-                  type="text"
-                  value={newSaree.image}
-                  onChange={(e) => setNewSaree({ ...newSaree, image: e.target.value })}
-                  className="w-full rounded-xl border border-border bg-card px-4 py-2.5 text-sm outline-none focus:border-gold font-mono text-xs"
-                />
-              </div>
-
-              <div>
-                <label className="block text-[11px] uppercase tracking-[0.18em] text-muted-foreground mb-1">
-                  Short Description / Story Blurb
-                </label>
-                <textarea
-                  rows={2}
-                  value={newSaree.blurb}
-                  onChange={(e) => setNewSaree({ ...newSaree, blurb: e.target.value })}
-                  className="w-full rounded-xl border border-border bg-card px-4 py-2.5 text-sm outline-none focus:border-gold"
-                />
-              </div>
-
-              <div className="pt-4 flex justify-end gap-3 border-t border-border">
-                <button
-                  type="button"
-                  onClick={() => setShowAddProductModal(false)}
-                  className="rounded-full px-5 py-2.5 text-xs text-muted-foreground hover:bg-muted"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="rounded-full bg-brand px-8 py-2.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-primary-foreground hover:bg-brand-soft shadow-md"
-                >
-                  Publish Product
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      <AddProductModal
+        isOpen={showAddProductModal}
+        onClose={() => setShowAddProductModal(false)}
+        onAddProduct={addProduct}
+        onShowToast={showToast}
+      />
 
       {/* MODAL: ORDER DETAILS */}
       {selectedOrder && (
@@ -1260,6 +1062,208 @@ export function AdminPanel() {
           ✓ {toastMessage}
         </div>
       )}
+    </div>
+  );
+}
+
+// ISOLATED ADD PRODUCT MODAL COMPONENT TO PREVENT DASHBOARD RE-RENDER LAG
+function AddProductModal({
+  isOpen,
+  onClose,
+  onAddProduct,
+  onShowToast,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  onAddProduct: (productData: Omit<ExtendedSaree, "cartAddsCount">) => void;
+  onShowToast: (msg: string) => void;
+}) {
+  const [name, setName] = useState("");
+  const [weave, setWeave] = useState("Kanjivaram");
+  const [colour, setColour] = useState("Gold");
+  const [price, setPrice] = useState<number | "">(4500);
+  const [status, setStatus] = useState<ProductStatus>("in_stock");
+  const [image, setImage] = useState("/Product/turmeric-zari-brocade.png");
+  const [blurb, setBlurb] = useState("Handcrafted masterpiece woven with rich heritage craftsmanship.");
+  const [fabric, setFabric] = useState("Handwoven pure silk cotton");
+  const [blouse, setBlouse] = useState("0.8m unstitched blouse piece included");
+  const [care, setCare] = useState("Dry clean only.");
+
+  if (!isOpen) return null;
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name.trim()) return;
+
+    const slug = name
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)+/g, "") || `saree-${Date.now()}`;
+
+    const imageUrl = image.trim() || "/Product/turmeric-zari-brocade.png";
+
+    onAddProduct({
+      slug,
+      name: name.trim(),
+      weave,
+      colour: colour.trim() || "Gold",
+      price: Number(price) || 0,
+      status,
+      stockQty: status === "in_stock" ? 1 : 0,
+      image: imageUrl,
+      views: [
+        { url: imageUrl, label: "Full drape" },
+        { url: imageUrl, label: "On the model" },
+        { url: imageUrl, label: "Weave detail" },
+      ],
+      blurb: blurb.trim() || "Handcrafted saree.",
+      fabric: fabric.trim() || "Handwoven cotton",
+      blouse: blouse.trim() || "Blouse piece included",
+      care: care.trim() || "Dry clean only.",
+    });
+
+    onShowToast(`Product "${name}" created successfully as ${status.replace("_", " ")}!`);
+    onClose();
+
+    setName("");
+    setPrice(4500);
+    setColour("Gold");
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs animate-in fade-in">
+      <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl border border-gold/30 bg-background p-6 sm:p-8 shadow-2xl">
+        <div className="flex items-center justify-between border-b border-border pb-4">
+          <div>
+            <p className="text-[10px] uppercase tracking-[0.25em] text-gold">Catalog Management</p>
+            <h2 className="font-display text-2xl text-brand-soft">Add New Saree Product</h2>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-full p-2 text-muted-foreground hover:bg-muted cursor-pointer"
+          >
+            ✕
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-[11px] uppercase tracking-[0.18em] text-muted-foreground mb-1">
+                Saree Name *
+              </label>
+              <input
+                type="text"
+                required
+                placeholder="e.g. Sapphire Kanjivaram Zari"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full rounded-xl border border-border bg-card px-4 py-2.5 text-sm outline-none focus:border-gold"
+              />
+            </div>
+
+            <div>
+              <label className="block text-[11px] uppercase tracking-[0.18em] text-muted-foreground mb-1">
+                Initial Stock Status *
+              </label>
+              <select
+                value={status}
+                onChange={(e) => setStatus(e.target.value as ProductStatus)}
+                className="w-full rounded-xl border border-border bg-card px-4 py-2.5 text-sm outline-none focus:border-gold cursor-pointer"
+              >
+                <option value="in_stock">In Stock (Available)</option>
+                <option value="out_of_stock">Out of Stock (Request Notify)</option>
+                <option value="coming_soon">Coming Soon (Register Interest)</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label className="block text-[11px] uppercase tracking-[0.18em] text-muted-foreground mb-1">
+                Weave Type
+              </label>
+              <select
+                value={weave}
+                onChange={(e) => setWeave(e.target.value)}
+                className="w-full rounded-xl border border-border bg-card px-4 py-2.5 text-sm outline-none focus:border-gold cursor-pointer"
+              >
+                {weaves.map((w) => (
+                  <option key={w} value={w}>{w}</option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-[11px] uppercase tracking-[0.18em] text-muted-foreground mb-1">
+                Primary Colour
+              </label>
+              <input
+                type="text"
+                value={colour}
+                onChange={(e) => setColour(e.target.value)}
+                className="w-full rounded-xl border border-border bg-card px-4 py-2.5 text-sm outline-none focus:border-gold"
+              />
+            </div>
+
+            <div>
+              <label className="block text-[11px] uppercase tracking-[0.18em] text-muted-foreground mb-1">
+                Price (INR ₹) *
+              </label>
+              <input
+                type="number"
+                required
+                min={1}
+                value={price}
+                onChange={(e) => setPrice(e.target.value === "" ? "" : Number(e.target.value))}
+                className="w-full rounded-xl border border-border bg-card px-4 py-2.5 text-sm outline-none focus:border-gold"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-[11px] uppercase tracking-[0.18em] text-muted-foreground mb-1">
+              Product Image URL
+            </label>
+            <input
+              type="text"
+              value={image}
+              onChange={(e) => setImage(e.target.value)}
+              className="w-full rounded-xl border border-border bg-card px-4 py-2.5 text-sm outline-none focus:border-gold font-mono text-xs"
+            />
+          </div>
+
+          <div>
+            <label className="block text-[11px] uppercase tracking-[0.18em] text-muted-foreground mb-1">
+              Short Description / Story Blurb
+            </label>
+            <textarea
+              rows={2}
+              value={blurb}
+              onChange={(e) => setBlurb(e.target.value)}
+              className="w-full rounded-xl border border-border bg-card px-4 py-2.5 text-sm outline-none focus:border-gold"
+            />
+          </div>
+
+          <div className="pt-4 flex justify-end gap-3 border-t border-border">
+            <button
+              type="button"
+              onClick={onClose}
+              className="rounded-full px-5 py-2.5 text-xs text-muted-foreground hover:bg-muted cursor-pointer"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="rounded-full bg-brand px-8 py-2.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-primary-foreground hover:bg-brand-soft shadow-md cursor-pointer"
+            >
+              Publish Product
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

@@ -316,7 +316,22 @@ export const sarees: Saree[] = [
 
 export const weaves = ["Kanjivaram", "Banarasi", "Chanderi", "Chettinad", "Ikat", "Cotton"];
 
-export const getSaree = (slug: string) => sarees.find((s) => s.slug === slug);
+export const getSaree = (slug: string): Saree | undefined => {
+  if (typeof window !== "undefined") {
+    try {
+      const keys = ["kadha_admin_products_v4", "kadha_admin_products_v3", "kadha_admin_products_v2", "kadha_admin_products_v1"];
+      for (const key of keys) {
+        const raw = localStorage.getItem(key);
+        if (raw) {
+          const stored: Saree[] = JSON.parse(raw);
+          const match = stored.find((s) => s.slug === slug);
+          if (match) return match;
+        }
+      }
+    } catch {}
+  }
+  return sarees.find((s) => s.slug === slug);
+};
 
 export const formatPrice = (paise: number) =>
   new Intl.NumberFormat("en-IN", {
