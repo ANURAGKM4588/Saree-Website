@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SareeCard } from "@/components/saree-card";
 import { sarees, weaves } from "@/data/sarees";
+import { useShopStore } from "@/lib/shop-store";
 
 type ShopSearch = { weave?: string | undefined };
 
@@ -50,7 +51,9 @@ export const Route = createFileRoute("/shop/")({
 
 function Shop() {
   const { weave } = Route.useSearch();
-  const list = weave ? sarees.filter((s) => s.weave === weave) : sarees;
+  const { products } = useShopStore();
+
+  const list = weave ? products.filter((s) => s.weave === weave) : products;
 
   const pill =
     "rounded-full px-5 py-2 text-[10px] uppercase tracking-[0.2em] transition-colors border";

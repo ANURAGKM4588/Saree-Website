@@ -1,7 +1,12 @@
 import { Link } from "@tanstack/react-router";
 import { formatPrice, type Saree } from "@/data/sarees";
+import { useShopStore } from "@/lib/shop-store";
 
 export function SareeCard({ saree, tall = false }: { saree: Saree; tall?: boolean }) {
+  const { products } = useShopStore();
+  const stored = products.find((p) => p.slug === saree.slug);
+  const status = stored?.status || "in_stock";
+
   return (
     <Link
       to="/shop/$slug"
@@ -19,11 +24,26 @@ export function SareeCard({ saree, tall = false }: { saree: Saree; tall?: boolea
             tall ? "aspect-[4/5]" : "aspect-[3/4]"
           }`}
         />
-        <span className="glass-panel absolute left-4 top-4 rounded-full px-3 py-1 text-[10px] font-medium uppercase tracking-[0.16em] text-brand-soft whitespace-nowrap">
-          {saree.weave}
-        </span>
+        
+        {/* Status or Weave Badge */}
+        <div className="absolute left-4 top-4 flex flex-col gap-1.5 items-start">
+          <span className="glass-panel rounded-full px-3 py-1 text-[10px] font-medium uppercase tracking-[0.16em] text-brand-soft whitespace-nowrap">
+            {saree.weave}
+          </span>
+          {status === "out_of_stock" && (
+            <span className="rounded-full bg-destructive/90 px-3 py-1 text-[9px] font-semibold uppercase tracking-[0.16em] text-destructive-foreground shadow-sm whitespace-nowrap">
+              Out of Stock
+            </span>
+          )}
+          {status === "coming_soon" && (
+            <span className="rounded-full bg-gold px-3 py-1 text-[9px] font-semibold uppercase tracking-[0.16em] text-brand-soft shadow-sm gold-frame whitespace-nowrap">
+              Coming Soon
+            </span>
+          )}
+        </div>
+
         <span className="absolute inset-x-4 bottom-4 translate-y-3 rounded-full bg-ink/90 py-3 text-center text-[11px] font-medium tracking-[0.06em] text-primary-foreground opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100 whitespace-nowrap">
-          View & book →
+          {status === "out_of_stock" ? "Notify Me →" : status === "coming_soon" ? "View & Register →" : "View & book →"}
         </span>
       </div>
       <div className="flex flex-1 items-start justify-between gap-4 px-1 pt-4">

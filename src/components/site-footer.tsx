@@ -33,6 +33,9 @@ export function SiteFooter() {
             <Link to="/booking" className="hover:text-gold">
               Book a saree
             </Link>
+            <Link to="/admin" className="hover:text-gold">
+              Admin Dashboard
+            </Link>
           </nav>
           <div className="flex flex-col gap-3 text-sm text-primary-foreground/75">
             <p className="font-display text-lg text-primary-foreground">Concierge</p>

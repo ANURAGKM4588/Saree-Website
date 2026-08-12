@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { formatPrice, getSaree } from "@/data/sarees";
 import { useCart } from "@/lib/cart";
+import { useShopStore } from "@/lib/shop-store";
 
 export const Route = createFileRoute("/booking")({
   head: () => ({
@@ -25,6 +26,7 @@ const label = "text-[11px] uppercase tracking-[0.18em] text-muted-foreground";
 
 function Booking() {
   const { lines, clear } = useCart();
+  const { createOrder } = useShopStore();
   const [done, setDone] = useState(false);
 
   const items = lines.flatMap((line) => {
@@ -32,6 +34,37 @@ function Booking() {
     return saree ? [{ ...line, saree }] : [];
   });
   const total = items.reduce((sum, i) => sum + i.saree.price * i.qty, 0);
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const customerName = formData.get("name") as string;
+    const phone = formData.get("phone") as string;
+    const email = formData.get("email") as string;
+    const address = formData.get("address") as string;
+    const notes = (formData.get("notes") as string) || undefined;
+
+    const orderItems = items.map((i) => ({
+      slug: i.saree.slug,
+      name: i.saree.name,
+      qty: i.qty,
+      price: i.saree.price,
+      image: i.saree.image,
+    }));
+
+    createOrder({
+      customerName,
+      phone,
+      email,
+      address,
+      notes,
+      items: orderItems,
+      total,
+    });
+
+    clear();
+    setDone(true);
+  };
 
   if (done) {
     return (
@@ -72,14 +105,7 @@ function Booking() {
     <div className="mx-auto max-w-5xl px-6 py-16">
       <h1 className="font-display text-4xl">Booking</h1>
       <div className="mt-12 grid gap-16 lg:grid-cols-[1.1fr_0.9fr]">
-        <form
-          className="space-y-7"
-          onSubmit={(event) => {
-            event.preventDefault();
-            clear();
-            setDone(true);
-          }}
-        >
+        <form className="space-y-7" onSubmit={handleSubmit}>
           <div>
             <label className={label} htmlFor="name">
               Full name
