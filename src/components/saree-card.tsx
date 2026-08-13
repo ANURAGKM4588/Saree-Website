@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from "react";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { formatPrice, type Saree } from "@/data/sarees";
 import { useShopStore } from "@/lib/shop-store";
 import { useCart } from "@/lib/cart";
@@ -9,6 +9,7 @@ import { ShoppingBag, Check } from "lucide-react";
 export function SareeCard({ saree, tall = false }: { saree: Saree; tall?: boolean }) {
   const { products, incrementCartAdds } = useShopStore();
   const { lines, add } = useCart();
+  const navigate = useNavigate();
   const [added, setAdded] = useState(false);
   const [currentViewIndex, setCurrentViewIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
@@ -51,6 +52,18 @@ export function SareeCard({ saree, tall = false }: { saree: Saree; tall?: boolea
     setTimeout(() => setAdded(false), 1800);
   };
 
+  const handleBookNow = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (status !== "in_stock") return;
+
+    triggerFlyToCartAnimation(imgRef.current);
+    add(saree.slug);
+    incrementCartAdds(saree.slug);
+    navigate({ to: "/booking" });
+  };
+
   return (
     <Link
       to="/shop/$slug"
@@ -75,7 +88,7 @@ export function SareeCard({ saree, tall = false }: { saree: Saree; tall?: boolea
           width={912}
           height={1200}
           loading="lazy"
-          className={`w-full object-cover transition-all duration-200 ${
+          className={`w-full object-cover transition-all duration-300 ${
             tall ? "aspect-[4/5]" : "aspect-[3/4]"
           }`}
         />
@@ -97,7 +110,7 @@ export function SareeCard({ saree, tall = false }: { saree: Saree; tall?: boolea
           )}
         </div>
 
-        {/* QUICK ADD TO CART BUTTON (Bottom-Right on Mobile, Top-Right on Desktop) */}
+        {/* QUICK ADD TO CART BUTTON (Top-Right on Card) */}
         <button
           type="button"
           onClick={handleQuickAdd}
@@ -109,7 +122,7 @@ export function SareeCard({ saree, tall = false }: { saree: Saree; tall?: boolea
               : "Add Saree to Shopping Bag"
           }
           disabled={status !== "in_stock"}
-          className={`absolute right-3 bottom-3 sm:top-4 sm:bottom-auto sm:right-4 z-20 flex h-10 w-10 items-center justify-center rounded-full border shadow-lg backdrop-blur-xs transition-all duration-300 cursor-pointer ${
+          className={`absolute right-3 top-3 sm:right-4 sm:top-4 z-20 flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full border shadow-lg backdrop-blur-xs transition-all duration-300 cursor-pointer ${
             added || isInCart
               ? "bg-brand text-white border-brand scale-105 shadow-emerald-900/30"
               : status === "in_stock"
@@ -118,11 +131,42 @@ export function SareeCard({ saree, tall = false }: { saree: Saree; tall?: boolea
           }`}
         >
           {added || isInCart ? (
-            <Check className="h-5 w-5 stroke-[2.5] text-white animate-in zoom-in-50" />
+            <Check className="h-4 w-4 sm:h-5 sm:w-5 stroke-[2.5] text-white animate-in zoom-in-50" />
           ) : (
             <ShoppingBag className="h-4 w-4" />
           )}
         </button>
+
+        {/* HOVER ACTION BUTTONS OVERLAY (Animated slide-up on mouse enter) */}
+        <div className="absolute inset-x-3 bottom-3 z-20 flex items-center gap-2 translate-y-12 opacity-0 transition-all duration-300 ease-out group-hover:translate-y-0 group-hover:opacity-100">
+          <Link
+            to="/shop/$slug"
+            params={{ slug: saree.slug }}
+            onClick={(e) => e.stopPropagation()}
+            className="flex-1 rounded-full bg-white/95 backdrop-blur-md px-3 py-2.5 text-center text-[10px] uppercase tracking-[0.18em] font-semibold text-brand shadow-lg border border-white/60 transition-all hover:bg-brand hover:text-white hover:border-brand active:scale-95 whitespace-nowrap"
+          >
+            View Details
+          </Link>
+
+          {status === "in_stock" ? (
+            <button
+              type="button"
+              onClick={handleBookNow}
+              className="flex-1 rounded-full bg-brand/95 backdrop-blur-md px-3 py-2.5 text-center text-[10px] uppercase tracking-[0.18em] font-semibold text-white shadow-lg border border-gold/40 transition-all hover:bg-brand-soft hover:scale-105 active:scale-95 whitespace-nowrap cursor-pointer"
+            >
+              Book Now →
+            </button>
+          ) : (
+            <Link
+              to="/shop/$slug"
+              params={{ slug: saree.slug }}
+              onClick={(e) => e.stopPropagation()}
+              className="flex-1 rounded-full bg-slate-900/90 backdrop-blur-md px-3 py-2.5 text-center text-[10px] uppercase tracking-[0.18em] font-semibold text-white shadow-lg border border-white/20 transition-all hover:bg-slate-800 whitespace-nowrap"
+            >
+              Notice Me
+            </Link>
+          )}
+        </div>
       </div>
 
       <div className="flex flex-1 items-start justify-between gap-4 px-1 pt-4">
