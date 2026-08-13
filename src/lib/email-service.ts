@@ -10,6 +10,7 @@ export interface EmailTemplateConfig {
   thankYouMessage: string;
   senderEmail: string;
   senderName: string;
+  googleScriptUrl?: string;
 }
 
 export const DEFAULT_EMAIL_TEMPLATE: EmailTemplateConfig = {
@@ -18,6 +19,7 @@ export const DEFAULT_EMAIL_TEMPLATE: EmailTemplateConfig = {
   thankYouMessage: "Your saree booking order #{ORDER_ID} has been successfully received by our studio master weavers.",
   senderEmail: BRAND_SENDER_EMAIL,
   senderName: BRAND_SENDER_NAME,
+  googleScriptUrl: "",
 };
 
 const TEMPLATE_KEY = "kadha_email_template_config";
@@ -222,6 +224,7 @@ export function generateOrderEmailHtml(order: Order, customConfig?: EmailTemplat
 
 /**
  * Triggers automated confirmation email dispatch to the customer
+ * Integrates with Google Apps Script Web App for automated Gmail delivery from kadha.shop@gmail.com
  */
 export async function sendOrderConfirmationEmail(order: Order): Promise<{ success: boolean; message: string }> {
   const cfg = getEmailTemplateConfig();
@@ -230,6 +233,32 @@ export async function sendOrderConfirmationEmail(order: Order): Promise<{ succes
   const subject = cfg.subjectTemplate
     .replace(/{ORDER_ID}/g, order.id)
     .replace(/{CUSTOMER_NAME}/g, order.customerName);
+
+  const scriptUrl = cfg.googleScriptUrl || import.meta.env.VITE_GOOGLE_SCRIPT_URL;
+
+  let scriptDispatched = false;
+  if (scriptUrl && scriptUrl.trim().length > 0) {
+    try {
+      await fetch(scriptUrl.trim(), {
+        method: "POST",
+        mode: "no-cors", // Google Apps Script cross-origin redirect support
+        headers: {
+          "Content-Type": "text/plain",
+        },
+        body: JSON.stringify({
+          recipient: order.email,
+          subject: subject,
+          htmlBody: emailHtml,
+          senderName: cfg.senderName,
+          orderId: order.id,
+        }),
+      });
+      scriptDispatched = true;
+      console.log(`[Google Apps Script] Automated email sent to ${order.email} via ${scriptUrl}`);
+    } catch (err) {
+      console.warn("Google Apps Script email fetch warning:", err);
+    }
+  }
 
   const log: SentEmailLog = {
     id: `EML-${Date.now().toString().substring(6)}`,
@@ -258,6 +287,8 @@ export async function sendOrderConfirmationEmail(order: Order): Promise<{ succes
 
   return {
     success: true,
-    message: `Automated confirmation email from ${cfg.senderEmail} successfully dispatched to ${order.email}!`,
+    message: scriptDispatched
+      ? `Automated Google Apps Script email sent from ${cfg.senderEmail} to ${order.email}!`
+      : `Automated confirmation email logged for ${order.email}!`,
   };
 }

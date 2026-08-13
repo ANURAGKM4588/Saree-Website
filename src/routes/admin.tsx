@@ -1184,6 +1184,28 @@ export function AdminPanel() {
                     </div>
                   </div>
 
+                  {/* Google Apps Script Web App URL Config */}
+                  <div className="rounded-2xl border border-emerald-600/30 bg-emerald-500/10 p-5 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <label className="text-xs font-bold uppercase tracking-[0.18em] text-emerald-950 flex items-center gap-2">
+                        <Mail className="h-4 w-4 text-emerald-700" /> Google Apps Script Automated Mail URL:
+                      </label>
+                      <span className="text-[10px] font-semibold text-emerald-800 bg-emerald-500/20 px-2.5 py-0.5 rounded-full">
+                        kadha.shop@gmail.com Direct Gmail Dispatch
+                      </span>
+                    </div>
+                    <input
+                      type="url"
+                      placeholder="https://script.google.com/macros/s/AKfycb.../exec"
+                      value={emailConfig.googleScriptUrl || ""}
+                      onChange={(e) => setEmailConfig({ ...emailConfig, googleScriptUrl: e.target.value })}
+                      className="w-full rounded-xl border border-border bg-card px-4 py-2.5 text-xs font-mono outline-none focus:border-gold"
+                    />
+                    <p className="text-[11px] text-emerald-900/90 leading-relaxed">
+                      💡 Paste your published Google Apps Script Web App URL above to send automated emails directly from <strong>kadha.shop@gmail.com</strong>.
+                    </p>
+                  </div>
+
                   <div>
                     <label className="block text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground mb-1.5">
                       Email Subject Line Template *
