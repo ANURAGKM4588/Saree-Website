@@ -1,22 +1,21 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { formatPrice, getSaree } from "@/data/sarees";
 import { useCart } from "@/lib/cart";
 import { useShopStore, type Order } from "@/lib/shop-store";
+import { useAuth } from "@/lib/auth";
 import { sendOrderConfirmationEmail } from "@/lib/email-service";
-import { CheckCircle2, Mail, ShieldCheck } from "lucide-react";
+import { CheckCircle2, Mail, ShieldCheck, User, MapPin, Sparkles } from "lucide-react";
 
 export const Route = createFileRoute("/booking")({
   head: () => ({
     meta: [
-      { title: "Book Your Saree | Kadha" },
+      { title: "Book Your Saree | Kadha Sarees" },
       {
         name: "description",
         content:
           "Share your delivery details and confirm your Kadha saree booking. Our studio confirms every order personally.",
       },
-      { property: "og:title", content: "Book Your Saree | Kadha" },
-      { property: "og:description", content: "Confirm your Kadha saree booking in one step." },
     ],
   }),
   component: Booking,
@@ -29,7 +28,28 @@ const label = "text-[11px] uppercase tracking-[0.18em] text-muted-foreground fon
 function Booking() {
   const { lines, clear } = useCart();
   const { createOrder } = useShopStore();
+  const { user, addSavedAddress } = useAuth();
   const [bookedOrder, setBookedOrder] = useState<Order | null>(null);
+
+  // Form controlled state for auto-fill & address selector
+  const [nameVal, setNameVal] = useState(user?.name || "");
+  const [phoneVal, setPhoneVal] = useState(user?.phone || "");
+  const [emailVal, setEmailVal] = useState(user?.email || "");
+  const [addressVal, setAddressVal] = useState("");
+  const [saveAddressChecked, setSaveAddressChecked] = useState(true);
+
+  // Auto-set primary address when user changes
+  useEffect(() => {
+    if (user) {
+      setNameVal(user.name);
+      setEmailVal(user.email);
+      setPhoneVal(user.phone || "");
+      const primary = user.addresses.find((a) => a.isPrimary) || user.addresses[0];
+      if (primary) {
+        setAddressVal(primary.address);
+      }
+    }
+  }, [user]);
 
   const items = lines.flatMap((line) => {
     const saree = getSaree(line.slug);
@@ -63,6 +83,20 @@ function Booking() {
       items: orderItems,
       total,
     });
+
+    // Save address for future orders if checked and logged in
+    if (user && saveAddressChecked && address) {
+      const exists = user.addresses.some((a) => a.address.trim() === address.trim());
+      if (!exists) {
+        addSavedAddress({
+          label: "Saved Shipping Address",
+          name: customerName,
+          phone: phone,
+          address: address,
+          isPrimary: user.addresses.length === 0,
+        });
+      }
+    }
 
     // Trigger Automated Email Dispatch directly to customer's email address
     sendOrderConfirmationEmail(newOrder);
@@ -139,38 +173,136 @@ function Booking() {
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-16">
-      <p className="text-[10px] uppercase tracking-[0.3em] text-gold font-bold">Studio Booking</p>
-      <h1 className="mt-2 font-display text-4xl text-brand-soft">Confirm Saree Booking</h1>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <p className="text-[10px] uppercase tracking-[0.3em] text-gold font-bold">Studio Booking</p>
+          <h1 className="mt-2 font-display text-4xl text-brand-soft">Confirm Saree Booking</h1>
+        </div>
+
+        {/* User Auth Quick Banner */}
+        {user ? (
+          <div className="inline-flex items-center gap-2.5 rounded-2xl bg-emerald-500/10 border border-emerald-600/20 px-4 py-2 text-xs font-semibold text-emerald-900">
+            <Sparkles className="h-4 w-4 text-emerald-600" />
+            <span>Signed in as <strong>{user.name}</strong> (Details auto-filled)</span>
+          </div>
+        ) : (
+          <Link
+            to="/login"
+            search={{ redirect: "/booking" }}
+            className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-cream/40 px-5 py-2 text-xs font-semibold text-brand-soft hover:bg-gold/20 transition-colors shadow-2xs"
+          >
+            <User className="h-4 w-4 text-gold" />
+            <span>Sign in to auto-fill saved address</span>
+          </Link>
+        )}
+      </div>
       <div className="ornament-rule mt-4 w-32" />
 
       <div className="mt-12 grid gap-16 lg:grid-cols-[1.1fr_0.9fr]">
         <form className="space-y-7" onSubmit={handleSubmit}>
+          {/* Saved Addresses Dropdown Selector if user is logged in and has addresses */}
+          {user && user.addresses.length > 0 && (
+            <div className="rounded-2xl border border-gold/30 bg-cream/30 p-4 space-y-2">
+              <label className="text-[11px] uppercase tracking-[0.18em] text-brand-soft font-bold flex items-center gap-1.5">
+                <MapPin className="h-4 w-4 text-gold" /> Choose From Saved Delivery Addresses:
+              </label>
+              <select
+                onChange={(e) => {
+                  const selected = user.addresses.find((a) => a.id === e.target.value);
+                  if (selected) {
+                    setAddressVal(selected.address);
+                    if (selected.name) setNameVal(selected.name);
+                    if (selected.phone) setPhoneVal(selected.phone);
+                  }
+                }}
+                className="w-full rounded-xl border border-border bg-card px-4 py-2.5 text-xs font-medium text-foreground outline-none focus:border-gold"
+              >
+                {user.addresses.map((addr) => (
+                  <option key={addr.id} value={addr.id}>
+                    {addr.label} ({addr.name} — {addr.address.substring(0, 35)}...)
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
           <div>
             <label className={label} htmlFor="name">
               Full name *
             </label>
-            <input id="name" name="name" required placeholder="Your Name" className={field} />
+            <input
+              id="name"
+              name="name"
+              required
+              placeholder="Your Name"
+              className={field}
+              value={nameVal}
+              onChange={(e) => setNameVal(e.target.value)}
+            />
           </div>
           <div className="grid gap-7 sm:grid-cols-2">
             <div>
               <label className={label} htmlFor="phone">
                 Phone Number *
               </label>
-              <input id="phone" name="phone" type="tel" required placeholder="+91 98765 43210" className={field} />
+              <input
+                id="phone"
+                name="phone"
+                type="tel"
+                required
+                placeholder="+91 98765 43210"
+                className={field}
+                value={phoneVal}
+                onChange={(e) => setPhoneVal(e.target.value)}
+              />
             </div>
             <div>
               <label className={label} htmlFor="email">
                 Email Address (For Booking Receipt) *
               </label>
-              <input id="email" name="email" type="email" required placeholder="your.email@example.com" className={field} />
+              <input
+                id="email"
+                name="email"
+                type="email"
+                required
+                placeholder="your.email@example.com"
+                className={field}
+                value={emailVal}
+                onChange={(e) => setEmailVal(e.target.value)}
+              />
             </div>
           </div>
           <div>
             <label className={label} htmlFor="address">
               Delivery Address *
             </label>
-            <textarea id="address" name="address" rows={3} required placeholder="Full shipping address inside Kerala / India" className={field} />
+            <textarea
+              id="address"
+              name="address"
+              rows={3}
+              required
+              placeholder="Full shipping address inside Kerala / India"
+              className={field}
+              value={addressVal}
+              onChange={(e) => setAddressVal(e.target.value)}
+            />
           </div>
+
+          {user && (
+            <div className="flex items-center gap-2.5 text-xs text-muted-foreground pt-1">
+              <input
+                type="checkbox"
+                id="save-address-chk"
+                checked={saveAddressChecked}
+                onChange={(e) => setSaveAddressChecked(e.target.checked)}
+                className="h-4 w-4 accent-brand rounded border-border"
+              />
+              <label htmlFor="save-address-chk" className="cursor-pointer">
+                Save this delivery address to my account for future saree bookings
+              </label>
+            </div>
+          )}
+
           <div>
             <label className={label} htmlFor="notes">
               Notes for the studio (Optional)

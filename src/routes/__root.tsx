@@ -13,6 +13,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { CartProvider } from "../lib/cart";
 import { ShopStoreProvider } from "../lib/shop-store";
+import { AuthProvider } from "../lib/auth";
 import { SiteHeader } from "../components/site-header";
 import { SiteFooter } from "../components/site-footer";
 
@@ -140,18 +141,20 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ShopStoreProvider>
-        <CartProvider>
-          <div className="flex min-h-screen flex-col font-sans">
-            <SiteHeader />
-            <main className="flex-1">
-              {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-              <Outlet />
-            </main>
-            <SiteFooter />
-          </div>
-        </CartProvider>
-      </ShopStoreProvider>
+      <AuthProvider>
+        <ShopStoreProvider>
+          <CartProvider>
+            <div className="flex min-h-screen flex-col font-sans">
+              <SiteHeader />
+              <main className="flex-1">
+                {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+                <Outlet />
+              </main>
+              <SiteFooter />
+            </div>
+          </CartProvider>
+        </ShopStoreProvider>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }

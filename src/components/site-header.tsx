@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Link, useLocation } from "@tanstack/react-router";
 import { useCart } from "@/lib/cart";
-import { ShoppingBag, Menu, X, MessageSquare } from "lucide-react";
+import { useAuth } from "@/lib/auth";
+import { ShoppingBag, Menu, X, MessageSquare, User as UserIcon } from "lucide-react";
 
 const navLinks = [
   { to: "/", label: "Home" },
@@ -13,6 +14,7 @@ const navLinks = [
 export function SiteHeader() {
   const location = useLocation();
   const { count } = useCart();
+  const { user } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Hide site header on Admin panel
@@ -31,9 +33,9 @@ export function SiteHeader() {
             href="https://wa.me/918075676393"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-gold font-semibold hover:underline"
+            className="hover:text-gold transition-colors inline-flex items-center gap-1 font-semibold"
           >
-            <MessageSquare className="h-3 w-3" /> WhatsApp Order: +91 8075676393
+            <MessageSquare className="h-3 w-3 text-emerald-400" /> WhatsApp Direct Order: +91 8075676393
           </a>
         </div>
       </div>
@@ -70,8 +72,16 @@ export function SiteHeader() {
             })}
           </nav>
 
-          {/* Desktop Shopping Bag Button */}
-          <div className="hidden sm:flex items-center gap-4">
+          {/* Desktop Shopping Bag & User Account Buttons */}
+          <div className="hidden sm:flex items-center gap-3">
+            <Link
+              to={user ? "/account" : "/login"}
+              className="inline-flex shrink-0 items-center gap-2 rounded-full border border-border bg-card px-4 py-2.5 text-[11px] uppercase tracking-[0.18em] font-semibold text-foreground transition-all duration-300 hover:border-gold hover:text-brand whitespace-nowrap shadow-2xs cursor-pointer"
+            >
+              <UserIcon className="h-4 w-4 text-gold" />
+              <span>{user ? user.name.split(" ")[0] : "Sign In"}</span>
+            </Link>
+
             <Link
               id="header-bag-btn"
               to="/bag"
@@ -85,8 +95,16 @@ export function SiteHeader() {
             </Link>
           </div>
 
-          {/* Mobile Right Bar: Shopping Bag + Mobile Menu Toggle */}
-          <div className="flex items-center gap-3 sm:hidden">
+          {/* Mobile Right Bar: User + Shopping Bag + Mobile Menu Toggle */}
+          <div className="flex items-center gap-2 sm:hidden">
+            <Link
+              to={user ? "/account" : "/login"}
+              className="inline-flex items-center justify-center rounded-full border border-border bg-card p-2 text-foreground hover:border-gold transition-colors"
+              aria-label="User Account"
+            >
+              <UserIcon className="h-5 w-5 text-gold" />
+            </Link>
+
             <Link
               id="header-bag-btn-mobile"
               to="/bag"
