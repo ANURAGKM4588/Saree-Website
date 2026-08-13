@@ -206,6 +206,40 @@ function Product() {
           </div>
         </div>
 
+        {/* Terms & Policy Details Card (Directly underneath product photo) */}
+        <div className="mt-6 rounded-2xl border border-gold/30 bg-cream/40 p-5 space-y-3.5 shadow-2xs">
+          <div className="flex items-center justify-between border-b border-gold/20 pb-2.5">
+            <h4 className="font-display text-xs font-bold uppercase tracking-[0.2em] text-brand-soft flex items-center gap-2">
+              <ShieldCheck className="h-4 w-4 text-gold shrink-0" /> Studio Terms & Order Policy
+            </h4>
+            <span className="text-[10px] font-semibold text-emerald-800 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 rounded-full">
+              Authentic Handloom
+            </span>
+          </div>
+
+          <div className="space-y-2 text-xs text-muted-foreground">
+            <div className="rounded-xl bg-amber-500/10 border border-amber-500/20 p-3 text-amber-950 font-medium">
+              <p className="flex items-start gap-2 text-[11px] leading-relaxed">
+                <Video className="h-4 w-4 text-rose-600 shrink-0 mt-0.5" />
+                <span>
+                  <strong className="font-bold text-rose-950">Compulsory Unboxing Video:</strong> Continuous opening video from sealed parcel tag to saree inspection is <u>mandatory</u> for damage replacement claims.
+                </span>
+              </p>
+            </div>
+
+            <p className="flex items-start gap-2 pt-1">
+              <CheckCircle2 className="h-3.5 w-3.5 text-emerald-700 shrink-0 mt-0.5" />
+              <span><strong className="text-foreground font-semibold">Damage Claims:</strong> Returns accepted strictly for transit-damaged pieces reported within 48 hours.</span>
+            </p>
+
+            <p className="flex items-start gap-2">
+              <Truck className="h-3.5 w-3.5 text-brand shrink-0 mt-0.5" />
+              <span><strong className="text-foreground font-semibold">Complimentary Kerala Dispatch:</strong> Free insured shipping inside Kerala (max 7 working days).</span>
+            </p>
+
+          </div>
+        </div>
+
         <div className="lg:pt-6">
           <p className="text-[11px] uppercase tracking-[0.24em] text-gold">{saree.weave}</p>
           <h1 className="mt-3 font-display text-4xl leading-tight text-brand-soft">{saree.name}</h1>
