@@ -8,6 +8,7 @@ import {
   type ReactNode,
 } from "react";
 import { sarees as defaultSarees, type Saree } from "@/data/sarees";
+import { supabase, isSupabaseConfigured } from "@/lib/supabase";
 
 export type ProductStatus = "in_stock" | "out_of_stock" | "coming_soon";
 
@@ -328,29 +329,81 @@ export function ShopStoreProvider({ children }: { children: ReactNode }) {
     } catch {}
   }, [notifyRequests]);
 
+  // Sync from Supabase on mount if keys are configured
+  useEffect(() => {
+    if (!isSupabaseConfigured) return;
+
+    async function syncSupabaseData() {
+      try {
+        const { data: dbProducts } = await supabase.from("products").select("*");
+        if (dbProducts && dbProducts.length > 0) {
+          setProducts(sanitizeProducts(dbProducts));
+        }
+        const { data: dbOrders } = await supabase.from("orders").select("*");
+        if (dbOrders && dbOrders.length > 0) {
+          setOrders(dbOrders);
+        }
+        const { data: dbNotify } = await supabase.from("notify_requests").select("*");
+        if (dbNotify && dbNotify.length > 0) {
+          setNotifyRequests(dbNotify);
+        }
+      } catch (err) {
+        console.warn("Supabase sync warning:", err);
+      }
+    }
+
+    syncSupabaseData();
+  }, []);
+
   const updateProductStatus = useCallback((slug: string, status: ProductStatus) => {
     setProducts((prev) =>
       prev.map((p) => (p.slug === slug ? { ...p, status, stockQty: status === "in_stock" ? Math.max(1, p.stockQty) : 0 } : p))
     );
+    if (isSupabaseConfigured) {
+      supabase.from("products").update({ status, stock_qty: status === "in_stock" ? 1 : 0 }).eq("slug", slug).then();
+    }
   }, []);
 
   const addProduct = useCallback((newProduct: Omit<ExtendedSaree, "cartAddsCount"> & { cartAddsCount?: number }) => {
-    setProducts((prev) => [
-      {
-        ...newProduct,
-        cartAddsCount: newProduct.cartAddsCount ?? 0,
-        publishedAt: newProduct.publishedAt || new Date().toISOString().split("T")[0],
-      },
-      ...prev,
-    ]);
+    const item: ExtendedSaree = {
+      ...newProduct,
+      cartAddsCount: newProduct.cartAddsCount ?? 0,
+      publishedAt: newProduct.publishedAt || new Date().toISOString().split("T")[0],
+    };
+    setProducts((prev) => [item, ...prev]);
+    if (isSupabaseConfigured) {
+      supabase.from("products").upsert({
+        slug: item.slug,
+        name: item.name,
+        weave: item.weave,
+        colour: item.colour,
+        price: item.price,
+        status: item.status,
+        stock_qty: item.stockQty,
+        image: item.image,
+        views: item.views,
+        blurb: item.blurb,
+        fabric: item.fabric,
+        blouse: item.blouse,
+        care: item.care,
+        cart_adds_count: item.cartAddsCount,
+        published_at: item.publishedAt,
+      }).then();
+    }
   }, []);
 
   const updateProduct = useCallback((slug: string, fields: Partial<ExtendedSaree>) => {
     setProducts((prev) => prev.map((p) => (p.slug === slug ? { ...p, ...fields } : p)));
+    if (isSupabaseConfigured) {
+      supabase.from("products").update(fields).eq("slug", slug).then();
+    }
   }, []);
 
   const deleteProduct = useCallback((slug: string) => {
     setProducts((prev) => prev.filter((p) => p.slug !== slug));
+    if (isSupabaseConfigured) {
+      supabase.from("products").delete().eq("slug", slug).then();
+    }
   }, []);
 
   const incrementCartAdds = useCallback((slug: string, qty = 1) => {
@@ -367,11 +420,26 @@ export function ShopStoreProvider({ children }: { children: ReactNode }) {
       status: "Pending",
     };
     setOrders((prev) => [newOrder, ...prev]);
+    if (isSupabaseConfigured) {
+      supabase.from("orders").insert({
+        id: newOrder.id,
+        customer_name: newOrder.customerName,
+        phone: newOrder.phone,
+        address: newOrder.address,
+        items: newOrder.items,
+        total: newOrder.total,
+        status: newOrder.status,
+        date: newOrder.date,
+      }).then();
+    }
     return newOrder;
   }, []);
 
   const updateOrderStatus = useCallback((orderId: string, status: OrderStatus) => {
     setOrders((prev) => prev.map((o) => (o.id === orderId ? { ...o, status } : o)));
+    if (isSupabaseConfigured) {
+      supabase.from("orders").update({ status }).eq("id", orderId).then();
+    }
   }, []);
 
   const createNotifyRequest = useCallback(
@@ -383,6 +451,16 @@ export function ShopStoreProvider({ children }: { children: ReactNode }) {
         status: "Pending",
       };
       setNotifyRequests((prev) => [newReq, ...prev]);
+      if (isSupabaseConfigured) {
+        supabase.from("notify_requests").insert({
+          id: newReq.id,
+          saree_name: newReq.sareeName,
+          saree_slug: newReq.sareeSlug,
+          phone: newReq.phone,
+          status: newReq.status,
+          requested_at: newReq.date,
+        }).then();
+      }
       return newReq;
     },
     []
@@ -390,10 +468,16 @@ export function ShopStoreProvider({ children }: { children: ReactNode }) {
 
   const updateNotifyStatus = useCallback((reqId: string, status: NotifyRequestStatus) => {
     setNotifyRequests((prev) => prev.map((r) => (r.id === reqId ? { ...r, status } : r)));
+    if (isSupabaseConfigured) {
+      supabase.from("notify_requests").update({ status }).eq("id", reqId).then();
+    }
   }, []);
 
   const deleteNotifyRequest = useCallback((reqId: string) => {
     setNotifyRequests((prev) => prev.filter((r) => r.id !== reqId));
+    if (isSupabaseConfigured) {
+      supabase.from("notify_requests").delete().eq("id", reqId).then();
+    }
   }, []);
 
   const resetStore = useCallback(() => {
