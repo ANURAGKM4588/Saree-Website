@@ -268,6 +268,31 @@ function Product() {
                   </p>
                 </div>
               </div>
+
+              {/* Section 3: Wash & Fabric Care Instructions */}
+              <div className="space-y-2 border-t border-border/60 pt-4">
+                <h4 className="font-display text-xs font-semibold text-brand-soft flex items-center gap-2 uppercase tracking-[0.14em]">
+                  <Droplets className="h-4 w-4 text-blue-600 shrink-0" /> Wash & Fabric Care Instructions
+                </h4>
+                <div className="space-y-1.5 text-muted-foreground pl-6">
+                  <p className="flex items-center gap-2">
+                    <span className="h-1.5 w-1.5 rounded-full bg-brand shrink-0 font-bold">•</span>
+                    <span>Dry clean recommended for first wash to preserve zari luster.</span>
+                  </p>
+                  <p className="flex items-center gap-2">
+                    <span className="h-1.5 w-1.5 rounded-full bg-brand shrink-0 font-bold">•</span>
+                    <span>Hand wash gently in cool water with mild silk detergent.</span>
+                  </p>
+                  <p className="flex items-center gap-2">
+                    <span className="h-1.5 w-1.5 rounded-full bg-brand shrink-0 font-bold">•</span>
+                    <span>Do not wring; dry flat in shade away from direct sunlight.</span>
+                  </p>
+                  <p className="flex items-center gap-2">
+                    <span className="h-1.5 w-1.5 rounded-full bg-brand shrink-0 font-bold">•</span>
+                    <span>Iron on low heat setting on reverse side of saree.</span>
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
