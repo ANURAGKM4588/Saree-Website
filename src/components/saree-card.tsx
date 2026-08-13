@@ -1,23 +1,29 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { formatPrice, type Saree } from "@/data/sarees";
 import { useShopStore } from "@/lib/shop-store";
 import { useCart } from "@/lib/cart";
+import { triggerFlyToCartAnimation } from "@/lib/fly-to-cart";
 import { ShoppingBag, Check } from "lucide-react";
 
 export function SareeCard({ saree, tall = false }: { saree: Saree; tall?: boolean }) {
   const { products, incrementCartAdds } = useShopStore();
-  const { add } = useCart();
+  const { lines, add } = useCart();
   const [added, setAdded] = useState(false);
+  const imgRef = useRef<HTMLImageElement>(null);
 
   const stored = products.find((p) => p.slug === saree.slug);
   const status = stored?.status || "in_stock";
+  const isInCart = lines.some((line) => line.slug === saree.slug);
 
   const handleQuickAdd = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
 
     if (status !== "in_stock") return;
+
+    // Trigger macOS Genie Fly-to-Cart Animation
+    triggerFlyToCartAnimation(imgRef.current);
 
     add(saree.slug);
     incrementCartAdds(saree.slug);
@@ -33,6 +39,7 @@ export function SareeCard({ saree, tall = false }: { saree: Saree; tall?: boolea
     >
       <div className="relative overflow-hidden rounded-3xl bg-secondary">
         <img
+          ref={imgRef}
           src={saree.image}
           alt={`${saree.name} — ${saree.weave} saree`}
           width={912}
@@ -64,18 +71,24 @@ export function SareeCard({ saree, tall = false }: { saree: Saree; tall?: boolea
         <button
           type="button"
           onClick={handleQuickAdd}
-          title={status === "in_stock" ? "Add Saree to Shopping Bag" : status.replace("_", " ")}
+          title={
+            status !== "in_stock"
+              ? status.replace("_", " ")
+              : isInCart
+              ? "Added to Bag (Click to add another)"
+              : "Add Saree to Shopping Bag"
+          }
           disabled={status !== "in_stock"}
-          className={`absolute right-4 top-4 z-20 flex h-10 w-10 items-center justify-center rounded-full border border-gold/40 shadow-lg backdrop-blur-xs transition-all duration-300 cursor-pointer ${
-            added
-              ? "bg-emerald-600 text-white scale-110"
+          className={`absolute right-4 top-4 z-20 flex h-10 w-10 items-center justify-center rounded-full border shadow-lg backdrop-blur-xs transition-all duration-300 cursor-pointer ${
+            added || isInCart
+              ? "bg-brand text-white border-brand scale-105 shadow-emerald-900/30"
               : status === "in_stock"
-              ? "bg-white/95 text-brand hover:bg-gold hover:text-brand-soft hover:scale-110 active:scale-95"
-              : "bg-slate-200/80 text-slate-400 cursor-not-allowed opacity-60"
+              ? "bg-white/95 text-brand border-gold/40 hover:bg-gold hover:text-brand-soft hover:scale-110 active:scale-95"
+              : "bg-slate-200/80 text-slate-400 border-slate-300 cursor-not-allowed opacity-60"
           }`}
         >
-          {added ? (
-            <Check className="h-5 w-5 animate-in zoom-in-50" />
+          {added || isInCart ? (
+            <Check className="h-5 w-5 stroke-[2.5] text-white animate-in zoom-in-50" />
           ) : (
             <ShoppingBag className="h-4 w-4" />
           )}

@@ -73,8 +73,9 @@ export function SiteHeader() {
           {/* Desktop Shopping Bag Button */}
           <div className="hidden sm:flex items-center gap-4">
             <Link
+              id="header-bag-btn"
               to="/bag"
-              className="inline-flex shrink-0 items-center gap-2.5 rounded-full bg-brand px-5 py-2.5 text-[11px] uppercase tracking-[0.2em] font-semibold text-primary-foreground transition-colors hover:bg-brand-soft whitespace-nowrap shadow-md cursor-pointer"
+              className="inline-flex shrink-0 items-center gap-2.5 rounded-full bg-brand px-5 py-2.5 text-[11px] uppercase tracking-[0.2em] font-semibold text-primary-foreground transition-all duration-300 hover:bg-brand-soft whitespace-nowrap shadow-md cursor-pointer transform-gpu"
             >
               <ShoppingBag className="h-4 w-4" />
               <span>Bag</span>
@@ -87,8 +88,9 @@ export function SiteHeader() {
           {/* Mobile Right Bar: Shopping Bag + Mobile Menu Toggle */}
           <div className="flex items-center gap-3 sm:hidden">
             <Link
+              id="header-bag-btn-mobile"
               to="/bag"
-              className="relative inline-flex items-center justify-center rounded-full bg-brand/10 p-2 text-brand hover:bg-brand/20"
+              className="relative inline-flex items-center justify-center rounded-full bg-brand/10 p-2 text-brand hover:bg-brand/20 transition-all duration-300 transform-gpu"
               aria-label="Shopping Bag"
             >
               <ShoppingBag className="h-5 w-5" />

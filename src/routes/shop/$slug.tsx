@@ -1,10 +1,11 @@
 import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { QuantityStepper } from "@/components/quantity-stepper";
 import { SareeCard } from "@/components/saree-card";
 import { formatPrice, getSaree, sarees, type SareeView } from "@/data/sarees";
 import { useCart } from "@/lib/cart";
 import { useShopStore } from "@/lib/shop-store";
+import { triggerFlyToCartAnimation } from "@/lib/fly-to-cart";
 import {
   Bell,
   Check,
@@ -94,6 +95,8 @@ function Product() {
     };
   }, [showNotifyModal]);
 
+  const mainImgRef = useRef<HTMLImageElement>(null);
+
   const gallery: SareeView[] = saree.views;
   const current: SareeView =
     gallery[Math.min(active, gallery.length - 1)] ?? { url: saree.image, label: "Full drape" };
@@ -101,11 +104,13 @@ function Product() {
   const related = sarees.filter((s) => s.slug !== saree.slug).slice(0, 3);
 
   const handleAddToCart = () => {
+    triggerFlyToCartAnimation(mainImgRef.current);
     add(saree.slug, qty);
     incrementCartAdds(saree.slug, qty);
   };
 
   const handleBookNow = () => {
+    triggerFlyToCartAnimation(mainImgRef.current);
     add(saree.slug, qty);
     incrementCartAdds(saree.slug, qty);
     navigate({ to: "/booking" });
@@ -145,6 +150,7 @@ function Product() {
         <div className="flex flex-col gap-4 sm:flex-row-reverse sm:items-start">
           <div className="relative flex-1 aspect-[3/4] overflow-hidden rounded-3xl bg-secondary">
             <img
+              ref={mainImgRef}
               key={current.url}
               src={current.url}
               alt={`${saree.name} — ${saree.weave} saree, ${current.label.toLowerCase()}`}

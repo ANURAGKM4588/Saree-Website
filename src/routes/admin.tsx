@@ -37,6 +37,10 @@ import {
   Image as ImageIcon,
   UploadCloud,
   Check,
+  X,
+  MapPin,
+  User,
+  MessageSquare,
 } from "lucide-react";
 import {
   ResponsiveContainer,
@@ -63,7 +67,18 @@ export const Route = createFileRoute("/admin")({
   component: AdminPanel,
 });
 
-type TabType = "overview" | "orders" | "products" | "notify" | "cart_analytics";
+import {
+  getSentEmailLogs,
+  sendOrderConfirmationEmail,
+  getEmailTemplateConfig,
+  saveEmailTemplateConfig,
+  DEFAULT_EMAIL_TEMPLATE,
+  generateOrderEmailHtml,
+  type SentEmailLog,
+  type EmailTemplateConfig,
+} from "@/lib/email-service";
+
+type TabType = "overview" | "orders" | "products" | "notify" | "cart_analytics" | "emails";
 
 const PRESET_IMAGES = [
   { url: "/Product/turmeric-zari-brocade.png", label: "Turmeric Zari" },
@@ -109,6 +124,11 @@ export function AdminPanel() {
   const [showAddProductModal, setShowAddProductModal] = useState(false);
   const [editingProduct, setEditingProduct] = useState<ExtendedSaree | null>(null);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+
+  // Email Template Automation State
+  const [emailConfig, setEmailConfig] = useState<EmailTemplateConfig>(getEmailTemplateConfig());
+  const [activeEmailSubTab, setActiveEmailSubTab] = useState<"editor" | "logs">("editor");
+  const [showEmailPreview, setShowEmailPreview] = useState(false);
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
@@ -259,6 +279,7 @@ export function AdminPanel() {
             { id: "products", label: "Products & Stock", icon: Package, badge: totalProductsCount },
             { id: "notify", label: "Restock & Coming Soon Requests", icon: BellRing, badge: pendingNotifyRequests },
             { id: "cart_analytics", label: "Cart Activity", icon: TrendingUp, badge: totalCartAddsCount },
+            { id: "emails", label: "Automated Customer Emails", icon: Mail, badge: getSentEmailLogs().length },
           ].map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
@@ -1031,6 +1052,299 @@ export function AdminPanel() {
             </div>
           </div>
         )}
+
+        {/* TAB 6: AUTOMATED CUSTOMER EMAILS CONTROL CENTER */}
+        {activeTab === "emails" && (
+          <div className="mt-8 space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-card p-6 rounded-3xl border border-border">
+              <div>
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/15 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-emerald-700">
+                  <CheckCircle2 className="h-3.5 w-3.5" /> Automated Email Dispatch System
+                </span>
+                <h2 className="mt-2 font-display text-2xl text-brand-soft">Customer Email Automation Center</h2>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  Customize your brand thank-you greetings, email templates, and audit dispatched customer receipts.
+                </p>
+              </div>
+
+              {/* Sub Navigation Tabs */}
+              <div className="flex items-center gap-2 rounded-full border border-border bg-background p-1.5">
+                <button
+                  type="button"
+                  onClick={() => setActiveEmailSubTab("editor")}
+                  className={`rounded-full px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] cursor-pointer transition-all ${
+                    activeEmailSubTab === "editor"
+                      ? "bg-brand text-primary-foreground shadow-sm"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  Template Editor
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveEmailSubTab("logs")}
+                  className={`rounded-full px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] cursor-pointer transition-all ${
+                    activeEmailSubTab === "logs"
+                      ? "bg-brand text-primary-foreground shadow-sm"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  Dispatched Logs ({getSentEmailLogs().length})
+                </button>
+              </div>
+            </div>
+
+            {/* SUB-VIEW 1: EMAIL TEMPLATE EDITOR */}
+            {activeEmailSubTab === "editor" && (
+              <div className="rounded-3xl border border-border bg-card p-6 sm:p-8 space-y-8 shadow-xs">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border pb-5">
+                  <div>
+                    <h3 className="font-display text-xl font-semibold text-brand-soft">Automated Email Template Settings</h3>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      Configure the official thank-you greeting and booking receipt content sent from <strong className="text-emerald-800">{emailConfig.senderEmail}</strong>.
+                    </p>
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setShowEmailPreview(true)}
+                      className="rounded-full border border-border bg-background px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-foreground hover:border-gold hover:text-brand cursor-pointer whitespace-nowrap"
+                    >
+                      <Eye className="h-4 w-4 inline mr-1" /> Live Preview
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setEmailConfig(DEFAULT_EMAIL_TEMPLATE);
+                        saveEmailTemplateConfig(DEFAULT_EMAIL_TEMPLATE);
+                        showToast("Restored email template to default brand layout!");
+                      }}
+                      className="rounded-full border border-border bg-background px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground hover:bg-muted cursor-pointer whitespace-nowrap"
+                    >
+                      Reset Default
+                    </button>
+                  </div>
+                </div>
+
+                {/* Dynamic Variables Guide Chips */}
+                <div className="rounded-2xl bg-cream/70 p-4 border border-gold/20 space-y-2">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gold">Available Dynamic Placeholders:</p>
+                  <div className="flex flex-wrap gap-2 text-xs">
+                    {[
+                      { code: "{ORDER_ID}", desc: "Booking Order ID (e.g. #ORD-8492)" },
+                      { code: "{CUSTOMER_NAME}", desc: "Customer Full Name" },
+                      { code: "{PHONE}", desc: "Customer Phone Number" },
+                      { code: "{EMAIL}", desc: "Customer Email Address" },
+                      { code: "{ADDRESS}", desc: "Customer Delivery Address" },
+                    ].map((v) => (
+                      <span
+                        key={v.code}
+                        className="inline-flex items-center gap-1 rounded-lg bg-background px-2.5 py-1 font-mono text-[11px] font-bold text-brand-soft border border-gold/30 shadow-2xs"
+                        title={v.desc}
+                      >
+                        {v.code}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    saveEmailTemplateConfig(emailConfig);
+                    showToast("Automated customer email template saved successfully!");
+                  }}
+                  className="space-y-6"
+                >
+                  <div className="grid gap-6 sm:grid-cols-2">
+                    <div>
+                      <label className="block text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground mb-1.5">
+                        Brand Sender Email Address *
+                      </label>
+                      <input
+                        type="email"
+                        required
+                        value={emailConfig.senderEmail}
+                        onChange={(e) => setEmailConfig({ ...emailConfig, senderEmail: e.target.value })}
+                        className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm outline-none focus:border-gold"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground mb-1.5">
+                        Brand Sender Display Name *
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={emailConfig.senderName}
+                        onChange={(e) => setEmailConfig({ ...emailConfig, senderName: e.target.value })}
+                        className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm outline-none focus:border-gold"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground mb-1.5">
+                      Email Subject Line Template *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={emailConfig.subjectTemplate}
+                      onChange={(e) => setEmailConfig({ ...emailConfig, subjectTemplate: e.target.value })}
+                      className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm font-medium outline-none focus:border-gold"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground mb-1.5">
+                      Warm Thank You Greeting Message *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={emailConfig.greetingText}
+                      onChange={(e) => setEmailConfig({ ...emailConfig, greetingText: e.target.value })}
+                      className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm font-medium outline-none focus:border-gold"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground mb-1.5">
+                      Order Booking Received Confirmation Text *
+                    </label>
+                    <textarea
+                      rows={2}
+                      required
+                      value={emailConfig.thankYouMessage}
+                      onChange={(e) => setEmailConfig({ ...emailConfig, thankYouMessage: e.target.value })}
+                      className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm leading-relaxed outline-none focus:border-gold"
+                    />
+                  </div>
+
+                  <div className="pt-4 flex items-center justify-between border-t border-border">
+                    <p className="text-xs text-muted-foreground">
+                      ✓ Changes to this template take effect immediately on all future customer bookings.
+                    </p>
+                    <button
+                      type="submit"
+                      className="rounded-full bg-brand px-8 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-primary-foreground hover:bg-brand-soft shadow-md cursor-pointer whitespace-nowrap"
+                    >
+                      Save Email Template
+                    </button>
+                  </div>
+                </form>
+              </div>
+            )}
+
+            {/* SUB-VIEW 2: DISPATCHED EMAILS LOG TABLE */}
+            {activeEmailSubTab === "logs" && (
+              <div className="overflow-x-auto rounded-3xl border border-border bg-card shadow-xs">
+                <table className="w-full text-left text-sm">
+                  <thead className="bg-muted/50 text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                    <tr>
+                      <th className="px-6 py-4">Log ID</th>
+                      <th className="px-6 py-4">Sender Email</th>
+                      <th className="px-6 py-4">Booking ID</th>
+                      <th className="px-6 py-4">Recipient Customer</th>
+                      <th className="px-6 py-4">Email Subject</th>
+                      <th className="px-6 py-4">Dispatched At</th>
+                      <th className="px-6 py-4">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border">
+                    {getSentEmailLogs().length === 0 ? (
+                      <tr>
+                        <td colSpan={7} className="px-6 py-12 text-center text-sm text-muted-foreground">
+                          No automated emails dispatched yet. Book an order on the store to test automated customer email generation.
+                        </td>
+                      </tr>
+                    ) : (
+                      getSentEmailLogs().map((emailLog) => (
+                        <tr key={emailLog.id} className="hover:bg-muted/30 transition-colors">
+                          <td className="px-6 py-4 font-mono font-bold text-xs text-gold">{emailLog.id}</td>
+                          <td className="px-6 py-4 font-mono text-xs font-semibold text-emerald-800">
+                            {emailLog.senderEmail || BRAND_SENDER_EMAIL}
+                          </td>
+                          <td className="px-6 py-4 font-mono font-bold text-xs text-brand-soft">{emailLog.orderId}</td>
+                          <td className="px-6 py-4">
+                            <p className="font-medium text-foreground">{emailLog.customerName}</p>
+                            <p className="text-xs text-muted-foreground">{emailLog.recipientEmail}</p>
+                          </td>
+                          <td className="px-6 py-4 text-xs font-medium text-foreground max-w-[280px] truncate">
+                            {emailLog.subject}
+                          </td>
+                          <td className="px-6 py-4 text-xs text-muted-foreground whitespace-nowrap">{emailLog.sentAt}</td>
+                          <td className="px-6 py-4">
+                            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-3 py-1 text-[10px] font-bold text-emerald-800 uppercase tracking-wider">
+                              ✓ {emailLog.status}
+                            </span>
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        )}
+
+      {/* MODAL: LIVE EMAIL HTML PREVIEW */}
+      {showEmailPreview && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 sm:p-6 backdrop-blur-xs animate-in fade-in overflow-y-auto">
+          <div className="w-full max-w-3xl max-h-[90vh] flex flex-col rounded-3xl border border-gold/40 bg-background text-foreground shadow-2xl overflow-hidden">
+            <div className="flex items-center justify-between border-b border-border bg-card px-6 py-4 shrink-0">
+              <div className="flex items-center gap-3">
+                <Mail className="h-5 w-5 text-gold" />
+                <h3 className="font-display text-xl font-medium text-brand-soft">Live Customer Email Preview</h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowEmailPreview(false)}
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background text-muted-foreground hover:bg-muted cursor-pointer"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-4 bg-muted/40">
+              <iframe
+                title="Email Preview"
+                srcDoc={generateOrderEmailHtml(
+                  {
+                    id: "ORD-8492",
+                    customerName: "Ananya Roy",
+                    email: "ananya.roy@example.com",
+                    phone: "+91 98765 43210",
+                    address: "Flat 4B, Emerald Heights, MG Road, Kochi, Kerala - 682016",
+                    items: [
+                      { slug: "turmeric-zari-brocade", name: "Turmeric Zari Brocade", qty: 2, price: 6200, image: "" },
+                      { slug: "sunrise-stripe-cotton", name: "Sunrise Stripe Cotton", qty: 1, price: 2200, image: "" },
+                    ],
+                    total: 14600,
+                    date: "Today",
+                    status: "Pending",
+                  },
+                  emailConfig
+                )}
+                className="w-full h-[580px] rounded-2xl border border-border bg-white shadow-inner"
+              />
+            </div>
+
+            <div className="flex justify-end border-t border-border bg-card px-6 py-4 shrink-0">
+              <button
+                type="button"
+                onClick={() => setShowEmailPreview(false)}
+                className="rounded-full bg-brand px-6 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-primary-foreground hover:bg-brand-soft cursor-pointer"
+              >
+                Close Preview
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       </div>
 
       {/* MODAL: ADD NEW PRODUCT */}
@@ -1056,66 +1370,163 @@ export function AdminPanel() {
         onShowToast={showToast}
       />
 
-      {/* MODAL: ORDER DETAILS */}
+      {/* MODAL: ORDER DETAILS (RESPONSIVE LANDSCAPE WHITE THEME) */}
       {selectedOrder && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs animate-in fade-in">
-          <div className="w-full max-w-lg rounded-3xl border border-gold/30 bg-background p-6 sm:p-8 shadow-2xl">
-            <div className="flex items-center justify-between border-b border-border pb-4">
-              <div>
-                <span className="font-mono text-xs font-bold text-gold">{selectedOrder.id}</span>
-                <h3 className="font-display text-2xl text-brand-soft">Order Details</h3>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 sm:p-6 backdrop-blur-xs animate-in fade-in overflow-y-auto">
+          <div className="w-full max-w-4xl max-h-[90vh] flex flex-col rounded-3xl border border-gold/40 bg-background text-foreground shadow-2xl overflow-hidden">
+            {/* Sticky Top Header Bar */}
+            <div className="flex items-center justify-between border-b border-border bg-card px-6 py-4 sm:px-8 shrink-0">
+              <div className="flex items-center gap-3">
+                <span className="font-mono text-sm font-bold text-gold bg-gold/10 px-3 py-1 rounded-full border border-gold/20">
+                  {selectedOrder.id}
+                </span>
+                <div>
+                  <h3 className="font-display text-xl sm:text-2xl font-medium text-brand-soft">Order Details</h3>
+                  <p className="text-xs text-muted-foreground">Received on {selectedOrder.date}</p>
+                </div>
               </div>
-              <button
-                type="button"
-                onClick={() => setSelectedOrder(null)}
-                className="rounded-full p-2 text-muted-foreground hover:bg-muted cursor-pointer"
-              >
-                ✕
-              </button>
+
+              <div className="flex items-center gap-3">
+                <select
+                  value={selectedOrder.status}
+                  onChange={(e) => {
+                    updateOrderStatus(selectedOrder.id, e.target.value as OrderStatus);
+                    showToast(`Order ${selectedOrder.id} status updated to ${e.target.value}!`);
+                  }}
+                  className={`rounded-full px-3 py-1.5 text-xs font-semibold outline-none cursor-pointer ${
+                    selectedOrder.status === "Pending"
+                      ? "bg-amber-100 text-amber-900 border border-amber-300"
+                      : selectedOrder.status === "Processing"
+                      ? "bg-blue-100 text-blue-900 border border-blue-300"
+                      : selectedOrder.status === "Completed"
+                      ? "bg-emerald-100 text-emerald-900 border border-emerald-300"
+                      : "bg-red-100 text-red-900 border border-red-300"
+                  }`}
+                >
+                  <option value="Pending">Pending</option>
+                  <option value="Processing">Processing</option>
+                  <option value="Completed">Completed</option>
+                  <option value="Cancelled">Cancelled</option>
+                </select>
+
+                <button
+                  type="button"
+                  onClick={() => setSelectedOrder(null)}
+                  className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background text-muted-foreground hover:bg-muted hover:text-foreground transition-colors cursor-pointer"
+                  title="Close Window"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
             </div>
 
-            <div className="mt-4 space-y-4 text-sm">
-              <div className="rounded-xl bg-cream p-4">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Customer Info</p>
-                <p className="mt-1 font-medium text-foreground">{selectedOrder.customerName}</p>
-                <p className="text-xs text-muted-foreground">{selectedOrder.email} · {selectedOrder.phone}</p>
-                <p className="mt-2 text-xs text-muted-foreground"><strong>Address:</strong> {selectedOrder.address}</p>
-                {selectedOrder.notes && (
-                  <p className="mt-1 text-xs italic text-brand-soft"><strong>Notes:</strong> "{selectedOrder.notes}"</p>
-                )}
+            {/* Scrollable Landscape 2-Column Body */}
+            <div className="flex-1 overflow-y-auto p-6 sm:p-8 grid grid-cols-1 md:grid-cols-12 gap-8">
+              {/* Left Column: Customer & Shipping Info (5 cols) */}
+              <div className="md:col-span-5 space-y-5">
+                <div className="rounded-2xl border border-border bg-card p-5 space-y-4">
+                  <div className="flex items-center gap-2 border-b border-border pb-3">
+                    <User className="h-4 w-4 text-gold" />
+                    <h4 className="text-xs font-semibold uppercase tracking-[0.18em] text-brand-soft">Customer Profile</h4>
+                  </div>
+                  <div>
+                    <p className="font-display text-base font-semibold text-foreground">{selectedOrder.customerName}</p>
+                    <p className="mt-1 text-xs text-muted-foreground flex items-center gap-1.5">
+                      <Mail className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                      <span className="truncate">{selectedOrder.email}</span>
+                    </p>
+                    <p className="mt-1 text-xs text-muted-foreground flex items-center gap-1.5">
+                      <Phone className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                      <span>{selectedOrder.phone}</span>
+                    </p>
+                  </div>
+                </div>
+
+                <div className="rounded-2xl border border-border bg-card p-5 space-y-3">
+                  <div className="flex items-center gap-2 border-b border-border pb-3">
+                    <MapPin className="h-4 w-4 text-gold" />
+                    <h4 className="text-xs font-semibold uppercase tracking-[0.18em] text-brand-soft">Delivery Address</h4>
+                  </div>
+                  <p className="text-xs leading-relaxed text-foreground whitespace-pre-wrap">{selectedOrder.address}</p>
+                  {selectedOrder.notes && (
+                    <div className="mt-3 rounded-xl bg-cream/70 p-3 border border-gold/20">
+                      <p className="text-[10px] uppercase tracking-wider font-semibold text-gold">Customer Notes:</p>
+                      <p className="mt-0.5 text-xs italic text-brand-soft">"{selectedOrder.notes}"</p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Direct WhatsApp Contact Button */}
+                <a
+                  href={`https://wa.me/${selectedOrder.phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hi ${selectedOrder.customerName}, regarding your Kadha order ${selectedOrder.id}...`)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex w-full items-center justify-center gap-2 rounded-full border border-emerald-600/30 bg-emerald-500/10 py-2.5 text-xs font-semibold uppercase tracking-[0.16em] text-emerald-800 transition-colors hover:bg-emerald-500/20 cursor-pointer whitespace-nowrap"
+                >
+                  <MessageSquare className="h-4 w-4 text-emerald-600" /> DM Customer on WhatsApp
+                </a>
               </div>
 
-              <div>
-                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground mb-2">Ordered Sarees</p>
-                <ul className="space-y-2 divide-y divide-border">
+              {/* Right Column: Scrollable Ordered Sarees List (7 cols) */}
+              <div className="md:col-span-7 space-y-4">
+                <div className="flex items-center justify-between border-b border-border pb-3">
+                  <h4 className="text-xs font-semibold uppercase tracking-[0.18em] text-brand-soft flex items-center gap-2">
+                    <Package className="h-4 w-4 text-gold" /> Ordered Sarees ({selectedOrder.items.length})
+                  </h4>
+                  <span className="text-xs font-semibold text-muted-foreground">Items Total</span>
+                </div>
+
+                <div className="max-h-[320px] overflow-y-auto space-y-3 pr-1 divide-y divide-border">
                   {selectedOrder.items.map((item, idx) => (
-                    <li key={idx} className="flex items-center justify-between pt-2">
-                      <div className="flex items-center gap-3">
-                        <img src={item.image} alt={item.name} className="h-10 w-10 rounded-lg object-cover bg-secondary" />
-                        <div>
-                          <p className="font-medium text-xs text-foreground">{item.name}</p>
-                          <p className="text-[10px] text-muted-foreground">Qty: {item.qty}</p>
+                    <div key={idx} className="flex items-center justify-between gap-4 pt-3 first:pt-0">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          className="h-14 w-11 rounded-xl object-cover bg-secondary border border-border shrink-0"
+                        />
+                        <div className="min-w-0">
+                          <p className="font-display text-sm font-semibold text-foreground truncate">{item.name}</p>
+                          <p className="text-xs text-muted-foreground mt-0.5">
+                            Quantity: <span className="font-semibold text-foreground">{item.qty}</span> × {formatPrice(item.price)}
+                          </p>
                         </div>
                       </div>
-                      <span className="font-display text-sm font-semibold tabular-nums">{formatPrice(item.price * item.qty)}</span>
-                    </li>
+                      <span className="font-display text-sm font-bold tabular-nums text-brand-soft whitespace-nowrap">
+                        {formatPrice(item.price * item.qty)}
+                      </span>
+                    </div>
                   ))}
-                </ul>
-              </div>
+                </div>
 
-              <div className="flex items-center justify-between border-t border-border pt-4 text-base font-bold">
-                <span>Total Amount:</span>
-                <span className="font-display text-xl text-brand-soft tabular-nums">{formatPrice(selectedOrder.total)}</span>
+                {/* Subtotal & Total Breakdown */}
+                <div className="mt-4 rounded-2xl bg-cream p-4 border border-gold/20 space-y-2">
+                  <div className="flex justify-between text-xs text-muted-foreground">
+                    <span>Shipping Fee</span>
+                    <span className="font-semibold text-emerald-700 uppercase tracking-wider">Free (Kerala)</span>
+                  </div>
+                  <div className="flex justify-between items-center border-t border-border/60 pt-2 text-sm font-bold text-foreground">
+                    <span>Total Amount</span>
+                    <span className="font-display text-xl text-brand-soft tabular-nums">
+                      {formatPrice(selectedOrder.total)}
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div className="mt-6 pt-4 flex justify-end border-t border-border">
+            {/* Sticky Bottom Footer Bar */}
+            <div className="flex items-center justify-between border-t border-border bg-muted/40 px-6 py-4 sm:px-8 shrink-0">
+              <div className="text-xs text-muted-foreground">
+                Total Order Value: <strong className="font-display text-base text-brand-soft tabular-nums">{formatPrice(selectedOrder.total)}</strong>
+              </div>
+
               <button
                 type="button"
                 onClick={() => setSelectedOrder(null)}
-                className="rounded-full bg-brand px-6 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-primary-foreground hover:bg-brand-soft cursor-pointer"
+                className="rounded-full bg-brand px-6 py-2.5 text-xs font-semibold uppercase tracking-[0.18em] text-primary-foreground transition-colors hover:bg-brand-soft cursor-pointer whitespace-nowrap shadow-md"
               >
-                Close
+                Close Window
               </button>
             </div>
           </div>
