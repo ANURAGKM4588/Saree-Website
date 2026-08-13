@@ -127,28 +127,24 @@ function Booking() {
     const address = formData.get("address") as string;
     const notes = (formData.get("notes") as string) || undefined;
 
-    if (paymentMethod === "razorpay") {
-      setIsProcessingPayment(true);
-      openRazorpayCheckout({
-        amountInRupees: total,
-        customerName,
-        customerEmail: email,
-        customerPhone: phone,
-        orderNotes: notes,
-        onSuccess: (payment) => {
-          setIsProcessingPayment(false);
-          processOrderCreation(customerName, phone, email, address, notes, payment.razorpay_payment_id);
-        },
-        onFailure: (err) => {
-          setIsProcessingPayment(false);
-          if (err?.reason !== "Payment cancelled by user") {
-            alert("Payment failed or was interrupted. Please try again.");
-          }
-        },
-      });
-    } else {
-      processOrderCreation(customerName, phone, email, address, notes);
-    }
+    setIsProcessingPayment(true);
+    openRazorpayCheckout({
+      amountInRupees: total,
+      customerName,
+      customerEmail: email,
+      customerPhone: phone,
+      orderNotes: notes,
+      onSuccess: (payment) => {
+        setIsProcessingPayment(false);
+        processOrderCreation(customerName, phone, email, address, notes, payment.razorpay_payment_id);
+      },
+      onFailure: (err) => {
+        setIsProcessingPayment(false);
+        if (err?.reason !== "Payment cancelled by user") {
+          alert("Payment failed or was interrupted. Please try again.");
+        }
+      },
+    });
   };
 
   if (bookedOrder) {
@@ -429,77 +425,17 @@ function Booking() {
             <input id="notes" name="notes" placeholder="Special stitching or delivery instructions..." className={field} />
           </div>
 
-          {/* Payment Method Selector */}
-          <div className="rounded-3xl border border-border bg-card p-6 space-y-4 shadow-xs">
-            <label className="text-xs font-bold uppercase tracking-[0.18em] text-brand-soft block border-b border-border pb-3">
-              Payment Gateway Selection:
-            </label>
-
-            <div className="grid gap-3 sm:grid-cols-2">
-              <label
-                className={`flex items-start gap-3 p-4 rounded-2xl border cursor-pointer transition-all ${
-                  paymentMethod === "razorpay"
-                    ? "border-emerald-600 bg-emerald-500/10 shadow-xs"
-                    : "border-border bg-background hover:border-gold/50"
-                }`}
-              >
-                <input
-                  type="radio"
-                  name="paymentChoice"
-                  value="razorpay"
-                  checked={paymentMethod === "razorpay"}
-                  onChange={() => setPaymentMethod("razorpay")}
-                  className="mt-1 h-4 w-4 accent-emerald-700"
-                />
-                <div>
-                  <span className="text-xs font-bold text-emerald-950 flex items-center gap-1.5">
-                    <CreditCard className="h-4 w-4 text-emerald-700" /> Razorpay Instant Payment
-                  </span>
-                  <p className="text-[11px] text-emerald-800/90 mt-1 leading-relaxed">
-                    UPI, Google Pay, PhonePe, Cards & NetBanking. Secured with 256-bit SSL encryption.
-                  </p>
-                </div>
-              </label>
-
-              <label
-                className={`flex items-start gap-3 p-4 rounded-2xl border cursor-pointer transition-all ${
-                  paymentMethod === "cod"
-                    ? "border-emerald-600 bg-emerald-500/10 shadow-xs"
-                    : "border-border bg-background hover:border-gold/50"
-                }`}
-              >
-                <input
-                  type="radio"
-                  name="paymentChoice"
-                  value="cod"
-                  checked={paymentMethod === "cod"}
-                  onChange={() => setPaymentMethod("cod")}
-                  className="mt-1 h-4 w-4 accent-emerald-700"
-                />
-                <div>
-                  <span className="text-xs font-bold text-foreground">Studio Order Reservation</span>
-                  <p className="text-[11px] text-muted-foreground mt-1 leading-relaxed">
-                    Reserve order now. Studio concierge will contact you to verify delivery.
-                  </p>
-                </div>
-              </label>
-            </div>
-          </div>
-
           <div className="pt-2">
             <button
               type="submit"
               disabled={isProcessingPayment}
               className="w-full sm:w-auto rounded-full bg-brand px-10 py-3.5 text-[11px] uppercase tracking-[0.22em] font-semibold text-primary-foreground transition-colors hover:bg-brand-soft shadow-md cursor-pointer whitespace-nowrap"
             >
-              {isProcessingPayment
-                ? "Opening Razorpay Gateway..."
-                : paymentMethod === "razorpay"
-                ? `Proceed to Pay ${formatPrice(total)} via Razorpay →`
-                : "Confirm Saree Booking →"}
+              {isProcessingPayment ? "Opening Razorpay Gateway..." : "Book Now →"}
             </button>
-            <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
-              ✓ An automated booking receipt with your unique Booking ID will be sent directly to your email.
+            <p className="mt-3 text-xs leading-relaxed text-muted-foreground flex items-center gap-1.5">
+              <Lock className="h-3.5 w-3.5 text-emerald-700 shrink-0" />
+              <span>Secured by 256-bit SSL encryption. An automated booking receipt will be emailed upon payment.</span>
             </p>
           </div>
         </form>
