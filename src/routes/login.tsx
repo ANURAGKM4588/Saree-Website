@@ -60,10 +60,9 @@ function LoginPage() {
     const name = formData.get("name") as string;
     const email = formData.get("email") as string;
     const phone = formData.get("phone") as string;
-    const address = (formData.get("address") as string) || undefined;
     const password = (formData.get("password") as string) || undefined;
 
-    const res = await register({ name, email, phone, address, password });
+    const res = await register({ name, email, phone, password });
     if (res.success) {
       setSuccessMsg("Account created successfully!");
       setTimeout(() => {
@@ -214,19 +213,6 @@ function LoginPage() {
           </div>
 
           <div>
-            <label className={labelStyle} htmlFor="reg-address">
-              Delivery Address (Saved for future bookings)
-            </label>
-            <textarea
-              id="reg-address"
-              name="address"
-              rows={3}
-              placeholder="House/Flat No., Street, City, State, Pincode"
-              className={inputStyle}
-            />
-          </div>
-
-          <div>
             <label className={labelStyle} htmlFor="reg-password">
               Password *
             </label>
@@ -245,7 +231,7 @@ function LoginPage() {
             disabled={isLoading}
             className="w-full rounded-full bg-brand py-3.5 text-xs font-semibold uppercase tracking-[0.2em] text-primary-foreground hover:bg-brand-soft shadow-md transition-colors cursor-pointer mt-4"
           >
-            {isLoading ? "Creating Account..." : "Create Account & Save Address →"}
+            {isLoading ? "Creating Account..." : "Create Account →"}
           </button>
         </form>
       )}

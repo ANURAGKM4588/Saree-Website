@@ -35,18 +35,24 @@ function Booking() {
   const [nameVal, setNameVal] = useState(user?.name || "");
   const [phoneVal, setPhoneVal] = useState(user?.phone || "");
   const [emailVal, setEmailVal] = useState(user?.email || "");
+  const [selectedAddressId, setSelectedAddressId] = useState<string>("new");
   const [addressVal, setAddressVal] = useState("");
+  const [addressLabelVal, setAddressLabelVal] = useState("Home Address");
   const [saveAddressChecked, setSaveAddressChecked] = useState(true);
 
-  // Auto-set primary address when user changes
+  // Auto-select primary address when user is logged in
   useEffect(() => {
     if (user) {
       setNameVal(user.name);
       setEmailVal(user.email);
       setPhoneVal(user.phone || "");
-      const primary = user.addresses.find((a) => a.isPrimary) || user.addresses[0];
-      if (primary) {
+      if (user.addresses.length > 0) {
+        const primary = user.addresses.find((a) => a.isPrimary) || user.addresses[0];
+        setSelectedAddressId(primary.id);
         setAddressVal(primary.address);
+      } else {
+        setSelectedAddressId("new");
+        setAddressVal("");
       }
     }
   }, [user]);
@@ -89,7 +95,7 @@ function Booking() {
       const exists = user.addresses.some((a) => a.address.trim() === address.trim());
       if (!exists) {
         addSavedAddress({
-          label: "Saved Shipping Address",
+          label: addressLabelVal || "Saved Shipping Address",
           name: customerName,
           phone: phone,
           address: address,
@@ -200,31 +206,79 @@ function Booking() {
 
       <div className="mt-12 grid gap-16 lg:grid-cols-[1.1fr_0.9fr]">
         <form className="space-y-7" onSubmit={handleSubmit}>
-          {/* Saved Addresses Dropdown Selector if user is logged in and has addresses */}
-          {user && user.addresses.length > 0 && (
-            <div className="rounded-2xl border border-gold/30 bg-cream/30 p-4 space-y-2">
-              <label className="text-[11px] uppercase tracking-[0.18em] text-brand-soft font-bold flex items-center gap-1.5">
-                <MapPin className="h-4 w-4 text-gold" /> Choose From Saved Delivery Addresses:
-              </label>
-              <select
-                onChange={(e) => {
-                  const selected = user.addresses.find((a) => a.id === e.target.value);
-                  if (selected) {
-                    setAddressVal(selected.address);
-                    if (selected.name) setNameVal(selected.name);
-                    if (selected.phone) setPhoneVal(selected.phone);
-                  }
-                }}
-                className="w-full rounded-xl border border-border bg-card px-4 py-2.5 text-xs font-medium text-foreground outline-none focus:border-gold"
-              >
-                {user.addresses.map((addr) => (
-                  <option key={addr.id} value={addr.id}>
-                    {addr.label} ({addr.name} — {addr.address.substring(0, 35)}...)
-                  </option>
-                ))}
-              </select>
+          {/* Address Selection Option (Previous Address vs New Address) */}
+          {user && user.addresses.length > 0 ? (
+            <div className="rounded-3xl border border-gold/40 bg-cream/30 p-5 space-y-4 shadow-xs">
+              <div className="flex items-center justify-between border-b border-gold/20 pb-3">
+                <span className="text-xs font-bold uppercase tracking-[0.18em] text-brand-soft flex items-center gap-1.5">
+                  <MapPin className="h-4 w-4 text-gold" /> Select Delivery Address:
+                </span>
+                <span className="text-[10px] font-semibold text-emerald-800 bg-emerald-500/15 px-2.5 py-0.5 rounded-full">
+                  Auto-Selected Previous Address
+                </span>
+              </div>
+
+              <div className="space-y-3">
+                {/* Option 1: Saved Previous Addresses Dropdown */}
+                <label className="flex items-start gap-3 p-3 rounded-2xl border border-border bg-card hover:border-gold/50 cursor-pointer transition-colors">
+                  <input
+                    type="radio"
+                    name="addressOption"
+                    value="saved"
+                    checked={selectedAddressId !== "new"}
+                    onChange={() => {
+                      const primary = user.addresses.find((a) => a.isPrimary) || user.addresses[0];
+                      if (primary) {
+                        setSelectedAddressId(primary.id);
+                        setAddressVal(primary.address);
+                        if (primary.name) setNameVal(primary.name);
+                        if (primary.phone) setPhoneVal(primary.phone);
+                      }
+                    }}
+                    className="mt-1 h-4 w-4 accent-brand"
+                  />
+                  <div className="flex-1 space-y-2">
+                    <span className="text-xs font-semibold text-foreground">Use Previously Saved Delivery Address</span>
+                    <select
+                      value={selectedAddressId === "new" ? user.addresses[0]?.id : selectedAddressId}
+                      onChange={(e) => {
+                        setSelectedAddressId(e.target.value);
+                        const selected = user.addresses.find((a) => a.id === e.target.value);
+                        if (selected) {
+                          setAddressVal(selected.address);
+                          if (selected.name) setNameVal(selected.name);
+                          if (selected.phone) setPhoneVal(selected.phone);
+                        }
+                      }}
+                      className="w-full rounded-xl border border-border bg-background px-3 py-2 text-xs font-medium text-foreground outline-none focus:border-gold"
+                    >
+                      {user.addresses.map((addr) => (
+                        <option key={addr.id} value={addr.id}>
+                          {addr.isPrimary ? "★ Primary: " : ""}{addr.label} ({addr.name} — {addr.address.substring(0, 40)}...)
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </label>
+
+                {/* Option 2: Add New Address */}
+                <label className="flex items-center gap-3 p-3 rounded-2xl border border-border bg-card hover:border-gold/50 cursor-pointer transition-colors">
+                  <input
+                    type="radio"
+                    name="addressOption"
+                    value="new"
+                    checked={selectedAddressId === "new"}
+                    onChange={() => {
+                      setSelectedAddressId("new");
+                      setAddressVal("");
+                    }}
+                    className="h-4 w-4 accent-brand"
+                  />
+                  <span className="text-xs font-semibold text-brand-soft">+ Enter a New Delivery Address</span>
+                </label>
+              </div>
             </div>
-          )}
+          ) : null}
 
           <div>
             <label className={label} htmlFor="name">
@@ -272,6 +326,7 @@ function Booking() {
               />
             </div>
           </div>
+
           <div>
             <label className={label} htmlFor="address">
               Delivery Address *
@@ -289,17 +344,34 @@ function Booking() {
           </div>
 
           {user && (
-            <div className="flex items-center gap-2.5 text-xs text-muted-foreground pt-1">
-              <input
-                type="checkbox"
-                id="save-address-chk"
-                checked={saveAddressChecked}
-                onChange={(e) => setSaveAddressChecked(e.target.checked)}
-                className="h-4 w-4 accent-brand rounded border-border"
-              />
-              <label htmlFor="save-address-chk" className="cursor-pointer">
-                Save this delivery address to my account for future saree bookings
-              </label>
+            <div className="space-y-3 rounded-2xl bg-muted/40 p-4 border border-border">
+              <div className="flex items-center gap-2.5 text-xs text-foreground font-medium">
+                <input
+                  type="checkbox"
+                  id="save-address-chk"
+                  checked={saveAddressChecked}
+                  onChange={(e) => setSaveAddressChecked(e.target.checked)}
+                  className="h-4 w-4 accent-brand rounded border-border"
+                />
+                <label htmlFor="save-address-chk" className="cursor-pointer">
+                  Save this delivery address to my account for future saree bookings
+                </label>
+              </div>
+
+              {saveAddressChecked && selectedAddressId === "new" && (
+                <div className="pl-6 animate-in fade-in">
+                  <label className="text-[10px] uppercase tracking-[0.16em] text-muted-foreground font-semibold block mb-1">
+                    Address Label (e.g. Home, Office, Parents)
+                  </label>
+                  <input
+                    type="text"
+                    value={addressLabelVal}
+                    onChange={(e) => setAddressLabelVal(e.target.value)}
+                    placeholder="Home Address"
+                    className="w-full sm:w-64 rounded-xl border border-border bg-background px-3 py-2 text-xs outline-none focus:border-gold"
+                  />
+                </div>
+              )}
             </div>
           )}
 
