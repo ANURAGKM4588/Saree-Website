@@ -97,7 +97,8 @@ function Product() {
 
   const mainImgRef = useRef<HTMLImageElement>(null);
 
-  const gallery: SareeView[] = saree.views;
+  const gallery: SareeView[] =
+    storedProduct?.views && storedProduct.views.length > 0 ? storedProduct.views : saree.views;
   const current: SareeView =
     gallery[Math.min(active, gallery.length - 1)] ?? { url: saree.image, label: "Full drape" };
 

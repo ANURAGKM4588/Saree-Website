@@ -1626,10 +1626,12 @@ function AddProductModal({
   const [fabric, setFabric] = useState("Handwoven pure silk cotton");
   const [blouse, setBlouse] = useState("0.8m unstitched blouse piece included");
   const [care, setCare] = useState("Dry clean recommended for first wash.");
+  const [views, setViews] = useState<{ url: string; label: string }[]>([]);
+  const [newViewLabel, setNewViewLabel] = useState("On the model");
+  const [newViewUrlInput, setNewViewUrlInput] = useState("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isCompressing, setIsCompressing] = useState(false);
 
-  // Reset form whenever modal opens & lock background page scroll
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
@@ -1639,6 +1641,7 @@ function AddProductModal({
       setPrice(4500);
       setStatus("in_stock");
       setImage("/Product/turmeric-zari-brocade.png");
+      setViews([{ url: "/Product/turmeric-zari-brocade.png", label: "Full drape" }]);
       setBlurb("Handcrafted masterpiece woven with rich heritage craftsmanship.");
       setFabric("Handwoven pure silk cotton");
       setBlouse("0.8m unstitched blouse piece included");
@@ -1656,19 +1659,44 @@ function AddProductModal({
 
   if (!isOpen) return null;
 
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, isNewView = false) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     try {
       setIsCompressing(true);
       const compressedUrl = await compressImageFile(file, 800, 0.75);
-      setImage(compressedUrl);
+      if (isNewView) {
+        setViews((prev) => [...prev, { url: compressedUrl, label: newViewLabel }]);
+        if (!image) setImage(compressedUrl);
+      } else {
+        setImage(compressedUrl);
+        if (!views.some((v) => v.url === compressedUrl)) {
+          setViews((prev) => [{ url: compressedUrl, label: "Full drape" }, ...prev]);
+        }
+      }
     } catch (err) {
       console.error("Compression failed:", err);
     } finally {
       setIsCompressing(false);
     }
+  };
+
+  const handleDeleteView = (indexToDelete: number) => {
+    const targetUrl = views[indexToDelete]?.url;
+    const updated = views.filter((_, i) => i !== indexToDelete);
+    setViews(updated);
+    if (targetUrl === image && updated.length > 0) {
+      setImage(updated[0].url);
+    }
+  };
+
+  const handleAddUrlView = () => {
+    if (!newViewUrlInput.trim()) return;
+    const url = newViewUrlInput.trim();
+    setViews((prev) => [...prev, { url, label: newViewLabel }]);
+    if (!image) setImage(url);
+    setNewViewUrlInput("");
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -1696,7 +1724,8 @@ function AddProductModal({
       slug = `${slug}-${Date.now().toString().slice(-4)}`;
     }
 
-    const imageUrl = image.trim() || "/Product/turmeric-zari-brocade.png";
+    const imageUrl = image.trim() || (views.length > 0 ? views[0].url : "/Product/turmeric-zari-brocade.png");
+    const finalViews = views.length > 0 ? views : [{ url: imageUrl, label: "Full drape" }];
 
     onAddProduct({
       slug,
@@ -1707,18 +1736,14 @@ function AddProductModal({
       status,
       stockQty: status === "in_stock" ? 1 : 0,
       image: imageUrl,
-      views: [
-        { url: imageUrl, label: "Full drape" },
-        { url: imageUrl, label: "On the model" },
-        { url: imageUrl, label: "Weave detail" },
-      ],
+      views: finalViews,
       blurb: blurb.trim() || "Handcrafted saree.",
       fabric: fabric.trim() || "Handwoven silk cotton",
       blouse: blouse.trim() || "Blouse piece included",
       care: care.trim() || "Dry clean recommended for first wash.",
     });
 
-    onShowToast(`Saree "${name.trim()}" published to catalog!`);
+    onShowToast(`Saree "${name.trim()}" published to catalog with ${finalViews.length} photo views!`);
     onClose();
   };
 
@@ -1752,42 +1777,119 @@ function AddProductModal({
         )}
 
         <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
-          {/* LEFT COLUMN: IMAGE UPLOAD & PREVIEW (LANDSCAPE STYLE) */}
+          {/* LEFT COLUMN: PRODUCT PHOTO GALLERY MANAGER */}
           <div className="md:col-span-5 space-y-4 bg-cream/30 p-5 rounded-2xl border border-gold/20">
-            <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-700 font-semibold">
-              Product Photo Upload *
-            </label>
+            <div className="flex items-center justify-between">
+              <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-700 font-bold flex items-center gap-1.5">
+                <ImageIcon className="h-4 w-4 text-gold" /> Product Photo Gallery ({views.length})
+              </label>
+              <span className="text-[10px] text-slate-500 font-semibold">Hover Preview Ready</span>
+            </div>
 
-            {/* Photo Preview Box (Landscape style) */}
+            {/* Active Primary Cover Photo Box */}
             <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border-2 border-gold/40 bg-white shadow-xs group">
-              <img src={image} alt="Preview" className="h-full w-full object-cover" />
+              <img src={image} alt="Primary Cover" className="h-full w-full object-cover" />
               <span className="absolute top-2 right-2 rounded-full bg-gold px-2.5 py-1 text-[10px] font-bold text-brand-soft shadow-xs">
-                Live Drape Preview
+                Primary Cover Photo
               </span>
             </div>
 
-            {/* Upload Button */}
-            <div>
-              <label className="w-full rounded-2xl border-2 border-dashed border-gold/50 bg-white hover:bg-gold/10 p-4 flex flex-col items-center justify-center gap-1.5 cursor-pointer transition-all shadow-xs group">
-                <UploadCloud className="h-6 w-6 text-gold group-hover:scale-110 transition-transform" />
-                <span className="text-xs font-semibold text-slate-800">
-                  {isCompressing ? "Processing Photo..." : "Upload High-Res Photo"}
-                </span>
-                <span className="text-[10px] text-slate-500">PNG, JPG, WebP from computer</span>
-                <input type="file" accept="image/*" onChange={handleFileUpload} className="hidden" />
-              </label>
+            {/* LIST ALL PRODUCT VIEW IMAGES WITH DELETE & MAKE COVER ACTIONS */}
+            <div className="space-y-2.5 pt-1">
+              <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-500 block">
+                Manage Views & Image Details:
+              </span>
+
+              <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
+                {views.map((view, idx) => (
+                  <div
+                    key={idx}
+                    className={`flex items-center justify-between gap-3 p-2.5 rounded-xl border transition-all ${
+                      view.url === image
+                        ? "border-gold bg-gold/10 shadow-2xs"
+                        : "border-slate-200 bg-white hover:border-slate-300"
+                    }`}
+                  >
+                    <img
+                      src={view.url}
+                      alt={view.label}
+                      className="h-12 w-10 rounded-lg object-cover bg-slate-100 shrink-0 border border-slate-200"
+                    />
+
+                    <div className="flex-1 min-w-0">
+                      <span className="text-xs font-semibold text-slate-800 block truncate">{view.label}</span>
+                      {view.url === image ? (
+                        <span className="text-[9px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full inline-block mt-0.5">
+                          ✓ Primary Cover
+                        </span>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => setImage(view.url)}
+                          className="text-[10px] text-brand hover:underline font-semibold mt-0.5 block"
+                        >
+                          Make Cover
+                        </button>
+                      )}
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteView(idx)}
+                      title="Delete Image View"
+                      className="flex h-8 w-8 items-center justify-center rounded-lg border border-red-200 bg-red-50 text-red-600 hover:bg-red-600 hover:text-white transition-colors cursor-pointer shrink-0"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
             </div>
 
-            {/* URL Input */}
-            <div>
-              <label className="block text-[10px] uppercase tracking-[0.15em] text-slate-500 mb-1">Custom Image URL</label>
-              <input
-                type="text"
-                placeholder="e.g. /Product/saree.png or https://..."
-                value={image}
-                onChange={(e) => setImage(e.target.value)}
-                className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-mono outline-none focus:border-gold text-slate-800"
-              />
+            {/* ADD NEW IMAGE VIEW SECTION */}
+            <div className="rounded-xl border border-dashed border-gold/50 bg-white p-3.5 space-y-3">
+              <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-brand-soft block">
+                + Add Additional Saree Image View:
+              </span>
+
+              <div className="space-y-2">
+                <select
+                  value={newViewLabel}
+                  onChange={(e) => setNewViewLabel(e.target.value)}
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs text-slate-800 font-semibold outline-none focus:border-gold"
+                >
+                  <option value="On the model">On the model</option>
+                  <option value="Weave detail">Weave detail</option>
+                  <option value="Pallu close-up">Pallu close-up</option>
+                  <option value="Blouse piece">Blouse piece</option>
+                  <option value="Full drape">Full drape</option>
+                </select>
+
+                <div className="flex gap-2">
+                  <label className="flex-1 rounded-xl border border-gold/40 bg-gold/10 hover:bg-gold/20 py-2 px-3 flex items-center justify-center gap-1.5 cursor-pointer text-xs font-semibold text-brand-soft transition-colors shadow-2xs">
+                    <UploadCloud className="h-4 w-4 text-gold shrink-0" />
+                    <span>Upload Photo</span>
+                    <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, true)} className="hidden" />
+                  </label>
+                </div>
+
+                <div className="flex gap-2 pt-1">
+                  <input
+                    type="text"
+                    placeholder="Or paste image URL"
+                    value={newViewUrlInput}
+                    onChange={(e) => setNewViewUrlInput(e.target.value)}
+                    className="flex-1 rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-mono outline-none focus:border-gold text-slate-800"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleAddUrlView}
+                    className="rounded-xl bg-brand px-3 py-1.5 text-xs font-bold text-white hover:bg-brand-soft cursor-pointer transition-colors"
+                  >
+                    Add
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -1929,6 +2031,9 @@ function EditProductModal({
   const [fabric, setFabric] = useState("");
   const [blouse, setBlouse] = useState("");
   const [care, setCare] = useState("");
+  const [views, setViews] = useState<{ url: string; label: string }[]>([]);
+  const [newViewLabel, setNewViewLabel] = useState("On the model");
+  const [newViewUrlInput, setNewViewUrlInput] = useState("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isCompressing, setIsCompressing] = useState(false);
 
@@ -1945,6 +2050,11 @@ function EditProductModal({
       setFabric(product.fabric);
       setBlouse(product.blouse);
       setCare(product.care);
+      const initialViews =
+        product.views && product.views.length > 0
+          ? product.views
+          : [{ url: product.image, label: "Full drape" }];
+      setViews(initialViews);
       setErrorMessage(null);
       setIsCompressing(false);
     } else {
@@ -1958,19 +2068,47 @@ function EditProductModal({
 
   if (!product) return null;
 
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, isNewView = false) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     try {
       setIsCompressing(true);
       const compressedUrl = await compressImageFile(file, 800, 0.75);
-      setImage(compressedUrl);
+      if (isNewView) {
+        setViews((prev) => [...prev, { url: compressedUrl, label: newViewLabel }]);
+        if (!image) setImage(compressedUrl);
+      } else {
+        setImage(compressedUrl);
+        // Ensure primary image is in views
+        if (!views.some((v) => v.url === compressedUrl)) {
+          setViews((prev) => [{ url: compressedUrl, label: "Full drape" }, ...prev]);
+        }
+      }
     } catch (err) {
       console.error("Compression failed:", err);
     } finally {
       setIsCompressing(false);
     }
+  };
+
+  const handleDeleteView = (indexToDelete: number) => {
+    const targetUrl = views[indexToDelete]?.url;
+    const updated = views.filter((_, i) => i !== indexToDelete);
+    setViews(updated);
+
+    // If deleted image was primary cover, reset cover to first remaining image
+    if (targetUrl === image && updated.length > 0) {
+      setImage(updated[0].url);
+    }
+  };
+
+  const handleAddUrlView = () => {
+    if (!newViewUrlInput.trim()) return;
+    const url = newViewUrlInput.trim();
+    setViews((prev) => [...prev, { url, label: newViewLabel }]);
+    if (!image) setImage(url);
+    setNewViewUrlInput("");
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -1988,7 +2126,8 @@ function EditProductModal({
       return;
     }
 
-    const imageUrl = image.trim() || product.image;
+    const imageUrl = image.trim() || (views.length > 0 ? views[0].url : product.image);
+    const finalViews = views.length > 0 ? views : [{ url: imageUrl, label: "Full drape" }];
 
     onUpdateProduct(product.slug, {
       name: name.trim(),
@@ -1998,18 +2137,14 @@ function EditProductModal({
       status,
       stockQty: status === "in_stock" ? 1 : 0,
       image: imageUrl,
-      views: [
-        { url: imageUrl, label: "Full drape" },
-        { url: imageUrl, label: "On the model" },
-        { url: imageUrl, label: "Weave detail" },
-      ],
+      views: finalViews,
       blurb: blurb.trim(),
       fabric: fabric.trim(),
       blouse: blouse.trim(),
       care: care.trim(),
     });
 
-    onShowToast(`Product "${name.trim()}" updated successfully!`);
+    onShowToast(`Product "${name.trim()}" updated successfully with ${finalViews.length} view images!`);
     onClose();
   };
 
@@ -2043,39 +2178,119 @@ function EditProductModal({
         )}
 
         <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
-          {/* LEFT COLUMN: IMAGE UPLOAD & PREVIEW */}
+          {/* LEFT COLUMN: PRODUCT PHOTO GALLERY MANAGER */}
           <div className="md:col-span-5 space-y-4 bg-cream/30 p-5 rounded-2xl border border-gold/20">
-            <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-700 font-semibold">
-              Product Photo Upload
-            </label>
+            <div className="flex items-center justify-between">
+              <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-700 font-bold flex items-center gap-1.5">
+                <ImageIcon className="h-4 w-4 text-gold" /> Product Photo Gallery ({views.length})
+              </label>
+              <span className="text-[10px] text-slate-500 font-semibold">Hover Preview Ready</span>
+            </div>
 
+            {/* Active Primary Cover Photo Box */}
             <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border-2 border-gold/40 bg-white shadow-xs group">
-              <img src={image} alt="Preview" className="h-full w-full object-cover" />
+              <img src={image} alt="Primary Cover" className="h-full w-full object-cover" />
               <span className="absolute top-2 right-2 rounded-full bg-gold px-2.5 py-1 text-[10px] font-bold text-brand-soft shadow-xs">
-                Active Photo
+                Primary Cover Photo
               </span>
             </div>
 
-            <div>
-              <label className="w-full rounded-2xl border-2 border-dashed border-gold/50 bg-white hover:bg-gold/10 p-4 flex flex-col items-center justify-center gap-1.5 cursor-pointer transition-all shadow-xs group">
-                <UploadCloud className="h-6 w-6 text-gold group-hover:scale-110 transition-transform" />
-                <span className="text-xs font-semibold text-slate-800">
-                  {isCompressing ? "Processing Photo..." : "Change Image File"}
-                </span>
-                <span className="text-[10px] text-slate-500">Upload replacement from device</span>
-                <input type="file" accept="image/*" onChange={handleFileUpload} className="hidden" />
-              </label>
+            {/* LIST ALL PRODUCT VIEW IMAGES WITH DELETE & MAKE COVER ACTIONS */}
+            <div className="space-y-2.5 pt-1">
+              <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-500 block">
+                Manage Views & Image Details:
+              </span>
+
+              <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
+                {views.map((view, idx) => (
+                  <div
+                    key={idx}
+                    className={`flex items-center justify-between gap-3 p-2.5 rounded-xl border transition-all ${
+                      view.url === image
+                        ? "border-gold bg-gold/10 shadow-2xs"
+                        : "border-slate-200 bg-white hover:border-slate-300"
+                    }`}
+                  >
+                    <img
+                      src={view.url}
+                      alt={view.label}
+                      className="h-12 w-10 rounded-lg object-cover bg-slate-100 shrink-0 border border-slate-200"
+                    />
+
+                    <div className="flex-1 min-w-0">
+                      <span className="text-xs font-semibold text-slate-800 block truncate">{view.label}</span>
+                      {view.url === image ? (
+                        <span className="text-[9px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full inline-block mt-0.5">
+                          ✓ Primary Cover
+                        </span>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => setImage(view.url)}
+                          className="text-[10px] text-brand hover:underline font-semibold mt-0.5 block"
+                        >
+                          Make Cover
+                        </button>
+                      )}
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteView(idx)}
+                      title="Delete Image View"
+                      className="flex h-8 w-8 items-center justify-center rounded-lg border border-red-200 bg-red-50 text-red-600 hover:bg-red-600 hover:text-white transition-colors cursor-pointer shrink-0"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
             </div>
 
-            <div>
-              <label className="block text-[10px] uppercase tracking-[0.15em] text-slate-500 mb-1">Custom Image URL</label>
-              <input
-                type="text"
-                placeholder="Or enter image URL"
-                value={image}
-                onChange={(e) => setImage(e.target.value)}
-                className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-mono outline-none focus:border-gold text-slate-800"
-              />
+            {/* ADD NEW IMAGE VIEW SECTION */}
+            <div className="rounded-xl border border-dashed border-gold/50 bg-white p-3.5 space-y-3">
+              <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-brand-soft block">
+                + Add Additional Saree Image View:
+              </span>
+
+              <div className="space-y-2">
+                <select
+                  value={newViewLabel}
+                  onChange={(e) => setNewViewLabel(e.target.value)}
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs text-slate-800 font-semibold outline-none focus:border-gold"
+                >
+                  <option value="On the model">On the model</option>
+                  <option value="Weave detail">Weave detail</option>
+                  <option value="Pallu close-up">Pallu close-up</option>
+                  <option value="Blouse piece">Blouse piece</option>
+                  <option value="Full drape">Full drape</option>
+                </select>
+
+                <div className="flex gap-2">
+                  <label className="flex-1 rounded-xl border border-gold/40 bg-gold/10 hover:bg-gold/20 py-2 px-3 flex items-center justify-center gap-1.5 cursor-pointer text-xs font-semibold text-brand-soft transition-colors shadow-2xs">
+                    <UploadCloud className="h-4 w-4 text-gold shrink-0" />
+                    <span>Upload Photo</span>
+                    <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, true)} className="hidden" />
+                  </label>
+                </div>
+
+                <div className="flex gap-2 pt-1">
+                  <input
+                    type="text"
+                    placeholder="Or paste image URL"
+                    value={newViewUrlInput}
+                    onChange={(e) => setNewViewUrlInput(e.target.value)}
+                    className="flex-1 rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-mono outline-none focus:border-gold text-slate-800"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleAddUrlView}
+                    className="rounded-xl bg-brand px-3 py-1.5 text-xs font-bold text-white hover:bg-brand-soft cursor-pointer transition-colors"
+                  >
+                    Add
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
 
