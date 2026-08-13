@@ -26,7 +26,7 @@ export const sarees: Saree[] = [
     name: "Turmeric Zari Brocade",
     weave: "Kanjivaram",
     colour: "Turmeric",
-    price: 6200,
+    price: 1,
     image: "/Product/turmeric-zari-brocade.png",
     views: views(
       "/Product/turmeric-zari-brocade.png",
@@ -44,7 +44,7 @@ export const sarees: Saree[] = [
     name: "Amber Peacock Silk Cotton",
     weave: "Kanjivaram",
     colour: "Amber",
-    price: 5600,
+    price: 5,
     image: "/Product/amber-peacock-silk-cotton.png",
     views: views(
       "/Product/amber-peacock-silk-cotton.png",
@@ -61,7 +61,7 @@ export const sarees: Saree[] = [
     name: "Mustard Kanchi Cotton",
     weave: "Kanjivaram",
     colour: "Mustard",
-    price: 4800,
+    price: 10,
     image: "/Product/mustard-kanchi-cotton.png",
     views: views(
       "/Product/mustard-kanchi-cotton.png",
@@ -78,7 +78,7 @@ export const sarees: Saree[] = [
     name: "Coffee Peacock Chettinad",
     weave: "Chettinad",
     colour: "Coffee",
-    price: 5200,
+    price: 1,
     image: "/Product/coffee-peacock-chettinad.png",
     views: views(
       "/Product/coffee-peacock-chettinad.png",
@@ -95,7 +95,7 @@ export const sarees: Saree[] = [
     name: "Kumkum Chettinad Cotton",
     weave: "Chettinad",
     colour: "Red",
-    price: 3400,
+    price: 5,
     image: "/Product/kumkum-chettinad-cotton.png",
     views: views(
       "/Product/kumkum-chettinad-cotton.png",
@@ -112,7 +112,7 @@ export const sarees: Saree[] = [
     name: "Ivory Ikat Handloom",
     weave: "Ikat",
     colour: "Ivory",
-    price: 2900,
+    price: 10,
     image: "/Product/ivory-ikat-handloom.png",
     views: views(
       "/Product/ivory-ikat-handloom.png",
@@ -129,7 +129,7 @@ export const sarees: Saree[] = [
     name: "Olive Ikat Handloom",
     weave: "Ikat",
     colour: "Olive",
-    price: 3100,
+    price: 1,
     image: "/Product/olive-ikat-handloom.png",
     views: views(
       "/Product/olive-ikat-handloom.png",
@@ -146,7 +146,7 @@ export const sarees: Saree[] = [
     name: "Sunrise Stripe Cotton",
     weave: "Cotton",
     colour: "Yellow",
-    price: 2200,
+    price: 5,
     image: "/Product/sunrise-stripe-cotton.png",
     views: views(
       "/Product/sunrise-stripe-cotton.png",
@@ -163,7 +163,7 @@ export const sarees: Saree[] = [
     name: "Rainbow Check Cotton",
     weave: "Cotton",
     colour: "Multicolour",
-    price: 2600,
+    price: 10,
     image: "/Product/rainbow-check-cotton.png",
     views: views(
       "/Product/rainbow-check-cotton.png",
@@ -181,7 +181,7 @@ export const sarees: Saree[] = [
     name: "Earth & Copper Sungudi",
     weave: "Cotton",
     colour: "Brown",
-    price: 3800,
+    price: 1,
     image: "/Product/Sungudi cotton brown.png",
     views: views(
       "/Product/Sungudi cotton brown.png",
@@ -198,7 +198,7 @@ export const sarees: Saree[] = [
     name: "Marigold Sunrise Sungudi",
     weave: "Cotton",
     colour: "Orange",
-    price: 4100,
+    price: 5,
     image: "/Product/Sungudi cotton orange.png",
     views: views(
       "/Product/Sungudi cotton orange.png",
@@ -215,7 +215,7 @@ export const sarees: Saree[] = [
     name: "Crimson Temple Sungudi",
     weave: "Chettinad",
     colour: "Red",
-    price: 4500,
+    price: 10,
     image: "/Product/Sungudi cotton red.png",
     views: views(
       "/Product/Sungudi cotton red.png",
@@ -232,7 +232,7 @@ export const sarees: Saree[] = [
     name: "Saffron Gold Sungudi",
     weave: "Cotton",
     colour: "Yellow",
-    price: 3900,
+    price: 1,
     image: "/Product/Sungudi cotton yellow.png",
     views: views(
       "/Product/Sungudi cotton yellow.png",
@@ -249,7 +249,7 @@ export const sarees: Saree[] = [
     name: "Emerald Banarasi Tussar",
     weave: "Banarasi",
     colour: "Green",
-    price: 7800,
+    price: 5,
     image: "/Product/ChatGPT Image Aug 11, 2026, 12_01_09 AM.png",
     views: views(
       "/Product/ChatGPT Image Aug 11, 2026, 12_01_09 AM.png",
@@ -266,7 +266,7 @@ export const sarees: Saree[] = [
     name: "Sapphire Chanderi Silk",
     weave: "Chanderi",
     colour: "Blue",
-    price: 6900,
+    price: 10,
     image: "/Product/ChatGPT Image Aug 11, 2026, 12_01_20 AM.png",
     views: views(
       "/Product/ChatGPT Image Aug 11, 2026, 12_01_20 AM.png",
@@ -283,7 +283,7 @@ export const sarees: Saree[] = [
     name: "Plum Kanchi Tissue Zari",
     weave: "Kanjivaram",
     colour: "Plum",
-    price: 8500,
+    price: 1,
     image: "/Product/ChatGPT Image Aug 11, 2026, 12_06_24 AM.png",
     views: views(
       "/Product/ChatGPT Image Aug 11, 2026, 12_06_24 AM.png",
@@ -300,7 +300,7 @@ export const sarees: Saree[] = [
     name: "Ruby Red Banarasi Brocade",
     weave: "Banarasi",
     colour: "Red",
-    price: 9200,
+    price: 5,
     image: "/Product/ChatGPT Image Aug 11, 2026, 12_00_56 AM.png",
     views: views(
       "/Product/ChatGPT Image Aug 11, 2026, 12_00_56 AM.png",
@@ -319,7 +319,7 @@ export const weaves = ["Kanjivaram", "Banarasi", "Chanderi", "Chettinad", "Ikat"
 export const getSaree = (slug: string): Saree | undefined => {
   if (typeof window !== "undefined") {
     try {
-      const keys = ["kadha_admin_products_v4", "kadha_admin_products_v3", "kadha_admin_products_v2", "kadha_admin_products_v1"];
+      const keys = ["kadha_admin_products_v5", "kadha_admin_products_v4", "kadha_admin_products_v3", "kadha_admin_products_v2", "kadha_admin_products_v1"];
       for (const key of keys) {
         const raw = localStorage.getItem(key);
         if (raw) {
