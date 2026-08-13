@@ -2,7 +2,7 @@ import { formatPrice } from "@/data/sarees";
 import type { Order } from "./shop-store";
 
 export const BRAND_SENDER_EMAIL = "kadha.shop@gmail.com";
-export const BRAND_SENDER_NAME = "Kadha Atelier";
+export const BRAND_SENDER_NAME = "Kadha Sarees";
 
 export interface EmailTemplateConfig {
   subjectTemplate: string;
@@ -13,8 +13,8 @@ export interface EmailTemplateConfig {
 }
 
 export const DEFAULT_EMAIL_TEMPLATE: EmailTemplateConfig = {
-  subjectTemplate: "Kadha Atelier — Booking Order Confirmation (#{ORDER_ID})",
-  greetingText: "Thank you for choosing Kadha Atelier! We are delighted to reserve your handwoven masterpiece.",
+  subjectTemplate: "Kadha Sarees — Booking Order Confirmation (#{ORDER_ID})",
+  greetingText: "Thank you for choosing Kadha Sarees! We are delighted to reserve your handwoven masterpiece.",
   thankYouMessage: "Your saree booking order #{ORDER_ID} has been successfully received by our studio master weavers.",
   senderEmail: BRAND_SENDER_EMAIL,
   senderName: BRAND_SENDER_NAME,
@@ -111,7 +111,7 @@ export function generateOrderEmailHtml(order: Order, customConfig?: EmailTemplat
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kadha Atelier Booking Confirmation</title>
+  <title>Kadha Sarees Booking Confirmation</title>
 </head>
 <body style="margin: 0; padding: 0; background-color: #faf9f6; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased;">
   <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #faf9f6; padding: 40px 10px;">
@@ -204,7 +204,7 @@ export function generateOrderEmailHtml(order: Order, customConfig?: EmailTemplat
                 Sent officially from <strong>${cfg.senderName}</strong> (&lt;<a href="mailto:${cfg.senderEmail}" style="color: #064e3b; text-decoration: underline;">${cfg.senderEmail}</a>&gt;)
               </p>
               <p style="margin: 4px 0 0 0; font-size: 11px; color: #9ca3af;">
-                Kadha Atelier Studio · Kerala, India · WhatsApp Support: +91 8075676393
+                Kadha Sarees Studio · Kerala, India · WhatsApp Support: +91 8075676393
               </p>
               <p style="margin: 4px 0 0 0; font-size: 10px; color: #9ca3af;">
                 This is an automated transactional booking notification sent directly to ${order.email}.

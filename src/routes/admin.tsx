@@ -57,10 +57,10 @@ import {
 export const Route = createFileRoute("/admin")({
   head: () => ({
     meta: [
-      { title: "Admin Dashboard | Kadha Atelier" },
+      { title: "Admin Dashboard | Kadha Sarees" },
       {
         name: "description",
-        content: "Kadha Atelier Store Admin Panel — Products, Orders, Stock Alerts & Analytics.",
+        content: "Kadha Sarees Store Admin Panel — Products, Orders, Stock Alerts & Analytics.",
       },
     ],
   }),

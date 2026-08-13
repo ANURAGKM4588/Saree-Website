@@ -45,7 +45,7 @@ export function SiteHeader() {
           <Link to="/" className="flex min-w-0 items-center">
             <img
               src="/logo/BRAND IDENTITY.png"
-              alt="Kadha Atelier Saree Store"
+              alt="Kadha Sarees Store"
               width={160}
               height={44}
               className="h-10 w-auto object-contain sm:h-12"

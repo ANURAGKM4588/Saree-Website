@@ -1,4 +1,4 @@
--- KADHA ATELIER SUPABASE DATABASE SCHEMA
+-- KADHA SAREES SUPABASE DATABASE SCHEMA
 -- Run this script in your Supabase SQL Editor (https://supabase.com/dashboard/project/oglbbffvqyqrlctkycfs/sql/new)
 
 -- 1. Products Table

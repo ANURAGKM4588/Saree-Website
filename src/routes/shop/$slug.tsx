@@ -302,7 +302,7 @@ function Product() {
 
             {/* Direct WhatsApp Order Link */}
             <a
-              href={`https://wa.me/918075676393?text=${encodeURIComponent(`Hi Kadha Atelier, I would like to order "${saree.name}" (${formatPrice(saree.price)}).`)}`}
+              href={`https://wa.me/918075676393?text=${encodeURIComponent(`Hi Kadha Sarees, I would like to order "${saree.name}" (${formatPrice(saree.price)}).`)}`}
               target="_blank"
               rel="noopener noreferrer"
               className="flex w-full items-center justify-center gap-2 rounded-full border border-emerald-600/30 bg-emerald-500/10 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-emerald-800 transition-colors hover:bg-emerald-500/20 shadow-2xs whitespace-nowrap"

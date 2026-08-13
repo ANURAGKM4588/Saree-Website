@@ -15,7 +15,7 @@ export function SiteFooter() {
           <div>
             <img
               src="/logo/BRAND IDENTITY white.png"
-              alt="Kadha Atelier"
+              alt="Kadha Sarees"
               width={160}
               height={50}
               loading="lazy"
