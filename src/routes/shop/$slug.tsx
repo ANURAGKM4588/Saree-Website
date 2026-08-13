@@ -15,12 +15,13 @@ import {
   MessageSquare,
   ShieldCheck,
   Droplets,
-  ChevronDown,
-  ChevronUp,
   Video,
   AlertTriangle,
   CheckCircle2,
   Clock,
+  Award,
+  Scissors,
+  Headphones,
 } from "lucide-react";
 
 export const Route = createFileRoute("/shop/$slug")({
@@ -72,7 +73,6 @@ function Product() {
   const navigate = useNavigate();
   const [qty, setQty] = useState(1);
   const [active, setActive] = useState(0);
-  const [openAccordion, setOpenAccordion] = useState<"shipping" | "return" | "wash" | null>("shipping");
 
   // Notify Modal State
   const [showNotifyModal, setShowNotifyModal] = useState(false);
@@ -148,7 +148,7 @@ function Product() {
       </Link>
 
       <div className="mt-8 grid gap-12 lg:grid-cols-[1.1fr_0.9fr]">
-        {/* LEFT COLUMN: PRODUCT IMAGE GALLERY & TERMS/POLICY ACCORDION BOX BELOW */}
+        {/* LEFT COLUMN: PRODUCT IMAGE GALLERY & FULLY VISIBLE TERMS/POLICY BOX AT BOTTOM */}
         <div className="flex flex-col gap-6">
           <div className="flex flex-col gap-4 sm:flex-row-reverse sm:items-start">
             <div className="relative flex-1 aspect-[3/4] overflow-hidden rounded-3xl bg-secondary">
@@ -208,124 +208,96 @@ function Product() {
             </div>
           </div>
 
-          {/* TERMS, DELIVERY & CARE ACCORDION SECTION (POSITIONED DIRECTLY AT BOTTOM OF PRODUCT IMAGE) */}
-          <div className="rounded-2xl border border-border bg-card overflow-hidden shadow-2xs">
-            <div className="border-b border-border bg-muted/40 px-5 py-3.5">
-              <h3 className="font-display text-xs font-bold uppercase tracking-[0.2em] text-brand-soft flex items-center gap-2">
-                <ShieldCheck className="h-4 w-4 text-gold" /> Terms, Delivery & Care
+          {/* TERMS, DELIVERY & CARE SECTION (FULL TIME VISIBLE STYLE AT BOTTOM OF PRODUCT IMAGE) */}
+          <div className="rounded-3xl border border-border bg-card p-6 sm:p-7 space-y-6 shadow-xs">
+            <div className="border-b border-border pb-4 flex items-center justify-between">
+              <h3 className="font-display text-base font-bold uppercase tracking-[0.18em] text-brand-soft flex items-center gap-2">
+                <ShieldCheck className="h-5 w-5 text-gold shrink-0" /> Terms, Delivery & Care
               </h3>
+              <span className="text-[10px] font-semibold text-emerald-800 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-full">
+                Kadha Guarantee
+              </span>
             </div>
 
-            <div className="divide-y divide-border text-xs">
-              {/* Shipping & Delivery Details */}
-              <div className="p-4">
-                <button
-                  type="button"
-                  onClick={() => setOpenAccordion(openAccordion === "shipping" ? null : "shipping")}
-                  className="flex w-full items-center justify-between font-medium text-foreground hover:text-brand cursor-pointer"
-                >
-                  <span className="flex items-center gap-2 font-display text-sm font-semibold text-brand-soft">
-                    <Truck className="h-4 w-4 text-brand" /> Delivery & Order Details
-                  </span>
-                  {openAccordion === "shipping" ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                </button>
-                {openAccordion === "shipping" && (
-                  <div className="mt-3 space-y-2.5 text-muted-foreground pl-6 animate-in fade-in duration-200">
-                    <p className="flex items-start gap-2">
-                      <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 shrink-0 mt-0.5" />
-                      <span><strong className="text-foreground font-semibold">Free Shipping:</strong> Complimentary shipping inside Kerala.</span>
-                    </p>
-                    <p className="flex items-start gap-2">
-                      <Clock className="h-3.5 w-3.5 text-brand shrink-0 mt-0.5" />
-                      <span><strong className="text-foreground font-semibold">Within Kerala:</strong> Max 7 working days.</span>
-                    </p>
-                    <p className="flex items-start gap-2">
-                      <Clock className="h-3.5 w-3.5 text-brand shrink-0 mt-0.5" />
-                      <span><strong className="text-foreground font-semibold">Outside Kerala:</strong> 10 – 15 working days.</span>
-                    </p>
-                    <p className="flex items-start gap-2">
-                      <MessageSquare className="h-3.5 w-3.5 text-emerald-600 shrink-0 mt-0.5" />
-                      <span><strong className="text-foreground font-semibold">WhatsApp Ordering:</strong> Send product screenshot to <a href="https://wa.me/918075676393" target="_blank" rel="noopener noreferrer" className="text-emerald-700 underline font-semibold">+91 8075676393</a>.</span>
-                    </p>
-                  </div>
-                )}
+            <div className="space-y-6 text-xs">
+              {/* Section 1: Delivery & Order Details */}
+              <div className="space-y-2.5">
+                <h4 className="font-display text-xs font-semibold text-brand-soft flex items-center gap-2 uppercase tracking-[0.14em]">
+                  <Truck className="h-4 w-4 text-brand shrink-0" /> Delivery & Order Details
+                </h4>
+                <div className="space-y-2 text-muted-foreground pl-6">
+                  <p className="flex items-start gap-2">
+                    <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                    <span><strong className="text-foreground font-semibold">Free Shipping:</strong> Complimentary shipping inside Kerala.</span>
+                  </p>
+                  <p className="flex items-start gap-2">
+                    <Clock className="h-3.5 w-3.5 text-brand shrink-0 mt-0.5" />
+                    <span><strong className="text-foreground font-semibold">Within Kerala:</strong> Max 7 working days delivery time.</span>
+                  </p>
+                  <p className="flex items-start gap-2">
+                    <Clock className="h-3.5 w-3.5 text-brand shrink-0 mt-0.5" />
+                    <span><strong className="text-foreground font-semibold">Outside Kerala:</strong> 10 – 15 working days insured dispatch.</span>
+                  </p>
+                  <p className="flex items-start gap-2">
+                    <MessageSquare className="h-3.5 w-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                    <span><strong className="text-foreground font-semibold">WhatsApp Direct Order:</strong> Send product screenshot to <a href="https://wa.me/918075676393" target="_blank" rel="noopener noreferrer" className="text-emerald-700 underline font-semibold">+91 8075676393</a>.</span>
+                  </p>
+                </div>
               </div>
 
-              {/* Returns & Damage Claim */}
-              <div className="p-4">
-                <button
-                  type="button"
-                  onClick={() => setOpenAccordion(openAccordion === "return" ? null : "return")}
-                  className="flex w-full items-center justify-between font-medium text-foreground hover:text-brand cursor-pointer"
-                >
-                  <span className="flex items-center gap-2 font-display text-sm font-semibold text-brand-soft">
-                    <ShieldCheck className="h-4 w-4 text-gold" /> Return & Damage Claim Policy
-                  </span>
-                  {openAccordion === "return" ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                </button>
-                {openAccordion === "return" && (
-                  <div className="mt-3 space-y-2.5 text-muted-foreground pl-6 animate-in fade-in duration-200">
-                    <div className="rounded-lg bg-amber-500/10 border border-amber-500/20 p-2.5 text-amber-900 text-[11px] mb-2 font-medium">
-                      ⚠️ <strong>Mandatory Requirement:</strong> Opening / unboxing video is compulsory for damage claims.
-                    </div>
-                    <p className="flex items-start gap-2">
-                      <Video className="h-3.5 w-3.5 text-rose-600 shrink-0 mt-0.5" />
-                      <span><strong className="text-foreground font-semibold">Unboxing Video:</strong> Continuous video showing package seal unboxing to product inspection.</span>
-                    </p>
-                    <p className="flex items-start gap-2">
-                      <CheckCircle2 className="h-3.5 w-3.5 text-foreground shrink-0 mt-0.5" />
-                      <span><strong className="text-foreground font-semibold">Returns:</strong> Accepted strictly for damaged pieces only.</span>
-                    </p>
-                    <p className="flex items-start gap-2">
-                      <AlertCircle className="h-3.5 w-3.5 text-muted-foreground shrink-0 mt-0.5" />
-                      <span><strong className="text-foreground font-semibold">No Other Exchange:</strong> No returns or exchanges for other reasons.</span>
-                    </p>
-                    <p className="flex items-start gap-2">
-                      <AlertTriangle className="h-3.5 w-3.5 text-amber-600 shrink-0 mt-0.5" />
-                      <span><strong className="text-foreground font-semibold">Colour Disclaimer:</strong> Slight colour variation may occur due to screen resolution & studio lighting.</span>
-                    </p>
+              {/* Section 2: Return & Damage Claim Policy */}
+              <div className="space-y-2.5 border-t border-border/60 pt-5">
+                <h4 className="font-display text-xs font-semibold text-brand-soft flex items-center gap-2 uppercase tracking-[0.14em]">
+                  <ShieldCheck className="h-4 w-4 text-gold shrink-0" /> Return & Damage Claim Policy
+                </h4>
+                <div className="space-y-2 text-muted-foreground pl-6">
+                  <div className="rounded-xl bg-amber-500/10 border border-amber-500/20 p-3 text-amber-950 text-[11px] font-medium leading-relaxed my-1">
+                    ⚠️ <strong>Compulsory Requirement:</strong> Opening / unboxing video is strictly compulsory for damage replacement claims. Continuous video showing package seal unboxing to product inspection.
                   </div>
-                )}
+                  <p className="flex items-start gap-2 pt-1">
+                    <CheckCircle2 className="h-3.5 w-3.5 text-foreground shrink-0 mt-0.5" />
+                    <span><strong className="text-foreground font-semibold">Damage Claims:</strong> Returns accepted strictly for transit-damaged pieces reported within 48 hours.</span>
+                  </p>
+                  <p className="flex items-start gap-2">
+                    <AlertCircle className="h-3.5 w-3.5 text-muted-foreground shrink-0 mt-0.5" />
+                    <span><strong className="text-foreground font-semibold">No Other Exchange:</strong> No returns or exchanges for color choice or personal preference.</span>
+                  </p>
+                  <p className="flex items-start gap-2">
+                    <AlertTriangle className="h-3.5 w-3.5 text-amber-600 shrink-0 mt-0.5" />
+                    <span><strong className="text-foreground font-semibold">Colour Disclaimer:</strong> Slight colour variation may occur due to screen resolution & studio lighting.</span>
+                  </p>
+                </div>
               </div>
 
-              {/* Wash Care Instructions */}
-              <div className="p-4">
-                <button
-                  type="button"
-                  onClick={() => setOpenAccordion(openAccordion === "wash" ? null : "wash")}
-                  className="flex w-full items-center justify-between font-medium text-foreground hover:text-brand cursor-pointer"
-                >
-                  <span className="flex items-center gap-2 font-display text-sm font-semibold text-brand-soft">
-                    <Droplets className="h-4 w-4 text-blue-600" /> Wash & Fabric Care Instructions
-                  </span>
-                  {openAccordion === "wash" ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                </button>
-                {openAccordion === "wash" && (
-                  <div className="mt-3 space-y-2 text-muted-foreground pl-6 animate-in fade-in duration-200">
-                    <p className="flex items-center gap-2">
-                      <span className="h-1.5 w-1.5 rounded-full bg-brand shrink-0"></span>
-                      <span>Dry clean recommended for first wash to preserve zari luster.</span>
-                    </p>
-                    <p className="flex items-center gap-2">
-                      <span className="h-1.5 w-1.5 rounded-full bg-brand shrink-0"></span>
-                      <span>Hand wash gently in cool water with mild silk detergent.</span>
-                    </p>
-                    <p className="flex items-center gap-2">
-                      <span className="h-1.5 w-1.5 rounded-full bg-brand shrink-0"></span>
-                      <span>Do not wring; dry flat in shade away from direct sunlight.</span>
-                    </p>
-                    <p className="flex items-center gap-2">
-                      <span className="h-1.5 w-1.5 rounded-full bg-brand shrink-0"></span>
-                      <span>Iron on low heat setting on reverse side of saree.</span>
-                    </p>
-                  </div>
-                )}
+              {/* Section 3: Wash & Fabric Care Instructions */}
+              <div className="space-y-2.5 border-t border-border/60 pt-5">
+                <h4 className="font-display text-xs font-semibold text-brand-soft flex items-center gap-2 uppercase tracking-[0.14em]">
+                  <Droplets className="h-4 w-4 text-blue-600 shrink-0" /> Wash & Fabric Care Instructions
+                </h4>
+                <div className="space-y-1.5 text-muted-foreground pl-6">
+                  <p className="flex items-center gap-2">
+                    <span className="h-1.5 w-1.5 rounded-full bg-brand shrink-0"></span>
+                    <span>Dry clean recommended for first wash to preserve zari luster.</span>
+                  </p>
+                  <p className="flex items-center gap-2">
+                    <span className="h-1.5 w-1.5 rounded-full bg-brand shrink-0"></span>
+                    <span>Hand wash gently in cool water with mild silk detergent.</span>
+                  </p>
+                  <p className="flex items-center gap-2">
+                    <span className="h-1.5 w-1.5 rounded-full bg-brand shrink-0"></span>
+                    <span>Do not wring; dry flat in shade away from direct sunlight.</span>
+                  </p>
+                  <p className="flex items-center gap-2">
+                    <span className="h-1.5 w-1.5 rounded-full bg-brand shrink-0"></span>
+                    <span>Iron on low heat setting on reverse side of saree.</span>
+                  </p>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* RIGHT COLUMN: SAREE PRODUCT DETAILS, PRICE, ACTIONS & HIGHLIGHTS */}
+        {/* RIGHT COLUMN: SAREE PRODUCT DETAILS, PRICE, ACTIONS, HIGHLIGHTS & NEW CRAFT GUARANTEE CARD */}
         <div className="lg:pt-6">
           <p className="text-[11px] uppercase tracking-[0.24em] text-gold">{saree.weave}</p>
           <h1 className="mt-3 font-display text-4xl leading-tight text-brand-soft">{saree.name}</h1>
@@ -449,6 +421,56 @@ function Product() {
               <Sparkles className="mx-auto h-4 w-4 text-amber-600" />
               <p className="mt-1 font-display text-xs font-semibold text-brand-soft">Limited Stock</p>
               <p className="text-[10px] text-muted-foreground">Book Yours Now</p>
+            </div>
+          </div>
+
+          {/* NEW RIGHT-SIDE CATEGORY CARD: STUDIO CRAFT GUARANTEE & AUTHENTICITY */}
+          <div className="mt-6 rounded-3xl border border-gold/30 bg-cream/40 p-6 space-y-4 shadow-2xs">
+            <div className="border-b border-gold/20 pb-3 flex items-center justify-between">
+              <h3 className="font-display text-xs font-bold uppercase tracking-[0.18em] text-brand-soft flex items-center gap-2">
+                <Award className="h-4 w-4 text-gold shrink-0" /> Studio Craft & Heritage Guarantee
+              </h3>
+              <span className="text-[9px] font-bold uppercase tracking-wider text-gold bg-gold/10 border border-gold/30 px-2.5 py-0.5 rounded-full">
+                100% Genuine
+              </span>
+            </div>
+
+            <div className="space-y-3 text-xs">
+              <div className="flex items-start gap-3">
+                <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gold/15 text-brand-soft shrink-0 mt-0.5">
+                  <Sparkles className="h-4 w-4 text-gold" />
+                </div>
+                <div>
+                  <h4 className="font-semibold text-foreground">Handloom Artisan Heritage</h4>
+                  <p className="mt-0.5 text-[11px] text-muted-foreground leading-relaxed">
+                    Directly sourced from master weavers in Kerala & South India with authentic zari detailing.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3 border-t border-gold/15 pt-3">
+                <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-700 shrink-0 mt-0.5">
+                  <Scissors className="h-4 w-4 text-emerald-600" />
+                </div>
+                <div>
+                  <h4 className="font-semibold text-foreground">Custom Blouse Stitching</h4>
+                  <p className="mt-0.5 text-[11px] text-muted-foreground leading-relaxed">
+                    Custom tailor measurements & neck designs available on request via WhatsApp concierge.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3 border-t border-gold/15 pt-3">
+                <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-brand/10 text-brand shrink-0 mt-0.5">
+                  <Headphones className="h-4 w-4 text-brand" />
+                </div>
+                <div>
+                  <h4 className="font-semibold text-foreground">Studio Concierge Support</h4>
+                  <p className="mt-0.5 text-[11px] text-muted-foreground leading-relaxed">
+                    Need assistance or video inspection of saree before booking? Call/WhatsApp <strong className="text-foreground">+91 8075676393</strong>.
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
