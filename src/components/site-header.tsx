@@ -6,7 +6,7 @@ import { ShoppingBag, Menu, X, MessageSquare } from "lucide-react";
 const navLinks = [
   { to: "/", label: "Home" },
   { to: "/shop", label: "Saree Catalog" },
-  { to: "/booking", label: "Custom Booking" },
+  { to: "/booking", label: "Checkout" },
   { to: "/about", label: "About Us" },
 ];
 
