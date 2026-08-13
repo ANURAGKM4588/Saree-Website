@@ -19,9 +19,6 @@ import {
   AlertTriangle,
   CheckCircle2,
   Clock,
-  Award,
-  Scissors,
-  Headphones,
 } from "lucide-react";
 
 export const Route = createFileRoute("/shop/$slug")({
@@ -139,165 +136,76 @@ function Product() {
   };
 
   return (
-    <div className="mx-auto max-w-[1400px] px-5 py-12 lg:px-8">
+    <div className="mx-auto max-w-[1536px] px-4 py-10 sm:px-6 lg:px-10">
       <Link
         to="/shop"
-        className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground hover:text-brand"
+        className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground hover:text-brand font-medium inline-block mb-2"
       >
         ← Collection
       </Link>
 
-      <div className="mt-8 grid gap-10 lg:grid-cols-2 items-start">
-        {/* LEFT COLUMN: PRODUCT IMAGE GALLERY & DELIVERY / RETURN POLICY DETAILS */}
-        <div className="flex flex-col gap-6">
-          <div className="flex flex-col gap-4 sm:flex-row-reverse sm:items-start">
-            <div className="relative flex-1 aspect-[3/4] overflow-hidden rounded-3xl bg-secondary">
-              <img
-                ref={mainImgRef}
-                key={current.url}
-                src={current.url}
-                alt={`${saree.name} — ${saree.weave} saree, ${current.label.toLowerCase()}`}
-                width={912}
-                height={1200}
-                className="h-full w-full object-cover"
-              />
-              {status === "in_stock" && (
-                <span className="absolute left-5 top-5 rounded-full bg-background/90 px-4 py-1.5 text-[10px] uppercase tracking-[0.22em] text-brand-soft gold-frame font-medium">
-                  One of a kind
-                </span>
-              )}
-              {status === "out_of_stock" && (
-                <span className="absolute left-5 top-5 rounded-full bg-destructive/90 px-4 py-1.5 text-[10px] uppercase tracking-[0.22em] text-destructive-foreground font-semibold shadow-md">
-                  Out of Stock
-                </span>
-              )}
-              {status === "coming_soon" && (
-                <span className="absolute left-5 top-5 rounded-full bg-gold px-4 py-1.5 text-[10px] uppercase tracking-[0.22em] text-brand-soft font-semibold gold-frame shadow-md">
-                  Coming Soon
-                </span>
-              )}
-              <span className="absolute bottom-5 left-5 rounded-full bg-background/85 px-4 py-1.5 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-                {current.label}
+      {/* TOP SECTION: BALANCED 2-COLUMN MAIN PRODUCT OVERVIEW */}
+      <div className="mt-4 grid gap-10 lg:grid-cols-[1.1fr_0.9fr] items-start">
+        {/* LEFT COLUMN: PRODUCT IMAGE GALLERY */}
+        <div className="flex flex-col gap-4 sm:flex-row-reverse sm:items-start">
+          <div className="relative flex-1 aspect-[3/4] overflow-hidden rounded-3xl bg-secondary shadow-xs">
+            <img
+              ref={mainImgRef}
+              key={current.url}
+              src={current.url}
+              alt={`${saree.name} — ${saree.weave} saree, ${current.label.toLowerCase()}`}
+              width={912}
+              height={1200}
+              className="h-full w-full object-cover"
+            />
+            {status === "in_stock" && (
+              <span className="absolute left-5 top-5 rounded-full bg-background/90 px-4 py-1.5 text-[10px] uppercase tracking-[0.22em] text-brand-soft gold-frame font-medium">
+                One of a kind
               </span>
-            </div>
-
-            <div className="flex gap-3 sm:w-24 sm:flex-col">
-              {gallery.map((view, i) => (
-                <button
-                  key={view.url}
-                  type="button"
-                  onClick={() => setActive(i)}
-                  aria-label={view.label}
-                  aria-current={i === active}
-                  className={`overflow-hidden rounded-2xl border transition-all ${
-                    i === active
-                      ? "border-brand opacity-100 ring-2 ring-gold/40"
-                      : "border-transparent opacity-60 hover:opacity-100"
-                  }`}
-                >
-                  <img
-                    src={view.url}
-                    alt={`${saree.name} — ${view.label.toLowerCase()} thumbnail`}
-                    width={96}
-                    height={128}
-                    loading="lazy"
-                    className="h-24 w-20 object-cover sm:h-28 sm:w-full"
-                  />
-                </button>
-              ))}
-            </div>
+            )}
+            {status === "out_of_stock" && (
+              <span className="absolute left-5 top-5 rounded-full bg-destructive/90 px-4 py-1.5 text-[10px] uppercase tracking-[0.22em] text-destructive-foreground font-semibold shadow-md">
+                Out of Stock
+              </span>
+            )}
+            {status === "coming_soon" && (
+              <span className="absolute left-5 top-5 rounded-full bg-gold px-4 py-1.5 text-[10px] uppercase tracking-[0.22em] text-brand-soft font-semibold gold-frame shadow-md">
+                Coming Soon
+              </span>
+            )}
+            <span className="absolute bottom-5 left-5 rounded-full bg-background/85 px-4 py-1.5 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+              {current.label}
+            </span>
           </div>
 
-          {/* LEFT COLUMN BOTTOM CARD: DELIVERY & RETURN POLICY DETAILS (FULL VISIBLE STYLE) */}
-          <div className="rounded-3xl border border-border bg-card p-6 sm:p-7 space-y-6 shadow-xs">
-            <div className="border-b border-border pb-3.5 flex items-center justify-between">
-              <h3 className="font-display text-xs font-bold uppercase tracking-[0.18em] text-brand-soft flex items-center gap-2">
-                <ShieldCheck className="h-4 w-4 text-gold shrink-0" /> Delivery & Damage Policy
-              </h3>
-              <span className="text-[10px] font-semibold text-emerald-800 bg-emerald-500/10 border border-emerald-500/20 px-3 py-0.5 rounded-full">
-                Kadha Verified
-              </span>
-            </div>
-
-            <div className="space-y-5 text-xs">
-              {/* Section 1: Delivery & Order Details */}
-              <div className="space-y-2">
-                <h4 className="font-display text-xs font-semibold text-brand-soft flex items-center gap-2 uppercase tracking-[0.14em]">
-                  <Truck className="h-4 w-4 text-brand shrink-0" /> Shipping & Delivery Timelines
-                </h4>
-                <div className="space-y-2 text-muted-foreground pl-6">
-                  <p className="flex items-start gap-2">
-                    <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 shrink-0 mt-0.5" />
-                    <span><strong className="text-foreground font-semibold">Free Kerala Shipping:</strong> Complimentary insured delivery inside Kerala.</span>
-                  </p>
-                  <p className="flex items-start gap-2">
-                    <Clock className="h-3.5 w-3.5 text-brand shrink-0 mt-0.5" />
-                    <span><strong className="text-foreground font-semibold">Within Kerala:</strong> Max 7 working days delivery time.</span>
-                  </p>
-                  <p className="flex items-start gap-2">
-                    <Clock className="h-3.5 w-3.5 text-brand shrink-0 mt-0.5" />
-                    <span><strong className="text-foreground font-semibold">Outside Kerala:</strong> 10 – 15 working days insured dispatch.</span>
-                  </p>
-                  <p className="flex items-start gap-2">
-                    <MessageSquare className="h-3.5 w-3.5 text-emerald-600 shrink-0 mt-0.5" />
-                    <span><strong className="text-foreground font-semibold">WhatsApp Direct Order:</strong> Send screenshot to <a href="https://wa.me/918075676393" target="_blank" rel="noopener noreferrer" className="text-emerald-700 underline font-semibold">+91 8075676393</a>.</span>
-                  </p>
-                </div>
-              </div>
-
-              {/* Section 2: Return & Damage Claim Policy */}
-              <div className="space-y-2 border-t border-border/60 pt-4">
-                <h4 className="font-display text-xs font-semibold text-brand-soft flex items-center gap-2 uppercase tracking-[0.14em]">
-                  <ShieldCheck className="h-4 w-4 text-gold shrink-0" /> Return & Damage Claim Policy
-                </h4>
-                <div className="space-y-2 text-muted-foreground pl-6">
-                  <div className="rounded-xl bg-amber-500/10 border border-amber-500/20 p-3 text-amber-950 text-[11px] font-medium leading-relaxed my-1">
-                    ⚠️ <strong>Compulsory Requirement:</strong> Opening / unboxing video is strictly compulsory for damage replacement claims. Continuous video showing package seal unboxing to product inspection.
-                  </div>
-                  <p className="flex items-start gap-2 pt-1">
-                    <CheckCircle2 className="h-3.5 w-3.5 text-foreground shrink-0 mt-0.5" />
-                    <span><strong className="text-foreground font-semibold">Damage Claims:</strong> Returns accepted strictly for transit-damaged pieces reported within 48 hours.</span>
-                  </p>
-                  <p className="flex items-start gap-2">
-                    <AlertCircle className="h-3.5 w-3.5 text-muted-foreground shrink-0 mt-0.5" />
-                    <span><strong className="text-foreground font-semibold">No Other Exchange:</strong> No returns or exchanges for color choice or personal preference.</span>
-                  </p>
-                  <p className="flex items-start gap-2">
-                    <AlertTriangle className="h-3.5 w-3.5 text-amber-600 shrink-0 mt-0.5" />
-                    <span><strong className="text-foreground font-semibold">Colour Disclaimer:</strong> Slight colour variation may occur due to screen resolution & studio lighting.</span>
-                  </p>
-                </div>
-              </div>
-
-              {/* Section 3: Wash & Fabric Care Instructions */}
-              <div className="space-y-2 border-t border-border/60 pt-4">
-                <h4 className="font-display text-xs font-semibold text-brand-soft flex items-center gap-2 uppercase tracking-[0.14em]">
-                  <Droplets className="h-4 w-4 text-blue-600 shrink-0" /> Wash & Fabric Care Instructions
-                </h4>
-                <div className="space-y-1.5 text-muted-foreground pl-6">
-                  <p className="flex items-center gap-2">
-                    <span className="h-1.5 w-1.5 rounded-full bg-brand shrink-0 font-bold">•</span>
-                    <span>Dry clean recommended for first wash to preserve zari luster.</span>
-                  </p>
-                  <p className="flex items-center gap-2">
-                    <span className="h-1.5 w-1.5 rounded-full bg-brand shrink-0 font-bold">•</span>
-                    <span>Hand wash gently in cool water with mild silk detergent.</span>
-                  </p>
-                  <p className="flex items-center gap-2">
-                    <span className="h-1.5 w-1.5 rounded-full bg-brand shrink-0 font-bold">•</span>
-                    <span>Do not wring; dry flat in shade away from direct sunlight.</span>
-                  </p>
-                  <p className="flex items-center gap-2">
-                    <span className="h-1.5 w-1.5 rounded-full bg-brand shrink-0 font-bold">•</span>
-                    <span>Iron on low heat setting on reverse side of saree.</span>
-                  </p>
-                </div>
-              </div>
-            </div>
+          <div className="flex gap-3 sm:w-24 sm:flex-col">
+            {gallery.map((view, i) => (
+              <button
+                key={view.url}
+                type="button"
+                onClick={() => setActive(i)}
+                aria-label={view.label}
+                aria-current={i === active}
+                className={`overflow-hidden rounded-2xl border transition-all ${
+                  i === active
+                    ? "border-brand opacity-100 ring-2 ring-gold/40"
+                    : "border-transparent opacity-60 hover:opacity-100"
+                }`}
+              >
+                <img
+                  src={view.url}
+                  alt={`${saree.name} — ${view.label.toLowerCase()} thumbnail`}
+                  width={96}
+                  height={128}
+                  loading="lazy"
+                  className="h-24 w-20 object-cover sm:h-28 sm:w-full"
+                />
+              </button>
+            ))}
           </div>
         </div>
 
-        {/* RIGHT COLUMN: SAREE DETAILS, PRICING, ACTIONS, HERITAGE & FABRIC CARE */}
+        {/* RIGHT COLUMN: SAREE DETAILS, PRICING, SPECS, ACTIONS & HIGHLIGHTS */}
         <div className="flex flex-col gap-6">
           <div>
             <p className="text-[11px] uppercase tracking-[0.24em] text-gold font-bold">{saree.weave}</p>
@@ -306,7 +214,7 @@ function Product() {
             <p className="mt-1 text-[11px] text-muted-foreground">
               Inclusive of taxes · Free shipping inside Kerala
             </p>
-            <p className="mt-4 max-w-md text-sm leading-relaxed text-muted-foreground">
+            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
               {saree.blurb}
             </p>
           </div>
@@ -342,7 +250,7 @@ function Product() {
                   <button
                     type="button"
                     onClick={handleAddToCart}
-                    className="flex-1 rounded-full border border-brand px-6 py-3 text-[11px] uppercase tracking-[0.2em] font-semibold text-brand transition-colors hover:bg-brand hover:text-primary-foreground cursor-pointer whitespace-nowrap"
+                    className="flex-1 rounded-full border border-brand px-6 py-3.5 text-[11px] uppercase tracking-[0.2em] font-semibold text-brand transition-colors hover:bg-brand hover:text-primary-foreground cursor-pointer whitespace-nowrap"
                   >
                     Add to bag
                   </button>
@@ -402,7 +310,7 @@ function Product() {
               href={`https://wa.me/918075676393?text=${encodeURIComponent(`Hi Kadha Sarees, I would like to order "${saree.name}" (${formatPrice(saree.price)}).`)}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex w-full items-center justify-center gap-2 rounded-full border border-emerald-600/30 bg-emerald-500/10 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-emerald-800 transition-colors hover:bg-emerald-500/20 shadow-2xs whitespace-nowrap"
+              className="flex w-full items-center justify-center gap-2 rounded-full border border-emerald-600/30 bg-emerald-500/10 py-3.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-emerald-800 transition-colors hover:bg-emerald-500/20 shadow-2xs whitespace-nowrap"
             >
               <MessageSquare className="h-4 w-4 text-emerald-600" />
               DM on WhatsApp to Order (+91 8075676393)
@@ -410,18 +318,18 @@ function Product() {
           </div>
 
           {/* Highlights Badges */}
-          <div className="grid grid-cols-3 gap-2.5 text-center">
-            <div className="rounded-xl border border-border bg-card p-3 shadow-2xs">
+          <div className="grid grid-cols-3 gap-3 text-center">
+            <div className="rounded-xl border border-border bg-card p-3.5 shadow-2xs">
               <Truck className="mx-auto h-4 w-4 text-brand" />
               <p className="mt-1 font-display text-xs font-semibold text-brand-soft">Free Shipping</p>
               <p className="text-[10px] text-muted-foreground">Inside Kerala</p>
             </div>
-            <div className="rounded-xl border border-border bg-card p-3 shadow-2xs">
+            <div className="rounded-xl border border-border bg-card p-3.5 shadow-2xs">
               <Clock className="mx-auto h-4 w-4 text-gold" />
               <p className="mt-1 font-display text-xs font-semibold text-brand-soft">7 Working Days</p>
               <p className="text-[10px] text-muted-foreground">Kerala Delivery</p>
             </div>
-            <div className="rounded-xl border border-border bg-card p-3 shadow-2xs">
+            <div className="rounded-xl border border-border bg-card p-3.5 shadow-2xs">
               <Sparkles className="mx-auto h-4 w-4 text-amber-600" />
               <p className="mt-1 font-display text-xs font-semibold text-brand-soft">Limited Stock</p>
               <p className="text-[10px] text-muted-foreground">Book Yours Now</p>
@@ -430,8 +338,104 @@ function Product() {
         </div>
       </div>
 
+      {/* FULL-WIDTH DEDICATED POLICY & CARE SECTION (Fills whole screen width below overview with ZERO empty gaps) */}
+      <section className="mt-14 rounded-3xl border border-border bg-card p-6 sm:p-8 shadow-xs">
+        <div className="border-b border-border pb-4 mb-6 flex items-center justify-between">
+          <div>
+            <span className="text-[10px] uppercase tracking-[0.24em] text-gold font-bold block mb-1">Customer Protection & Care</span>
+            <h3 className="font-display text-xl font-bold uppercase tracking-[0.16em] text-brand-soft flex items-center gap-2">
+              <ShieldCheck className="h-5 w-5 text-gold shrink-0" /> Delivery, Damage Policy & Wash Care
+            </h3>
+          </div>
+          <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-800 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-full hidden sm:inline-block">
+            Kadha Verified Policy
+          </span>
+        </div>
+
+        {/* 3-COLUMN SIDE-BY-SIDE GRID CARDS (Fills entire screen width symmetrically) */}
+        <div className="grid gap-6 md:grid-cols-3 items-stretch">
+          {/* Card 1: Shipping & Delivery Timelines */}
+          <div className="rounded-2xl border border-border/80 bg-background/60 p-5 space-y-3 flex flex-col justify-between">
+            <div>
+              <h4 className="font-display text-xs font-bold text-brand-soft flex items-center gap-2 uppercase tracking-[0.14em] border-b border-border/50 pb-2.5 mb-3">
+                <Truck className="h-4 w-4 text-brand shrink-0" /> Shipping & Delivery
+              </h4>
+              <div className="space-y-2 text-xs text-muted-foreground">
+                <p className="flex items-start gap-2">
+                  <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                  <span><strong className="text-foreground font-semibold">Free Shipping:</strong> Complimentary insured delivery inside Kerala.</span>
+                </p>
+                <p className="flex items-start gap-2">
+                  <Clock className="h-3.5 w-3.5 text-brand shrink-0 mt-0.5" />
+                  <span><strong className="text-foreground font-semibold">Within Kerala:</strong> Max 7 working days delivery.</span>
+                </p>
+                <p className="flex items-start gap-2">
+                  <Clock className="h-3.5 w-3.5 text-brand shrink-0 mt-0.5" />
+                  <span><strong className="text-foreground font-semibold">Outside Kerala:</strong> 10 – 15 working days dispatch.</span>
+                </p>
+              </div>
+            </div>
+            <div className="pt-2 border-t border-border/40">
+              <p className="text-[11px] text-muted-foreground flex items-center gap-1.5">
+                <MessageSquare className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
+                <span>WhatsApp support: <a href="https://wa.me/918075676393" target="_blank" rel="noopener noreferrer" className="text-emerald-700 underline font-semibold">+91 8075676393</a></span>
+              </p>
+            </div>
+          </div>
+
+          {/* Card 2: Return & Damage Claim Policy */}
+          <div className="rounded-2xl border border-border/80 bg-background/60 p-5 space-y-3 flex flex-col justify-between">
+            <div>
+              <h4 className="font-display text-xs font-bold text-brand-soft flex items-center gap-2 uppercase tracking-[0.14em] border-b border-border/50 pb-2.5 mb-3">
+                <ShieldCheck className="h-4 w-4 text-gold shrink-0" /> Return & Damage Claim
+              </h4>
+              <div className="space-y-2 text-xs text-muted-foreground">
+                <div className="rounded-xl bg-amber-500/10 border border-amber-500/20 p-2.5 text-amber-950 text-[11px] font-medium leading-relaxed mb-2">
+                  ⚠️ <strong>Compulsory Requirement:</strong> Continuous unboxing video showing package seal to product inspection is strictly required.
+                </div>
+                <p className="flex items-start gap-2">
+                  <CheckCircle2 className="h-3.5 w-3.5 text-foreground shrink-0 mt-0.5" />
+                  <span><strong className="text-foreground font-semibold">Damage Claims:</strong> Returns accepted strictly for transit-damaged pieces.</span>
+                </p>
+                <p className="flex items-start gap-2">
+                  <AlertCircle className="h-3.5 w-3.5 text-muted-foreground shrink-0 mt-0.5" />
+                  <span><strong className="text-foreground font-semibold">No Other Exchange:</strong> No returns for color choice/preference.</span>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Card 3: Wash & Fabric Care Instructions */}
+          <div className="rounded-2xl border border-border/80 bg-background/60 p-5 space-y-3 flex flex-col justify-between">
+            <div>
+              <h4 className="font-display text-xs font-bold text-brand-soft flex items-center gap-2 uppercase tracking-[0.14em] border-b border-border/50 pb-2.5 mb-3">
+                <Droplets className="h-4 w-4 text-blue-600 shrink-0" /> Wash & Fabric Care
+              </h4>
+              <div className="space-y-2 text-xs text-muted-foreground">
+                <p className="flex items-center gap-2">
+                  <span className="h-1.5 w-1.5 rounded-full bg-brand shrink-0 font-bold">•</span>
+                  <span>Dry clean recommended for first wash to preserve zari luster.</span>
+                </p>
+                <p className="flex items-center gap-2">
+                  <span className="h-1.5 w-1.5 rounded-full bg-brand shrink-0 font-bold">•</span>
+                  <span>Hand wash gently in cool water with mild silk detergent.</span>
+                </p>
+                <p className="flex items-center gap-2">
+                  <span className="h-1.5 w-1.5 rounded-full bg-brand shrink-0 font-bold">•</span>
+                  <span>Do not wring; dry flat in shade away from direct sunlight.</span>
+                </p>
+                <p className="flex items-center gap-2">
+                  <span className="h-1.5 w-1.5 rounded-full bg-brand shrink-0 font-bold">•</span>
+                  <span>Iron on low heat setting on reverse side of saree.</span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* RELATED SAREES SECTION */}
-      <section className="mt-24">
+      <section className="mt-20">
         <div className="flex items-end justify-between border-b border-border pb-6">
           <div>
             <p className="text-[11px] uppercase tracking-[0.24em] text-gold font-bold">Handwoven Collection</p>
