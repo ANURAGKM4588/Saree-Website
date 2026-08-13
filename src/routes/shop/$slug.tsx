@@ -5,7 +5,22 @@ import { SareeCard } from "@/components/saree-card";
 import { formatPrice, getSaree, sarees, type SareeView } from "@/data/sarees";
 import { useCart } from "@/lib/cart";
 import { useShopStore } from "@/lib/shop-store";
-import { Bell, Check, Sparkles, AlertCircle } from "lucide-react";
+import {
+  Bell,
+  Check,
+  Sparkles,
+  AlertCircle,
+  Truck,
+  MessageSquare,
+  ShieldCheck,
+  Droplets,
+  ChevronDown,
+  ChevronUp,
+  Video,
+  AlertTriangle,
+  CheckCircle2,
+  Clock,
+} from "lucide-react";
 
 export const Route = createFileRoute("/shop/$slug")({
   loader: ({ params }) => {
@@ -56,6 +71,7 @@ function Product() {
   const navigate = useNavigate();
   const [qty, setQty] = useState(1);
   const [active, setActive] = useState(0);
+  const [openAccordion, setOpenAccordion] = useState<"shipping" | "return" | "wash" | null>("shipping");
 
   // Notify Modal State
   const [showNotifyModal, setShowNotifyModal] = useState(false);
@@ -176,7 +192,7 @@ function Product() {
           <h1 className="mt-3 font-display text-4xl leading-tight text-brand-soft">{saree.name}</h1>
           <p className="mt-4 font-display text-2xl tabular-nums">{formatPrice(saree.price)}</p>
           <p className="mt-1 text-[11px] text-muted-foreground">
-            Inclusive of taxes · Free insured shipping
+            Inclusive of taxes · Free shipping inside Kerala
           </p>
           <p className="mt-6 max-w-md text-sm leading-relaxed text-muted-foreground">
             {saree.blurb}
@@ -211,7 +227,7 @@ function Product() {
                   <button
                     type="button"
                     onClick={handleAddToCart}
-                    className="flex-1 rounded-full border border-brand px-8 py-3 text-[11px] uppercase tracking-[0.22em] text-brand transition-colors hover:bg-brand hover:text-primary-foreground"
+                    className="flex-1 rounded-full border border-brand px-8 py-3 text-[11px] uppercase tracking-[0.22em] text-brand transition-colors hover:bg-brand hover:text-primary-foreground cursor-pointer"
                   >
                     Add to bag
                   </button>
@@ -219,7 +235,7 @@ function Product() {
                 <button
                   type="button"
                   onClick={handleBookNow}
-                  className="w-full rounded-full bg-brand px-8 py-3 text-[11px] uppercase tracking-[0.22em] text-primary-foreground transition-colors hover:bg-brand-soft"
+                  className="w-full rounded-full bg-brand px-8 py-3 text-[11px] uppercase tracking-[0.22em] text-primary-foreground transition-colors hover:bg-brand-soft cursor-pointer shadow-md"
                 >
                   Book now
                 </button>
@@ -238,7 +254,7 @@ function Product() {
                 <button
                   type="button"
                   onClick={() => setShowNotifyModal(true)}
-                  className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-destructive px-8 py-3 text-[11px] uppercase tracking-[0.22em] text-destructive-foreground transition-colors hover:bg-destructive/90 shadow-md"
+                  className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-destructive px-8 py-3 text-[11px] uppercase tracking-[0.22em] text-destructive-foreground transition-colors hover:bg-destructive/90 shadow-md cursor-pointer"
                 >
                   <Bell className="h-4 w-4" />
                   Notify Me When Restocked
@@ -258,28 +274,167 @@ function Product() {
                 <button
                   type="button"
                   onClick={() => setShowNotifyModal(true)}
-                  className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand px-8 py-3 text-[11px] uppercase tracking-[0.22em] text-primary-foreground transition-colors hover:bg-brand-soft shadow-md"
+                  className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand px-8 py-3 text-[11px] uppercase tracking-[0.22em] text-primary-foreground transition-colors hover:bg-brand-soft shadow-md cursor-pointer"
                 >
                   <Bell className="h-4 w-4 text-gold" />
                   Notify Me On Launch
                 </button>
               </div>
             )}
+
+            {/* Direct WhatsApp Order Link */}
+            <a
+              href={`https://wa.me/918075676393?text=${encodeURIComponent(`Hi Kadha Atelier, I would like to order "${saree.name}" (${formatPrice(saree.price)}).`)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex w-full items-center justify-center gap-2 rounded-full border border-emerald-600/30 bg-emerald-500/10 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-emerald-800 transition-colors hover:bg-emerald-500/20 shadow-2xs"
+            >
+              <MessageSquare className="h-4 w-4 text-emerald-600" />
+              DM on WhatsApp to Order (+91 8075676393)
+            </a>
           </div>
 
-          <div className="mt-8 grid grid-cols-3 gap-3 text-center">
-            {[
-              { k: "14 days", v: "Loom to door" },
-              { k: "7 days", v: "Easy exchange" },
-              { k: "Certified", v: "Handloom mark" },
-            ].map((f) => (
-              <div key={f.k} className="rounded-lg bg-cream px-3 py-4">
-                <p className="font-display text-base text-brand-soft">{f.k}</p>
-                <p className="mt-1 text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
-                  {f.v}
-                </p>
+          {/* Highlights Badges */}
+          <div className="mt-6 grid grid-cols-3 gap-2.5 text-center">
+            <div className="rounded-xl border border-border bg-card p-3 shadow-2xs">
+              <Truck className="mx-auto h-4 w-4 text-brand" />
+              <p className="mt-1 font-display text-xs font-semibold text-brand-soft">Free Shipping</p>
+              <p className="text-[10px] text-muted-foreground">Inside Kerala</p>
+            </div>
+            <div className="rounded-xl border border-border bg-card p-3 shadow-2xs">
+              <Clock className="mx-auto h-4 w-4 text-gold" />
+              <p className="mt-1 font-display text-xs font-semibold text-brand-soft">7 Working Days</p>
+              <p className="text-[10px] text-muted-foreground">Kerala Delivery</p>
+            </div>
+            <div className="rounded-xl border border-border bg-card p-3 shadow-2xs">
+              <Sparkles className="mx-auto h-4 w-4 text-amber-600" />
+              <p className="mt-1 font-display text-xs font-semibold text-brand-soft">Limited Stock</p>
+              <p className="text-[10px] text-muted-foreground">Book Yours Now</p>
+            </div>
+          </div>
+
+          {/* Accordion Policy Sections */}
+          <div className="mt-8 rounded-2xl border border-border bg-card overflow-hidden shadow-2xs">
+            <div className="border-b border-border bg-muted/40 px-5 py-3.5">
+              <h3 className="font-display text-xs font-bold uppercase tracking-[0.2em] text-brand-soft flex items-center gap-2">
+                <ShieldCheck className="h-4 w-4 text-gold" /> Terms, Delivery & Care
+              </h3>
+            </div>
+
+            <div className="divide-y divide-border text-xs">
+              {/* Shipping & Delivery Details */}
+              <div className="p-4">
+                <button
+                  type="button"
+                  onClick={() => setOpenAccordion(openAccordion === "shipping" ? null : "shipping")}
+                  className="flex w-full items-center justify-between font-medium text-foreground hover:text-brand cursor-pointer"
+                >
+                  <span className="flex items-center gap-2 font-display text-sm font-semibold text-brand-soft">
+                    <Truck className="h-4 w-4 text-brand" /> Delivery & Order Details
+                  </span>
+                  {openAccordion === "shipping" ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                </button>
+                {openAccordion === "shipping" && (
+                  <div className="mt-3 space-y-2.5 text-muted-foreground pl-6 animate-in fade-in duration-200">
+                    <p className="flex items-start gap-2">
+                      <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                      <span><strong className="text-foreground font-semibold">Free Shipping:</strong> Complimentary shipping inside Kerala.</span>
+                    </p>
+                    <p className="flex items-start gap-2">
+                      <Clock className="h-3.5 w-3.5 text-brand shrink-0 mt-0.5" />
+                      <span><strong className="text-foreground font-semibold">Within Kerala:</strong> Max 7 working days.</span>
+                    </p>
+                    <p className="flex items-start gap-2">
+                      <Clock className="h-3.5 w-3.5 text-brand shrink-0 mt-0.5" />
+                      <span><strong className="text-foreground font-semibold">Outside Kerala:</strong> 10 – 15 working days.</span>
+                    </p>
+                    <p className="flex items-start gap-2">
+                      <MessageSquare className="h-3.5 w-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                      <span><strong className="text-foreground font-semibold">WhatsApp Ordering:</strong> Send product screenshot to <a href="https://wa.me/918075676393" target="_blank" rel="noopener noreferrer" className="text-emerald-700 underline font-semibold">+91 8075676393</a>.</span>
+                    </p>
+                  </div>
+                )}
               </div>
-            ))}
+
+              {/* Returns & Damage Claim */}
+              <div className="p-4">
+                <button
+                  type="button"
+                  onClick={() => setOpenAccordion(openAccordion === "return" ? null : "return")}
+                  className="flex w-full items-center justify-between font-medium text-foreground hover:text-brand cursor-pointer"
+                >
+                  <span className="flex items-center gap-2 font-display text-sm font-semibold text-brand-soft">
+                    <ShieldCheck className="h-4 w-4 text-gold" /> Return & Damage Claim Policy
+                  </span>
+                  {openAccordion === "return" ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                </button>
+                {openAccordion === "return" && (
+                  <div className="mt-3 space-y-2.5 text-muted-foreground pl-6 animate-in fade-in duration-200">
+                    <div className="rounded-lg bg-amber-500/10 border border-amber-500/20 p-2.5 text-amber-900 text-[11px] mb-2 font-medium">
+                      ⚠️ <strong>Mandatory Requirement:</strong> Opening / unboxing video is compulsory for damage claims.
+                    </div>
+                    <p className="flex items-start gap-2">
+                      <Video className="h-3.5 w-3.5 text-rose-600 shrink-0 mt-0.5" />
+                      <span><strong className="text-foreground font-semibold">Unboxing Video:</strong> Continuous video showing package seal unboxing to product inspection.</span>
+                    </p>
+                    <p className="flex items-start gap-2">
+                      <CheckCircle2 className="h-3.5 w-3.5 text-foreground shrink-0 mt-0.5" />
+                      <span><strong className="text-foreground font-semibold">Returns:</strong> Accepted strictly for damaged pieces only.</span>
+                    </p>
+                    <p className="flex items-start gap-2">
+                      <AlertCircle className="h-3.5 w-3.5 text-muted-foreground shrink-0 mt-0.5" />
+                      <span><strong className="text-foreground font-semibold">No Other Exchange:</strong> No returns or exchanges for other reasons.</span>
+                    </p>
+                    <p className="flex items-start gap-2">
+                      <AlertTriangle className="h-3.5 w-3.5 text-amber-600 shrink-0 mt-0.5" />
+                      <span><strong className="text-foreground font-semibold">Colour Disclaimer:</strong> Slight colour variation may occur due to screen resolution & studio lighting.</span>
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {/* Wash Care Instructions */}
+              <div className="p-4">
+                <button
+                  type="button"
+                  onClick={() => setOpenAccordion(openAccordion === "wash" ? null : "wash")}
+                  className="flex w-full items-center justify-between font-medium text-foreground hover:text-brand cursor-pointer"
+                >
+                  <span className="flex items-center gap-2 font-display text-sm font-semibold text-brand-soft">
+                    <Droplets className="h-4 w-4 text-blue-600" /> Wash & Fabric Care Instructions
+                  </span>
+                  {openAccordion === "wash" ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                </button>
+                {openAccordion === "wash" && (
+                  <div className="mt-3 space-y-2 text-muted-foreground pl-6 animate-in fade-in duration-200">
+                    <p className="flex items-center gap-2">
+                      <span className="h-1.5 w-1.5 rounded-full bg-brand shrink-0"></span>
+                      <span>Dry clean recommended for first wash</span>
+                    </p>
+                    <p className="flex items-center gap-2">
+                      <span className="h-1.5 w-1.5 rounded-full bg-brand shrink-0"></span>
+                      <span>Gentle hand wash after that</span>
+                    </p>
+                    <p className="flex items-center gap-2">
+                      <span className="h-1.5 w-1.5 rounded-full bg-brand shrink-0"></span>
+                      <span>Use mild detergent</span>
+                    </p>
+                    <p className="flex items-center gap-2">
+                      <span className="h-1.5 w-1.5 rounded-full bg-brand shrink-0"></span>
+                      <span>Do not bleach</span>
+                    </p>
+                    <p className="flex items-center gap-2">
+                      <span className="h-1.5 w-1.5 rounded-full bg-brand shrink-0"></span>
+                      <span>Dry in shade</span>
+                    </p>
+                    <p className="flex items-center gap-2">
+                      <span className="h-1.5 w-1.5 rounded-full bg-brand shrink-0"></span>
+                      <span>Iron on low heat if needed</span>
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </div>

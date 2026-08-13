@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   useShopStore,
   type ProductStatus,
@@ -33,6 +33,10 @@ import {
   Send,
   Layers,
   ArrowUpRight,
+  AlertCircle,
+  Image as ImageIcon,
+  UploadCloud,
+  Check,
 } from "lucide-react";
 import {
   ResponsiveContainer,
@@ -61,6 +65,22 @@ export const Route = createFileRoute("/admin")({
 
 type TabType = "overview" | "orders" | "products" | "notify" | "cart_analytics";
 
+const PRESET_IMAGES = [
+  { url: "/Product/turmeric-zari-brocade.png", label: "Turmeric Zari" },
+  { url: "/Product/amber-peacock-silk-cotton.png", label: "Amber Peacock" },
+  { url: "/Product/coffee-peacock-chettinad.png", label: "Coffee Chettinad" },
+  { url: "/Product/ivory-ikat-handloom.png", label: "Ivory Ikat" },
+  { url: "/Product/kumkum-chettinad-cotton.png", label: "Kumkum Cotton" },
+  { url: "/Product/mustard-kanchi-cotton.png", label: "Mustard Kanchi" },
+  { url: "/Product/olive-ikat-handloom.png", label: "Olive Ikat" },
+  { url: "/Product/rainbow-check-cotton.png", label: "Rainbow Check" },
+  { url: "/Product/sunrise-stripe-cotton.png", label: "Sunrise Stripe" },
+  { url: "/Product/Sungudi cotton red.png", label: "Sungudi Red" },
+  { url: "/Product/Sungudi cotton orange.png", label: "Sungudi Orange" },
+  { url: "/Product/Sungudi cotton yellow.png", label: "Sungudi Yellow" },
+  { url: "/Product/Sungudi cotton brown.png", label: "Sungudi Brown" },
+];
+
 export function AdminPanel() {
   const {
     products,
@@ -87,6 +107,7 @@ export function AdminPanel() {
 
   // Modals state
   const [showAddProductModal, setShowAddProductModal] = useState(false);
+  const [editingProduct, setEditingProduct] = useState<ExtendedSaree | null>(null);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
   const showToast = (msg: string) => {
@@ -185,9 +206,18 @@ export function AdminPanel() {
             </div>
 
             <div className="flex flex-wrap items-center gap-3">
+              <Link
+                to="/"
+                className="inline-flex items-center gap-1.5 rounded-full border border-primary-foreground/20 bg-primary-foreground/10 px-4 py-2.5 text-[11px] font-medium uppercase tracking-[0.16em] text-primary-foreground transition-colors hover:bg-primary-foreground/20"
+              >
+                ← Back to Store
+              </Link>
               <button
                 type="button"
-                onClick={() => setShowAddProductModal(true)}
+                onClick={() => {
+                  setActiveTab("products");
+                  setShowAddProductModal(true);
+                }}
                 className="inline-flex items-center gap-2 rounded-full bg-gold px-5 py-2.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-brand-soft transition-colors hover:bg-gold-soft shadow-md cursor-pointer"
               >
                 <Plus className="h-4 w-4" /> Add New Product
@@ -351,8 +381,8 @@ export function AdminPanel() {
                   </div>
                   <Package className="h-5 w-5 text-gold" />
                 </div>
-                <div className="mt-4 h-56 flex items-center justify-center">
-                  <ResponsiveContainer width="100%" height="100%">
+                <div className="mt-4 w-full h-56">
+                  <ResponsiveContainer width="100%" height="100%" minWidth={100} minHeight={180} debounce={50}>
                     <PieChart>
                       <Pie
                         data={chartStockData}
@@ -362,6 +392,7 @@ export function AdminPanel() {
                         outerRadius={80}
                         paddingAngle={5}
                         dataKey="value"
+                        isAnimationActive={false}
                       >
                         {chartStockData.map((entry, index) => (
                           <Cell key={`cell-${index}`} fill={entry.color} />
@@ -387,13 +418,13 @@ export function AdminPanel() {
                   </div>
                   <TrendingUp className="h-5 w-5 text-gold" />
                 </div>
-                <div className="mt-4 h-64">
-                  <ResponsiveContainer width="100%" height="100%">
+                <div className="mt-4 w-full h-64">
+                  <ResponsiveContainer width="100%" height="100%" minWidth={100} minHeight={200} debounce={50}>
                     <BarChart data={topCartProductsData} margin={{ top: 10, right: 10, left: -20, bottom: 20 }}>
                       <XAxis dataKey="name" tick={{ fontSize: 11 }} interval={0} angle={-15} textAnchor="end" />
                       <YAxis allowDecimals={false} tick={{ fontSize: 11 }} />
                       <Tooltip formatter={(val) => [`${val} Cart Adds`, "Count"]} />
-                      <Bar dataKey="cartAdds" fill="var(--brand)" radius={[8, 8, 0, 0]} />
+                      <Bar dataKey="cartAdds" fill="var(--brand)" radius={[8, 8, 0, 0]} isAnimationActive={false} />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
@@ -681,9 +712,9 @@ export function AdminPanel() {
                 <button
                   type="button"
                   onClick={() => setShowAddProductModal(true)}
-                  className="rounded-full bg-brand px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-primary-foreground hover:bg-brand-soft flex items-center gap-1.5 cursor-pointer"
+                  className="rounded-full bg-gold px-5 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-brand-soft hover:bg-gold-soft flex items-center gap-1.5 cursor-pointer shadow-md transition-transform active:scale-95 font-bold"
                 >
-                  <Plus className="h-4 w-4" /> Add
+                  <Plus className="h-4 w-4" /> + Add Saree Product
                 </button>
               </div>
             </div>
@@ -763,6 +794,14 @@ export function AdminPanel() {
                       >
                         <ArrowUpRight className="h-4 w-4" />
                       </Link>
+                      <button
+                        type="button"
+                        onClick={() => setEditingProduct(p)}
+                        className="rounded-full p-2 text-muted-foreground hover:bg-muted hover:text-brand cursor-pointer"
+                        title="Edit Product Details"
+                      >
+                        <Edit3 className="h-4 w-4" />
+                      </button>
                       <button
                         type="button"
                         onClick={() => {
@@ -986,7 +1025,22 @@ export function AdminPanel() {
       <AddProductModal
         isOpen={showAddProductModal}
         onClose={() => setShowAddProductModal(false)}
-        onAddProduct={addProduct}
+        onAddProduct={(productData) => {
+          addProduct(productData);
+          setActiveTab("products");
+        }}
+        onShowToast={showToast}
+        existingSlugs={products.map((p) => p.slug)}
+      />
+
+      {/* MODAL: EDIT PRODUCT */}
+      <EditProductModal
+        product={editingProduct}
+        onClose={() => setEditingProduct(null)}
+        onUpdateProduct={(slug, fields) => {
+          updateProduct(slug, fields);
+          showToast(`Updated product details.`);
+        }}
         onShowToast={showToast}
       />
 
@@ -1002,7 +1056,7 @@ export function AdminPanel() {
               <button
                 type="button"
                 onClick={() => setSelectedOrder(null)}
-                className="rounded-full p-2 text-muted-foreground hover:bg-muted"
+                className="rounded-full p-2 text-muted-foreground hover:bg-muted cursor-pointer"
               >
                 ✕
               </button>
@@ -1047,7 +1101,7 @@ export function AdminPanel() {
               <button
                 type="button"
                 onClick={() => setSelectedOrder(null)}
-                className="rounded-full bg-brand px-6 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-primary-foreground hover:bg-brand-soft"
+                className="rounded-full bg-brand px-6 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-primary-foreground hover:bg-brand-soft cursor-pointer"
               >
                 Close
               </button>
@@ -1066,17 +1120,56 @@ export function AdminPanel() {
   );
 }
 
-// ISOLATED ADD PRODUCT MODAL COMPONENT TO PREVENT DASHBOARD RE-RENDER LAG
+// FAST OFFSCREEN CANVAS IMAGE COMPRESSOR (Prevents large base64 browser freezes)
+function compressImageFile(file: File, maxWidth = 800, quality = 0.75): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        let width = img.width;
+        let height = img.height;
+
+        if (width > maxWidth) {
+          height = Math.round((height * maxWidth) / width);
+          width = maxWidth;
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+
+        const ctx = canvas.getContext("2d");
+        if (!ctx) {
+          resolve(e.target?.result as string);
+          return;
+        }
+
+        ctx.drawImage(img, 0, 0, width, height);
+        const compressedDataUrl = canvas.toDataURL("image/jpeg", quality);
+        resolve(compressedDataUrl);
+      };
+      img.onerror = () => reject(new Error("Failed to load image"));
+      img.src = e.target?.result as string;
+    };
+    reader.onerror = () => reject(new Error("Failed to read file"));
+    reader.readAsDataURL(file);
+  });
+}
+
+// MINIMAL & MODERN ADD PRODUCT POPUP MODAL (LANDSCAPE WHITE THEME)
 function AddProductModal({
   isOpen,
   onClose,
   onAddProduct,
   onShowToast,
+  existingSlugs,
 }: {
   isOpen: boolean;
   onClose: () => void;
   onAddProduct: (productData: Omit<ExtendedSaree, "cartAddsCount">) => void;
   onShowToast: (msg: string) => void;
+  existingSlugs: string[];
 }) {
   const [name, setName] = useState("");
   const [weave, setWeave] = useState("Kanjivaram");
@@ -1087,19 +1180,69 @@ function AddProductModal({
   const [blurb, setBlurb] = useState("Handcrafted masterpiece woven with rich heritage craftsmanship.");
   const [fabric, setFabric] = useState("Handwoven pure silk cotton");
   const [blouse, setBlouse] = useState("0.8m unstitched blouse piece included");
-  const [care, setCare] = useState("Dry clean only.");
+  const [care, setCare] = useState("Dry clean recommended for first wash.");
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isCompressing, setIsCompressing] = useState(false);
+
+  // Reset form whenever modal opens
+  useEffect(() => {
+    if (isOpen) {
+      setName("");
+      setWeave("Kanjivaram");
+      setColour("Gold");
+      setPrice(4500);
+      setStatus("in_stock");
+      setImage("/Product/turmeric-zari-brocade.png");
+      setBlurb("Handcrafted masterpiece woven with rich heritage craftsmanship.");
+      setFabric("Handwoven pure silk cotton");
+      setBlouse("0.8m unstitched blouse piece included");
+      setCare("Dry clean recommended for first wash.");
+      setErrorMessage(null);
+      setIsCompressing(false);
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      setIsCompressing(true);
+      const compressedUrl = await compressImageFile(file, 800, 0.75);
+      setImage(compressedUrl);
+    } catch (err) {
+      console.error("Compression failed:", err);
+    } finally {
+      setIsCompressing(false);
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim()) return;
+    setErrorMessage(null);
 
-    const slug = name
+    if (!name.trim()) {
+      setErrorMessage("Please enter a valid saree product name.");
+      return;
+    }
+
+    const numPrice = Number(price);
+    if (!price || isNaN(numPrice) || numPrice <= 0) {
+      setErrorMessage("Please enter a valid price greater than ₹0.");
+      return;
+    }
+
+    let slug = name
       .toLowerCase()
       .trim()
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/(^-|-$)+/g, "") || `saree-${Date.now()}`;
+
+    if (existingSlugs.includes(slug)) {
+      slug = `${slug}-${Date.now().toString().slice(-4)}`;
+    }
 
     const imageUrl = image.trim() || "/Product/turmeric-zari-brocade.png";
 
@@ -1108,7 +1251,7 @@ function AddProductModal({
       name: name.trim(),
       weave,
       colour: colour.trim() || "Gold",
-      price: Number(price) || 0,
+      price: numPrice,
       status,
       stockQty: status === "in_stock" ? 1 : 0,
       image: imageUrl,
@@ -1118,149 +1261,467 @@ function AddProductModal({
         { url: imageUrl, label: "Weave detail" },
       ],
       blurb: blurb.trim() || "Handcrafted saree.",
-      fabric: fabric.trim() || "Handwoven cotton",
+      fabric: fabric.trim() || "Handwoven silk cotton",
       blouse: blouse.trim() || "Blouse piece included",
-      care: care.trim() || "Dry clean only.",
+      care: care.trim() || "Dry clean recommended for first wash.",
     });
 
-    onShowToast(`Product "${name}" created successfully as ${status.replace("_", " ")}!`);
+    onShowToast(`Saree "${name.trim()}" published to catalog!`);
     onClose();
-
-    setName("");
-    setPrice(4500);
-    setColour("Gold");
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs animate-in fade-in">
-      <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl border border-gold/30 bg-background p-6 sm:p-8 shadow-2xl">
-        <div className="flex items-center justify-between border-b border-border pb-4">
-          <div>
-            <p className="text-[10px] uppercase tracking-[0.25em] text-gold">Catalog Management</p>
-            <h2 className="font-display text-2xl text-brand-soft">Add New Saree Product</h2>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm animate-in fade-in">
+      <div className="relative w-full max-w-4xl max-h-[92vh] overflow-y-auto rounded-3xl border-2 border-gold/40 bg-white text-slate-900 p-6 sm:p-8 shadow-2xl font-sans">
+        <div className="flex items-center justify-between border-b border-slate-100 pb-4 mb-6">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gold/20 text-gold">
+              <Sparkles className="h-5 w-5" />
+            </div>
+            <div>
+              <p className="text-[10px] uppercase tracking-[0.25em] text-gold font-bold">Studio Catalog</p>
+              <h2 className="font-display text-2xl font-semibold text-brand-soft">Add New Saree Product</h2>
+            </div>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-full p-2 text-muted-foreground hover:bg-muted cursor-pointer"
+            className="rounded-full p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-700 cursor-pointer transition-colors"
           >
             ✕
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {errorMessage && (
+          <div className="mb-4 flex items-center gap-2 rounded-xl bg-destructive/10 border border-destructive/20 p-3 text-xs text-destructive">
+            <AlertCircle className="h-4 w-4 shrink-0" />
+            <span>{errorMessage}</span>
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
+          {/* LEFT COLUMN: IMAGE UPLOAD & PREVIEW (LANDSCAPE STYLE) */}
+          <div className="md:col-span-5 space-y-4 bg-cream/30 p-5 rounded-2xl border border-gold/20">
+            <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-700 font-semibold">
+              Product Photo Upload *
+            </label>
+
+            {/* Photo Preview Box (Landscape style) */}
+            <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border-2 border-gold/40 bg-white shadow-xs group">
+              <img src={image} alt="Preview" className="h-full w-full object-cover" />
+              <span className="absolute top-2 right-2 rounded-full bg-gold px-2.5 py-1 text-[10px] font-bold text-brand-soft shadow-xs">
+                Live Drape Preview
+              </span>
+            </div>
+
+            {/* Upload Button */}
             <div>
-              <label className="block text-[11px] uppercase tracking-[0.18em] text-muted-foreground mb-1">
-                Saree Name *
+              <label className="w-full rounded-2xl border-2 border-dashed border-gold/50 bg-white hover:bg-gold/10 p-4 flex flex-col items-center justify-center gap-1.5 cursor-pointer transition-all shadow-xs group">
+                <UploadCloud className="h-6 w-6 text-gold group-hover:scale-110 transition-transform" />
+                <span className="text-xs font-semibold text-slate-800">
+                  {isCompressing ? "Processing Photo..." : "Upload High-Res Photo"}
+                </span>
+                <span className="text-[10px] text-slate-500">PNG, JPG, WebP from computer</span>
+                <input type="file" accept="image/*" onChange={handleFileUpload} className="hidden" />
+              </label>
+            </div>
+
+            {/* URL Input */}
+            <div>
+              <label className="block text-[10px] uppercase tracking-[0.15em] text-slate-500 mb-1">Custom Image URL</label>
+              <input
+                type="text"
+                placeholder="e.g. /Product/saree.png or https://..."
+                value={image}
+                onChange={(e) => setImage(e.target.value)}
+                className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-mono outline-none focus:border-gold text-slate-800"
+              />
+            </div>
+          </div>
+
+          {/* RIGHT COLUMN: DETAILS FORM FIELDS */}
+          <div className="md:col-span-7 space-y-4">
+            {/* Title */}
+            <div>
+              <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-semibold">
+                Saree Title / Name *
               </label>
               <input
                 type="text"
                 required
-                placeholder="e.g. Sapphire Kanjivaram Zari"
+                placeholder="e.g. Royal Emerald Kanjivaram Brocade"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full rounded-xl border border-border bg-card px-4 py-2.5 text-sm outline-none focus:border-gold"
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 outline-none focus:border-gold font-medium"
               />
             </div>
 
+            {/* Stock Status & Price */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-semibold">
+                  Stock Status *
+                </label>
+                <select
+                  value={status}
+                  onChange={(e) => setStatus(e.target.value as ProductStatus)}
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 outline-none focus:border-gold cursor-pointer font-medium"
+                >
+                  <option value="in_stock">In Stock (Live on Store)</option>
+                  <option value="out_of_stock">Out of Stock (Request Alert)</option>
+                  <option value="coming_soon">Coming Soon (Priority Booking)</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-semibold">
+                  Price (INR ₹) *
+                </label>
+                <input
+                  type="number"
+                  required
+                  min={1}
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value === "" ? "" : Number(e.target.value))}
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 outline-none focus:border-gold font-medium"
+                />
+              </div>
+            </div>
+
+            {/* Weave & Colour */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-semibold">
+                  Weave Type
+                </label>
+                <select
+                  value={weave}
+                  onChange={(e) => setWeave(e.target.value)}
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 outline-none focus:border-gold cursor-pointer font-medium"
+                >
+                  {weaves.map((w) => (
+                    <option key={w} value={w}>{w}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-semibold">
+                  Primary Colour
+                </label>
+                <input
+                  type="text"
+                  value={colour}
+                  onChange={(e) => setColour(e.target.value)}
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 outline-none focus:border-gold font-medium"
+                />
+              </div>
+            </div>
+
+            {/* Story Blurb */}
             <div>
-              <label className="block text-[11px] uppercase tracking-[0.18em] text-muted-foreground mb-1">
-                Initial Stock Status *
+              <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-semibold">
+                Short Story / Craft Blurb
               </label>
-              <select
-                value={status}
-                onChange={(e) => setStatus(e.target.value as ProductStatus)}
-                className="w-full rounded-xl border border-border bg-card px-4 py-2.5 text-sm outline-none focus:border-gold cursor-pointer"
+              <textarea
+                rows={3}
+                value={blurb}
+                onChange={(e) => setBlurb(e.target.value)}
+                placeholder="Handcrafted masterpiece woven with rich heritage craftsmanship..."
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 outline-none focus:border-gold font-medium resize-none"
+              />
+            </div>
+
+            {/* Action Bar */}
+            <div className="pt-4 flex justify-end gap-3 border-t border-slate-100">
+              <button
+                type="button"
+                onClick={onClose}
+                className="rounded-full px-5 py-2.5 text-xs font-medium text-slate-500 hover:bg-slate-100 cursor-pointer transition-colors"
               >
-                <option value="in_stock">In Stock (Available)</option>
-                <option value="out_of_stock">Out of Stock (Request Notify)</option>
-                <option value="coming_soon">Coming Soon (Register Interest)</option>
-              </select>
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="rounded-full bg-brand px-8 py-2.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-white hover:bg-brand-soft shadow-md cursor-pointer transition-transform active:scale-95 font-bold"
+              >
+                Publish Saree Product
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+// MINIMAL & MODERN EDIT PRODUCT POPUP MODAL (LANDSCAPE WHITE THEME)
+function EditProductModal({
+  product,
+  onClose,
+  onUpdateProduct,
+  onShowToast,
+}: {
+  product: ExtendedSaree | null;
+  onClose: () => void;
+  onUpdateProduct: (slug: string, fields: Partial<ExtendedSaree>) => void;
+  onShowToast: (msg: string) => void;
+}) {
+  const [name, setName] = useState("");
+  const [weave, setWeave] = useState("Kanjivaram");
+  const [colour, setColour] = useState("Gold");
+  const [price, setPrice] = useState<number | "">(4500);
+  const [status, setStatus] = useState<ProductStatus>("in_stock");
+  const [image, setImage] = useState("");
+  const [blurb, setBlurb] = useState("");
+  const [fabric, setFabric] = useState("");
+  const [blouse, setBlouse] = useState("");
+  const [care, setCare] = useState("");
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isCompressing, setIsCompressing] = useState(false);
+
+  useEffect(() => {
+    if (product) {
+      setName(product.name);
+      setWeave(product.weave);
+      setColour(product.colour);
+      setPrice(product.price);
+      setStatus(product.status);
+      setImage(product.image);
+      setBlurb(product.blurb);
+      setFabric(product.fabric);
+      setBlouse(product.blouse);
+      setCare(product.care);
+      setErrorMessage(null);
+      setIsCompressing(false);
+    }
+  }, [product]);
+
+  if (!product) return null;
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      setIsCompressing(true);
+      const compressedUrl = await compressImageFile(file, 800, 0.75);
+      setImage(compressedUrl);
+    } catch (err) {
+      console.error("Compression failed:", err);
+    } finally {
+      setIsCompressing(false);
+    }
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrorMessage(null);
+
+    if (!name.trim()) {
+      setErrorMessage("Please enter a valid saree name.");
+      return;
+    }
+
+    const numPrice = Number(price);
+    if (!price || isNaN(numPrice) || numPrice <= 0) {
+      setErrorMessage("Please enter a valid price greater than ₹0.");
+      return;
+    }
+
+    const imageUrl = image.trim() || product.image;
+
+    onUpdateProduct(product.slug, {
+      name: name.trim(),
+      weave,
+      colour: colour.trim(),
+      price: numPrice,
+      status,
+      stockQty: status === "in_stock" ? 1 : 0,
+      image: imageUrl,
+      views: [
+        { url: imageUrl, label: "Full drape" },
+        { url: imageUrl, label: "On the model" },
+        { url: imageUrl, label: "Weave detail" },
+      ],
+      blurb: blurb.trim(),
+      fabric: fabric.trim(),
+      blouse: blouse.trim(),
+      care: care.trim(),
+    });
+
+    onShowToast(`Product "${name.trim()}" updated successfully!`);
+    onClose();
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm animate-in fade-in">
+      <div className="relative w-full max-w-4xl max-h-[92vh] overflow-y-auto rounded-3xl border-2 border-gold/40 bg-white text-slate-900 p-6 sm:p-8 shadow-2xl font-sans">
+        <div className="flex items-center justify-between border-b border-slate-100 pb-4 mb-6">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gold/20 text-gold">
+              <Edit3 className="h-5 w-5" />
+            </div>
+            <div>
+              <p className="text-[10px] uppercase tracking-[0.25em] text-gold font-bold">Catalog Management</p>
+              <h2 className="font-display text-2xl font-semibold text-brand-soft">Edit Saree Product</h2>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-full p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-700 cursor-pointer transition-colors"
+          >
+            ✕
+          </button>
+        </div>
+
+        {errorMessage && (
+          <div className="mb-4 flex items-center gap-2 rounded-xl bg-destructive/10 border border-destructive/20 p-3 text-xs text-destructive">
+            <AlertCircle className="h-4 w-4 shrink-0" />
+            <span>{errorMessage}</span>
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
+          {/* LEFT COLUMN: IMAGE UPLOAD & PREVIEW */}
+          <div className="md:col-span-5 space-y-4 bg-cream/30 p-5 rounded-2xl border border-gold/20">
+            <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-700 font-semibold">
+              Product Photo Upload
+            </label>
+
+            <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border-2 border-gold/40 bg-white shadow-xs group">
+              <img src={image} alt="Preview" className="h-full w-full object-cover" />
+              <span className="absolute top-2 right-2 rounded-full bg-gold px-2.5 py-1 text-[10px] font-bold text-brand-soft shadow-xs">
+                Active Photo
+              </span>
+            </div>
+
+            <div>
+              <label className="w-full rounded-2xl border-2 border-dashed border-gold/50 bg-white hover:bg-gold/10 p-4 flex flex-col items-center justify-center gap-1.5 cursor-pointer transition-all shadow-xs group">
+                <UploadCloud className="h-6 w-6 text-gold group-hover:scale-110 transition-transform" />
+                <span className="text-xs font-semibold text-slate-800">
+                  {isCompressing ? "Processing Photo..." : "Change Image File"}
+                </span>
+                <span className="text-[10px] text-slate-500">Upload replacement from device</span>
+                <input type="file" accept="image/*" onChange={handleFileUpload} className="hidden" />
+              </label>
+            </div>
+
+            <div>
+              <label className="block text-[10px] uppercase tracking-[0.15em] text-slate-500 mb-1">Custom Image URL</label>
+              <input
+                type="text"
+                placeholder="Or enter image URL"
+                value={image}
+                onChange={(e) => setImage(e.target.value)}
+                className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-mono outline-none focus:border-gold text-slate-800"
+              />
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {/* RIGHT COLUMN: DETAILS FORM FIELDS */}
+          <div className="md:col-span-7 space-y-4">
             <div>
-              <label className="block text-[11px] uppercase tracking-[0.18em] text-muted-foreground mb-1">
-                Weave Type
-              </label>
-              <select
-                value={weave}
-                onChange={(e) => setWeave(e.target.value)}
-                className="w-full rounded-xl border border-border bg-card px-4 py-2.5 text-sm outline-none focus:border-gold cursor-pointer"
-              >
-                {weaves.map((w) => (
-                  <option key={w} value={w}>{w}</option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-[11px] uppercase tracking-[0.18em] text-muted-foreground mb-1">
-                Primary Colour
+              <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-semibold">
+                Saree Title / Name *
               </label>
               <input
                 type="text"
-                value={colour}
-                onChange={(e) => setColour(e.target.value)}
-                className="w-full rounded-xl border border-border bg-card px-4 py-2.5 text-sm outline-none focus:border-gold"
+                required
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 outline-none focus:border-gold font-medium"
               />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-semibold">
+                  Stock Status *
+                </label>
+                <select
+                  value={status}
+                  onChange={(e) => setStatus(e.target.value as ProductStatus)}
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 outline-none focus:border-gold cursor-pointer font-medium"
+                >
+                  <option value="in_stock">In Stock (Available)</option>
+                  <option value="out_of_stock">Out of Stock (Request Notify)</option>
+                  <option value="coming_soon">Coming Soon (Register Interest)</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-semibold">
+                  Price (INR ₹) *
+                </label>
+                <input
+                  type="number"
+                  required
+                  min={1}
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value === "" ? "" : Number(e.target.value))}
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 outline-none focus:border-gold font-medium"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-semibold">
+                  Weave Type
+                </label>
+                <select
+                  value={weave}
+                  onChange={(e) => setWeave(e.target.value)}
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 outline-none focus:border-gold cursor-pointer font-medium"
+                >
+                  {weaves.map((w) => (
+                    <option key={w} value={w}>{w}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-semibold">
+                  Primary Colour
+                </label>
+                <input
+                  type="text"
+                  value={colour}
+                  onChange={(e) => setColour(e.target.value)}
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 outline-none focus:border-gold font-medium"
+                />
+              </div>
             </div>
 
             <div>
-              <label className="block text-[11px] uppercase tracking-[0.18em] text-muted-foreground mb-1">
-                Price (INR ₹) *
+              <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-semibold">
+                Short Story / Craft Blurb
               </label>
-              <input
-                type="number"
-                required
-                min={1}
-                value={price}
-                onChange={(e) => setPrice(e.target.value === "" ? "" : Number(e.target.value))}
-                className="w-full rounded-xl border border-border bg-card px-4 py-2.5 text-sm outline-none focus:border-gold"
+              <textarea
+                rows={3}
+                value={blurb}
+                onChange={(e) => setBlurb(e.target.value)}
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 outline-none focus:border-gold font-medium resize-none"
               />
             </div>
-          </div>
 
-          <div>
-            <label className="block text-[11px] uppercase tracking-[0.18em] text-muted-foreground mb-1">
-              Product Image URL
-            </label>
-            <input
-              type="text"
-              value={image}
-              onChange={(e) => setImage(e.target.value)}
-              className="w-full rounded-xl border border-border bg-card px-4 py-2.5 text-sm outline-none focus:border-gold font-mono text-xs"
-            />
-          </div>
-
-          <div>
-            <label className="block text-[11px] uppercase tracking-[0.18em] text-muted-foreground mb-1">
-              Short Description / Story Blurb
-            </label>
-            <textarea
-              rows={2}
-              value={blurb}
-              onChange={(e) => setBlurb(e.target.value)}
-              className="w-full rounded-xl border border-border bg-card px-4 py-2.5 text-sm outline-none focus:border-gold"
-            />
-          </div>
-
-          <div className="pt-4 flex justify-end gap-3 border-t border-border">
-            <button
-              type="button"
-              onClick={onClose}
-              className="rounded-full px-5 py-2.5 text-xs text-muted-foreground hover:bg-muted cursor-pointer"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="rounded-full bg-brand px-8 py-2.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-primary-foreground hover:bg-brand-soft shadow-md cursor-pointer"
-            >
-              Publish Product
-            </button>
+            <div className="pt-4 flex justify-end gap-3 border-t border-slate-100">
+              <button
+                type="button"
+                onClick={onClose}
+                className="rounded-full px-5 py-2.5 text-xs font-medium text-slate-500 hover:bg-slate-100 cursor-pointer transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="rounded-full bg-brand px-8 py-2.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-white hover:bg-brand-soft shadow-md cursor-pointer transition-transform active:scale-95 font-bold"
+              >
+                Save Changes
+              </button>
+            </div>
           </div>
         </form>
       </div>

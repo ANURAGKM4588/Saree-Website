@@ -1,6 +1,13 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useLocation } from "@tanstack/react-router";
 
 export function SiteFooter() {
+  const location = useLocation();
+
+  // Hide site footer on Admin panel
+  if (location.pathname.startsWith("/admin")) {
+    return null;
+  }
+
   return (
     <footer className="mt-24 bg-brand-soft text-primary-foreground">
       <div className="mx-auto max-w-[1400px] px-5 py-16 lg:px-8">

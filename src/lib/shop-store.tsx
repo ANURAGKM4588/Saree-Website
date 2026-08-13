@@ -263,12 +263,28 @@ const initialNotifyRequests: NotifyRequest[] = [
 
 const ShopStoreContext = createContext<ShopStoreContextType | null>(null);
 
+function sanitizeProducts(prods: ExtendedSaree[]): ExtendedSaree[] {
+  if (!Array.isArray(prods) || prods.length === 0) return initialProducts;
+  return prods.map((p) => {
+    let cleanImage = p.image;
+    // If image is missing or an old uncompressed giant base64 (> 100KB string length), sanitize to default asset
+    if (!cleanImage || (typeof cleanImage === "string" && cleanImage.length > 100000)) {
+      cleanImage = "/Product/turmeric-zari-brocade.png";
+    }
+    return {
+      ...p,
+      image: cleanImage,
+    };
+  });
+}
+
 export function ShopStoreProvider({ children }: { children: ReactNode }) {
   const [products, setProducts] = useState<ExtendedSaree[]>(() => {
     if (typeof window === "undefined") return initialProducts;
     try {
       const raw = localStorage.getItem(PRODUCTS_KEY);
-      return raw ? JSON.parse(raw) : initialProducts;
+      const parsed = raw ? JSON.parse(raw) : initialProducts;
+      return sanitizeProducts(parsed);
     } catch {
       return initialProducts;
     }
