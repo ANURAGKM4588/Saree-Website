@@ -65,10 +65,8 @@ export function SareeCard({ saree, tall = false }: { saree: Saree; tall?: boolea
   };
 
   return (
-    <Link
-      to="/shop/$slug"
-      params={{ slug: saree.slug }}
-      className="group relative flex h-full flex-col"
+    <div
+      className="group relative flex h-full flex-col cursor-pointer"
       onMouseEnter={() => {
         setIsHovered(true);
         if (viewImages.length > 1) {
@@ -81,20 +79,22 @@ export function SareeCard({ saree, tall = false }: { saree: Saree; tall?: boolea
       }}
     >
       <div className="relative overflow-hidden rounded-3xl bg-secondary">
-        <img
-          ref={imgRef}
-          src={currentImage}
-          alt={`${saree.name} — ${saree.weave} saree`}
-          width={912}
-          height={1200}
-          loading="lazy"
-          className={`w-full object-cover transition-all duration-300 ${
-            tall ? "aspect-[4/5]" : "aspect-[3/4]"
-          }`}
-        />
+        <Link to="/shop/$slug" params={{ slug: saree.slug }} className="block">
+          <img
+            ref={imgRef}
+            src={currentImage}
+            alt={`${saree.name} — ${saree.weave} saree`}
+            width={912}
+            height={1200}
+            loading="lazy"
+            className={`w-full object-cover transition-all duration-300 ${
+              tall ? "aspect-[4/5]" : "aspect-[3/4]"
+            }`}
+          />
+        </Link>
         
         {/* Status or Weave Badge */}
-        <div className="absolute left-3 top-3 sm:left-4 sm:top-4 flex flex-col gap-1.5 items-start z-10">
+        <div className="absolute left-3 top-3 sm:left-4 sm:top-4 flex flex-col gap-1.5 items-start z-10 pointer-events-none">
           <span className="glass-panel rounded-full px-2.5 py-0.5 sm:px-3 sm:py-1 text-[9px] sm:text-[10px] font-medium uppercase tracking-[0.16em] text-brand-soft whitespace-nowrap">
             {saree.weave}
           </span>
@@ -139,14 +139,17 @@ export function SareeCard({ saree, tall = false }: { saree: Saree; tall?: boolea
 
         {/* HOVER ACTION BUTTONS OVERLAY (Animated slide-up on mouse enter) */}
         <div className="absolute inset-x-3 bottom-3 z-20 flex items-center gap-2 translate-y-12 opacity-0 transition-all duration-300 ease-out group-hover:translate-y-0 group-hover:opacity-100">
-          <Link
-            to="/shop/$slug"
-            params={{ slug: saree.slug }}
-            onClick={(e) => e.stopPropagation()}
-            className="flex-1 rounded-full bg-white/95 backdrop-blur-md px-3 py-2.5 text-center text-[10px] uppercase tracking-[0.18em] font-semibold text-brand shadow-lg border border-white/60 transition-all hover:bg-brand hover:text-white hover:border-brand active:scale-95 whitespace-nowrap"
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              navigate({ to: "/shop/$slug", params: { slug: saree.slug } });
+            }}
+            className="flex-1 rounded-full bg-white/95 backdrop-blur-md px-3 py-2.5 text-center text-[10px] uppercase tracking-[0.18em] font-semibold text-brand shadow-lg border border-white/60 transition-all hover:bg-brand hover:text-white hover:border-brand active:scale-95 whitespace-nowrap cursor-pointer"
           >
             View Details
-          </Link>
+          </button>
 
           {status === "in_stock" ? (
             <button
@@ -157,29 +160,34 @@ export function SareeCard({ saree, tall = false }: { saree: Saree; tall?: boolea
               Book Now →
             </button>
           ) : (
-            <Link
-              to="/shop/$slug"
-              params={{ slug: saree.slug }}
-              onClick={(e) => e.stopPropagation()}
-              className="flex-1 rounded-full bg-slate-900/90 backdrop-blur-md px-3 py-2.5 text-center text-[10px] uppercase tracking-[0.18em] font-semibold text-white shadow-lg border border-white/20 transition-all hover:bg-slate-800 whitespace-nowrap"
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                navigate({ to: "/shop/$slug", params: { slug: saree.slug } });
+              }}
+              className="flex-1 rounded-full bg-slate-900/90 backdrop-blur-md px-3 py-2.5 text-center text-[10px] uppercase tracking-[0.18em] font-semibold text-white shadow-lg border border-white/20 transition-all hover:bg-slate-800 whitespace-nowrap cursor-pointer"
             >
               Notice Me
-            </Link>
+            </button>
           )}
         </div>
       </div>
 
       <div className="flex flex-1 items-start justify-between gap-4 px-1 pt-4">
         <div className="min-w-0">
-          <h3 className="truncate font-display text-lg font-medium leading-tight tracking-tight text-brand-soft">
-            {saree.name}
-          </h3>
+          <Link to="/shop/$slug" params={{ slug: saree.slug }} className="hover:underline">
+            <h3 className="truncate font-display text-lg font-medium leading-tight tracking-tight text-brand-soft">
+              {saree.name}
+            </h3>
+          </Link>
           <p className="mt-1 text-xs text-muted-foreground truncate">{saree.colour} · Handwoven</p>
         </div>
         <p className="shrink-0 font-display text-base font-medium tabular-nums text-foreground whitespace-nowrap">
           {formatPrice(saree.price)}
         </p>
       </div>
-    </Link>
+    </div>
   );
 }
