@@ -22,7 +22,7 @@ export function SareeCard({ saree, tall = false }: { saree: Saree; tall?: boolea
   const viewImages = saree.views && saree.views.length > 0 ? saree.views : [{ url: saree.image, label: "Full drape" }];
   const currentImage = viewImages[currentViewIndex]?.url || saree.image;
 
-  // Fast auto-carousel on mouse hover (650ms per slide)
+  // Fast auto-carousel on mouse hover (600ms per slide)
   useEffect(() => {
     if (!isHovered || viewImages.length <= 1) {
       setCurrentViewIndex(0);
@@ -31,7 +31,7 @@ export function SareeCard({ saree, tall = false }: { saree: Saree; tall?: boolea
 
     const interval = setInterval(() => {
       setCurrentViewIndex((prev) => (prev + 1) % viewImages.length);
-    }, 650);
+    }, 600);
 
     return () => clearInterval(interval);
   }, [isHovered, viewImages.length]);
@@ -56,8 +56,16 @@ export function SareeCard({ saree, tall = false }: { saree: Saree; tall?: boolea
       to="/shop/$slug"
       params={{ slug: saree.slug }}
       className="group relative flex h-full flex-col"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseEnter={() => {
+        setIsHovered(true);
+        if (viewImages.length > 1) {
+          setCurrentViewIndex(1); // Immediately switch image the exact moment mouse enters!
+        }
+      }}
+      onMouseLeave={() => {
+        setIsHovered(false);
+        setCurrentViewIndex(0);
+      }}
     >
       <div className="relative overflow-hidden rounded-3xl bg-secondary">
         <img
@@ -67,7 +75,7 @@ export function SareeCard({ saree, tall = false }: { saree: Saree; tall?: boolea
           width={912}
           height={1200}
           loading="lazy"
-          className={`w-full object-cover transition-all duration-300 group-hover:scale-[1.05] ${
+          className={`w-full object-cover transition-all duration-200 ${
             tall ? "aspect-[4/5]" : "aspect-[3/4]"
           }`}
         />
