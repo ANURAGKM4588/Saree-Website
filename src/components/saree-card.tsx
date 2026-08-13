@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Link } from "@tanstack/react-router";
 import { formatPrice, type Saree } from "@/data/sarees";
 import { useShopStore } from "@/lib/shop-store";
@@ -10,11 +10,32 @@ export function SareeCard({ saree, tall = false }: { saree: Saree; tall?: boolea
   const { products, incrementCartAdds } = useShopStore();
   const { lines, add } = useCart();
   const [added, setAdded] = useState(false);
+  const [currentViewIndex, setCurrentViewIndex] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
   const imgRef = useRef<HTMLImageElement>(null);
 
   const stored = products.find((p) => p.slug === saree.slug);
   const status = stored?.status || "in_stock";
   const isInCart = lines.some((line) => line.slug === saree.slug);
+
+  // Extract all product view images (Full drape, Model, Weave detail)
+  const viewImages = saree.views && saree.views.length > 0 ? saree.views : [{ url: saree.image, label: "Full drape" }];
+  const currentImage = viewImages[currentViewIndex]?.url || saree.image;
+  const currentLabel = viewImages[currentViewIndex]?.label || "Full drape";
+
+  // Auto-carousel on mouse hover
+  useEffect(() => {
+    if (!isHovered || viewImages.length <= 1) {
+      setCurrentViewIndex(0);
+      return;
+    }
+
+    const interval = setInterval(() => {
+      setCurrentViewIndex((prev) => (prev + 1) % viewImages.length);
+    }, 1300);
+
+    return () => clearInterval(interval);
+  }, [isHovered, viewImages.length]);
 
   const handleQuickAdd = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -36,16 +57,18 @@ export function SareeCard({ saree, tall = false }: { saree: Saree; tall?: boolea
       to="/shop/$slug"
       params={{ slug: saree.slug }}
       className="group relative flex h-full flex-col"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       <div className="relative overflow-hidden rounded-3xl bg-secondary">
         <img
           ref={imgRef}
-          src={saree.image}
-          alt={`${saree.name} — ${saree.weave} saree`}
+          src={currentImage}
+          alt={`${saree.name} — ${currentLabel}`}
           width={912}
           height={1200}
           loading="lazy"
-          className={`w-full object-cover transition-transform duration-[900ms] group-hover:scale-[1.05] ${
+          className={`w-full object-cover transition-all duration-[600ms] group-hover:scale-[1.05] ${
             tall ? "aspect-[4/5]" : "aspect-[3/4]"
           }`}
         />
@@ -66,6 +89,25 @@ export function SareeCard({ saree, tall = false }: { saree: Saree; tall?: boolea
             </span>
           )}
         </div>
+
+        {/* Hover View Indicator Pill & Dots */}
+        {viewImages.length > 1 && (
+          <div className="absolute bottom-3 left-3 z-10 flex items-center gap-1.5 rounded-full bg-ink/75 backdrop-blur-xs px-2.5 py-1 transition-opacity duration-300">
+            <span className="text-[9px] font-semibold uppercase tracking-wider text-primary-foreground hidden sm:inline mr-1">
+              {currentLabel}
+            </span>
+            <div className="flex items-center gap-1">
+              {viewImages.map((_, idx) => (
+                <span
+                  key={idx}
+                  className={`h-1.5 rounded-full transition-all duration-300 ${
+                    idx === currentViewIndex ? "w-3 bg-gold" : "w-1.5 bg-white/40"
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* QUICK ADD TO CART BUTTON (Bottom-Right on Mobile, Top-Right on Desktop) */}
         <button
@@ -93,10 +135,6 @@ export function SareeCard({ saree, tall = false }: { saree: Saree; tall?: boolea
             <ShoppingBag className="h-4 w-4" />
           )}
         </button>
-
-        <span className="hidden sm:block absolute inset-x-4 bottom-4 translate-y-3 rounded-full bg-ink/90 py-3 text-center text-[11px] font-medium tracking-[0.06em] text-primary-foreground opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100 whitespace-nowrap">
-          {status === "out_of_stock" ? "Notify Me →" : status === "coming_soon" ? "View & Register →" : "View & book →"}
-        </span>
       </div>
 
       <div className="flex flex-1 items-start justify-between gap-4 px-1 pt-4">
