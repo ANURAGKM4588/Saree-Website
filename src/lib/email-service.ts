@@ -19,7 +19,7 @@ export const DEFAULT_EMAIL_TEMPLATE: EmailTemplateConfig = {
   thankYouMessage: "Your saree booking order #{ORDER_ID} has been successfully received by our studio master weavers.",
   senderEmail: BRAND_SENDER_EMAIL,
   senderName: BRAND_SENDER_NAME,
-  googleScriptUrl: "",
+  googleScriptUrl: "https://script.google.com/macros/s/AKfycbxWd8D3CfTZ908oaEegLWUXBHbU97SjXjgpj6_9fwytIMdKtDzLXeshvzcqsUV_zhgpBg/exec",
 };
 
 const TEMPLATE_KEY = "kadha_email_template_config";
