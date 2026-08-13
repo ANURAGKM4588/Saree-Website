@@ -148,98 +148,184 @@ function Product() {
       </Link>
 
       <div className="mt-8 grid gap-12 lg:grid-cols-[1.1fr_0.9fr]">
-        <div className="flex flex-col gap-4 sm:flex-row-reverse sm:items-start">
-          <div className="relative flex-1 aspect-[3/4] overflow-hidden rounded-3xl bg-secondary">
-            <img
-              ref={mainImgRef}
-              key={current.url}
-              src={current.url}
-              alt={`${saree.name} — ${saree.weave} saree, ${current.label.toLowerCase()}`}
-              width={912}
-              height={1200}
-              className="h-full w-full object-cover"
-            />
-            {status === "in_stock" && (
-              <span className="absolute left-5 top-5 rounded-full bg-background/90 px-4 py-1.5 text-[10px] uppercase tracking-[0.22em] text-brand-soft gold-frame">
-                One of a kind
-              </span>
-            )}
-            {status === "out_of_stock" && (
-              <span className="absolute left-5 top-5 rounded-full bg-destructive/90 px-4 py-1.5 text-[10px] uppercase tracking-[0.22em] text-destructive-foreground font-semibold shadow-md">
-                Out of Stock
-              </span>
-            )}
-            {status === "coming_soon" && (
-              <span className="absolute left-5 top-5 rounded-full bg-gold px-4 py-1.5 text-[10px] uppercase tracking-[0.22em] text-brand-soft font-semibold gold-frame shadow-md">
-                Coming Soon
-              </span>
-            )}
-            <span className="absolute bottom-5 left-5 rounded-full bg-background/85 px-4 py-1.5 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-              {current.label}
-            </span>
-          </div>
-
-          <div className="flex gap-3 sm:w-24 sm:flex-col">
-            {gallery.map((view, i) => (
-              <button
-                key={view.url}
-                type="button"
-                onClick={() => setActive(i)}
-                aria-label={view.label}
-                aria-current={i === active}
-                className={`overflow-hidden rounded-2xl border transition-all ${
-                  i === active
-                    ? "border-brand opacity-100"
-                    : "border-transparent opacity-60 hover:opacity-100"
-                }`}
-              >
-                <img
-                  src={view.url}
-                  alt={`${saree.name} — ${view.label.toLowerCase()} thumbnail`}
-                  width={96}
-                  height={128}
-                  loading="lazy"
-                  className="h-24 w-20 object-cover sm:h-28 sm:w-full"
-                />
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Terms & Policy Details Card (Directly underneath product photo) */}
-        <div className="mt-6 rounded-2xl border border-gold/30 bg-cream/40 p-5 space-y-3.5 shadow-2xs">
-          <div className="flex items-center justify-between border-b border-gold/20 pb-2.5">
-            <h4 className="font-display text-xs font-bold uppercase tracking-[0.2em] text-brand-soft flex items-center gap-2">
-              <ShieldCheck className="h-4 w-4 text-gold shrink-0" /> Studio Terms & Order Policy
-            </h4>
-            <span className="text-[10px] font-semibold text-emerald-800 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 rounded-full">
-              Authentic Handloom
-            </span>
-          </div>
-
-          <div className="space-y-2 text-xs text-muted-foreground">
-            <div className="rounded-xl bg-amber-500/10 border border-amber-500/20 p-3 text-amber-950 font-medium">
-              <p className="flex items-start gap-2 text-[11px] leading-relaxed">
-                <Video className="h-4 w-4 text-rose-600 shrink-0 mt-0.5" />
-                <span>
-                  <strong className="font-bold text-rose-950">Compulsory Unboxing Video:</strong> Continuous opening video from sealed parcel tag to saree inspection is <u>mandatory</u> for damage replacement claims.
+        {/* LEFT COLUMN: PRODUCT IMAGE GALLERY & TERMS/POLICY ACCORDION BOX BELOW */}
+        <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-4 sm:flex-row-reverse sm:items-start">
+            <div className="relative flex-1 aspect-[3/4] overflow-hidden rounded-3xl bg-secondary">
+              <img
+                ref={mainImgRef}
+                key={current.url}
+                src={current.url}
+                alt={`${saree.name} — ${saree.weave} saree, ${current.label.toLowerCase()}`}
+                width={912}
+                height={1200}
+                className="h-full w-full object-cover"
+              />
+              {status === "in_stock" && (
+                <span className="absolute left-5 top-5 rounded-full bg-background/90 px-4 py-1.5 text-[10px] uppercase tracking-[0.22em] text-brand-soft gold-frame">
+                  One of a kind
                 </span>
-              </p>
+              )}
+              {status === "out_of_stock" && (
+                <span className="absolute left-5 top-5 rounded-full bg-destructive/90 px-4 py-1.5 text-[10px] uppercase tracking-[0.22em] text-destructive-foreground font-semibold shadow-md">
+                  Out of Stock
+                </span>
+              )}
+              {status === "coming_soon" && (
+                <span className="absolute left-5 top-5 rounded-full bg-gold px-4 py-1.5 text-[10px] uppercase tracking-[0.22em] text-brand-soft font-semibold gold-frame shadow-md">
+                  Coming Soon
+                </span>
+              )}
+              <span className="absolute bottom-5 left-5 rounded-full bg-background/85 px-4 py-1.5 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+                {current.label}
+              </span>
             </div>
 
-            <p className="flex items-start gap-2 pt-1">
-              <CheckCircle2 className="h-3.5 w-3.5 text-emerald-700 shrink-0 mt-0.5" />
-              <span><strong className="text-foreground font-semibold">Damage Claims:</strong> Returns accepted strictly for transit-damaged pieces reported within 48 hours.</span>
-            </p>
+            <div className="flex gap-3 sm:w-24 sm:flex-col">
+              {gallery.map((view, i) => (
+                <button
+                  key={view.url}
+                  type="button"
+                  onClick={() => setActive(i)}
+                  aria-label={view.label}
+                  aria-current={i === active}
+                  className={`overflow-hidden rounded-2xl border transition-all ${
+                    i === active
+                      ? "border-brand opacity-100"
+                      : "border-transparent opacity-60 hover:opacity-100"
+                  }`}
+                >
+                  <img
+                    src={view.url}
+                    alt={`${saree.name} — ${view.label.toLowerCase()} thumbnail`}
+                    width={96}
+                    height={128}
+                    loading="lazy"
+                    className="h-24 w-20 object-cover sm:h-28 sm:w-full"
+                  />
+                </button>
+              ))}
+            </div>
+          </div>
 
-            <p className="flex items-start gap-2">
-              <Truck className="h-3.5 w-3.5 text-brand shrink-0 mt-0.5" />
-              <span><strong className="text-foreground font-semibold">Complimentary Kerala Dispatch:</strong> Free insured shipping inside Kerala (max 7 working days).</span>
-            </p>
+          {/* TERMS, DELIVERY & CARE ACCORDION SECTION (POSITIONED DIRECTLY AT BOTTOM OF PRODUCT IMAGE) */}
+          <div className="rounded-2xl border border-border bg-card overflow-hidden shadow-2xs">
+            <div className="border-b border-border bg-muted/40 px-5 py-3.5">
+              <h3 className="font-display text-xs font-bold uppercase tracking-[0.2em] text-brand-soft flex items-center gap-2">
+                <ShieldCheck className="h-4 w-4 text-gold" /> Terms, Delivery & Care
+              </h3>
+            </div>
 
+            <div className="divide-y divide-border text-xs">
+              {/* Shipping & Delivery Details */}
+              <div className="p-4">
+                <button
+                  type="button"
+                  onClick={() => setOpenAccordion(openAccordion === "shipping" ? null : "shipping")}
+                  className="flex w-full items-center justify-between font-medium text-foreground hover:text-brand cursor-pointer"
+                >
+                  <span className="flex items-center gap-2 font-display text-sm font-semibold text-brand-soft">
+                    <Truck className="h-4 w-4 text-brand" /> Delivery & Order Details
+                  </span>
+                  {openAccordion === "shipping" ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                </button>
+                {openAccordion === "shipping" && (
+                  <div className="mt-3 space-y-2.5 text-muted-foreground pl-6 animate-in fade-in duration-200">
+                    <p className="flex items-start gap-2">
+                      <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                      <span><strong className="text-foreground font-semibold">Free Shipping:</strong> Complimentary shipping inside Kerala.</span>
+                    </p>
+                    <p className="flex items-start gap-2">
+                      <Clock className="h-3.5 w-3.5 text-brand shrink-0 mt-0.5" />
+                      <span><strong className="text-foreground font-semibold">Within Kerala:</strong> Max 7 working days.</span>
+                    </p>
+                    <p className="flex items-start gap-2">
+                      <Clock className="h-3.5 w-3.5 text-brand shrink-0 mt-0.5" />
+                      <span><strong className="text-foreground font-semibold">Outside Kerala:</strong> 10 – 15 working days.</span>
+                    </p>
+                    <p className="flex items-start gap-2">
+                      <MessageSquare className="h-3.5 w-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                      <span><strong className="text-foreground font-semibold">WhatsApp Ordering:</strong> Send product screenshot to <a href="https://wa.me/918075676393" target="_blank" rel="noopener noreferrer" className="text-emerald-700 underline font-semibold">+91 8075676393</a>.</span>
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {/* Returns & Damage Claim */}
+              <div className="p-4">
+                <button
+                  type="button"
+                  onClick={() => setOpenAccordion(openAccordion === "return" ? null : "return")}
+                  className="flex w-full items-center justify-between font-medium text-foreground hover:text-brand cursor-pointer"
+                >
+                  <span className="flex items-center gap-2 font-display text-sm font-semibold text-brand-soft">
+                    <ShieldCheck className="h-4 w-4 text-gold" /> Return & Damage Claim Policy
+                  </span>
+                  {openAccordion === "return" ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                </button>
+                {openAccordion === "return" && (
+                  <div className="mt-3 space-y-2.5 text-muted-foreground pl-6 animate-in fade-in duration-200">
+                    <div className="rounded-lg bg-amber-500/10 border border-amber-500/20 p-2.5 text-amber-900 text-[11px] mb-2 font-medium">
+                      ⚠️ <strong>Mandatory Requirement:</strong> Opening / unboxing video is compulsory for damage claims.
+                    </div>
+                    <p className="flex items-start gap-2">
+                      <Video className="h-3.5 w-3.5 text-rose-600 shrink-0 mt-0.5" />
+                      <span><strong className="text-foreground font-semibold">Unboxing Video:</strong> Continuous video showing package seal unboxing to product inspection.</span>
+                    </p>
+                    <p className="flex items-start gap-2">
+                      <CheckCircle2 className="h-3.5 w-3.5 text-foreground shrink-0 mt-0.5" />
+                      <span><strong className="text-foreground font-semibold">Returns:</strong> Accepted strictly for damaged pieces only.</span>
+                    </p>
+                    <p className="flex items-start gap-2">
+                      <AlertCircle className="h-3.5 w-3.5 text-muted-foreground shrink-0 mt-0.5" />
+                      <span><strong className="text-foreground font-semibold">No Other Exchange:</strong> No returns or exchanges for other reasons.</span>
+                    </p>
+                    <p className="flex items-start gap-2">
+                      <AlertTriangle className="h-3.5 w-3.5 text-amber-600 shrink-0 mt-0.5" />
+                      <span><strong className="text-foreground font-semibold">Colour Disclaimer:</strong> Slight colour variation may occur due to screen resolution & studio lighting.</span>
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {/* Wash Care Instructions */}
+              <div className="p-4">
+                <button
+                  type="button"
+                  onClick={() => setOpenAccordion(openAccordion === "wash" ? null : "wash")}
+                  className="flex w-full items-center justify-between font-medium text-foreground hover:text-brand cursor-pointer"
+                >
+                  <span className="flex items-center gap-2 font-display text-sm font-semibold text-brand-soft">
+                    <Droplets className="h-4 w-4 text-blue-600" /> Wash & Fabric Care Instructions
+                  </span>
+                  {openAccordion === "wash" ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                </button>
+                {openAccordion === "wash" && (
+                  <div className="mt-3 space-y-2 text-muted-foreground pl-6 animate-in fade-in duration-200">
+                    <p className="flex items-center gap-2">
+                      <span className="h-1.5 w-1.5 rounded-full bg-brand shrink-0"></span>
+                      <span>Dry clean recommended for first wash to preserve zari luster.</span>
+                    </p>
+                    <p className="flex items-center gap-2">
+                      <span className="h-1.5 w-1.5 rounded-full bg-brand shrink-0"></span>
+                      <span>Hand wash gently in cool water with mild silk detergent.</span>
+                    </p>
+                    <p className="flex items-center gap-2">
+                      <span className="h-1.5 w-1.5 rounded-full bg-brand shrink-0"></span>
+                      <span>Do not wring; dry flat in shade away from direct sunlight.</span>
+                    </p>
+                    <p className="flex items-center gap-2">
+                      <span className="h-1.5 w-1.5 rounded-full bg-brand shrink-0"></span>
+                      <span>Iron on low heat setting on reverse side of saree.</span>
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </div>
 
+        {/* RIGHT COLUMN: SAREE PRODUCT DETAILS, PRICE, ACTIONS & HIGHLIGHTS */}
         <div className="lg:pt-6">
           <p className="text-[11px] uppercase tracking-[0.24em] text-gold">{saree.weave}</p>
           <h1 className="mt-3 font-display text-4xl leading-tight text-brand-soft">{saree.name}</h1>
@@ -365,223 +451,104 @@ function Product() {
               <p className="text-[10px] text-muted-foreground">Book Yours Now</p>
             </div>
           </div>
-
-          {/* Accordion Policy Sections */}
-          <div className="mt-8 rounded-2xl border border-border bg-card overflow-hidden shadow-2xs">
-            <div className="border-b border-border bg-muted/40 px-5 py-3.5">
-              <h3 className="font-display text-xs font-bold uppercase tracking-[0.2em] text-brand-soft flex items-center gap-2">
-                <ShieldCheck className="h-4 w-4 text-gold" /> Terms, Delivery & Care
-              </h3>
-            </div>
-
-            <div className="divide-y divide-border text-xs">
-              {/* Shipping & Delivery Details */}
-              <div className="p-4">
-                <button
-                  type="button"
-                  onClick={() => setOpenAccordion(openAccordion === "shipping" ? null : "shipping")}
-                  className="flex w-full items-center justify-between font-medium text-foreground hover:text-brand cursor-pointer"
-                >
-                  <span className="flex items-center gap-2 font-display text-sm font-semibold text-brand-soft">
-                    <Truck className="h-4 w-4 text-brand" /> Delivery & Order Details
-                  </span>
-                  {openAccordion === "shipping" ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                </button>
-                {openAccordion === "shipping" && (
-                  <div className="mt-3 space-y-2.5 text-muted-foreground pl-6 animate-in fade-in duration-200">
-                    <p className="flex items-start gap-2">
-                      <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 shrink-0 mt-0.5" />
-                      <span><strong className="text-foreground font-semibold">Free Shipping:</strong> Complimentary shipping inside Kerala.</span>
-                    </p>
-                    <p className="flex items-start gap-2">
-                      <Clock className="h-3.5 w-3.5 text-brand shrink-0 mt-0.5" />
-                      <span><strong className="text-foreground font-semibold">Within Kerala:</strong> Max 7 working days.</span>
-                    </p>
-                    <p className="flex items-start gap-2">
-                      <Clock className="h-3.5 w-3.5 text-brand shrink-0 mt-0.5" />
-                      <span><strong className="text-foreground font-semibold">Outside Kerala:</strong> 10 – 15 working days.</span>
-                    </p>
-                    <p className="flex items-start gap-2">
-                      <MessageSquare className="h-3.5 w-3.5 text-emerald-600 shrink-0 mt-0.5" />
-                      <span><strong className="text-foreground font-semibold">WhatsApp Ordering:</strong> Send product screenshot to <a href="https://wa.me/918075676393" target="_blank" rel="noopener noreferrer" className="text-emerald-700 underline font-semibold">+91 8075676393</a>.</span>
-                    </p>
-                  </div>
-                )}
-              </div>
-
-              {/* Returns & Damage Claim */}
-              <div className="p-4">
-                <button
-                  type="button"
-                  onClick={() => setOpenAccordion(openAccordion === "return" ? null : "return")}
-                  className="flex w-full items-center justify-between font-medium text-foreground hover:text-brand cursor-pointer"
-                >
-                  <span className="flex items-center gap-2 font-display text-sm font-semibold text-brand-soft">
-                    <ShieldCheck className="h-4 w-4 text-gold" /> Return & Damage Claim Policy
-                  </span>
-                  {openAccordion === "return" ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                </button>
-                {openAccordion === "return" && (
-                  <div className="mt-3 space-y-2.5 text-muted-foreground pl-6 animate-in fade-in duration-200">
-                    <div className="rounded-lg bg-amber-500/10 border border-amber-500/20 p-2.5 text-amber-900 text-[11px] mb-2 font-medium">
-                      ⚠️ <strong>Mandatory Requirement:</strong> Opening / unboxing video is compulsory for damage claims.
-                    </div>
-                    <p className="flex items-start gap-2">
-                      <Video className="h-3.5 w-3.5 text-rose-600 shrink-0 mt-0.5" />
-                      <span><strong className="text-foreground font-semibold">Unboxing Video:</strong> Continuous video showing package seal unboxing to product inspection.</span>
-                    </p>
-                    <p className="flex items-start gap-2">
-                      <CheckCircle2 className="h-3.5 w-3.5 text-foreground shrink-0 mt-0.5" />
-                      <span><strong className="text-foreground font-semibold">Returns:</strong> Accepted strictly for damaged pieces only.</span>
-                    </p>
-                    <p className="flex items-start gap-2">
-                      <AlertCircle className="h-3.5 w-3.5 text-muted-foreground shrink-0 mt-0.5" />
-                      <span><strong className="text-foreground font-semibold">No Other Exchange:</strong> No returns or exchanges for other reasons.</span>
-                    </p>
-                    <p className="flex items-start gap-2">
-                      <AlertTriangle className="h-3.5 w-3.5 text-amber-600 shrink-0 mt-0.5" />
-                      <span><strong className="text-foreground font-semibold">Colour Disclaimer:</strong> Slight colour variation may occur due to screen resolution & studio lighting.</span>
-                    </p>
-                  </div>
-                )}
-              </div>
-
-              {/* Wash Care Instructions */}
-              <div className="p-4">
-                <button
-                  type="button"
-                  onClick={() => setOpenAccordion(openAccordion === "wash" ? null : "wash")}
-                  className="flex w-full items-center justify-between font-medium text-foreground hover:text-brand cursor-pointer"
-                >
-                  <span className="flex items-center gap-2 font-display text-sm font-semibold text-brand-soft">
-                    <Droplets className="h-4 w-4 text-blue-600" /> Wash & Fabric Care Instructions
-                  </span>
-                  {openAccordion === "wash" ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                </button>
-                {openAccordion === "wash" && (
-                  <div className="mt-3 space-y-2 text-muted-foreground pl-6 animate-in fade-in duration-200">
-                    <p className="flex items-center gap-2">
-                      <span className="h-1.5 w-1.5 rounded-full bg-brand shrink-0"></span>
-                      <span>Dry clean recommended for first wash</span>
-                    </p>
-                    <p className="flex items-center gap-2">
-                      <span className="h-1.5 w-1.5 rounded-full bg-brand shrink-0"></span>
-                      <span>Gentle hand wash after that</span>
-                    </p>
-                    <p className="flex items-center gap-2">
-                      <span className="h-1.5 w-1.5 rounded-full bg-brand shrink-0"></span>
-                      <span>Use mild detergent</span>
-                    </p>
-                    <p className="flex items-center gap-2">
-                      <span className="h-1.5 w-1.5 rounded-full bg-brand shrink-0"></span>
-                      <span>Do not bleach</span>
-                    </p>
-                    <p className="flex items-center gap-2">
-                      <span className="h-1.5 w-1.5 rounded-full bg-brand shrink-0"></span>
-                      <span>Dry in shade</span>
-                    </p>
-                    <p className="flex items-center gap-2">
-                      <span className="h-1.5 w-1.5 rounded-full bg-brand shrink-0"></span>
-                      <span>Iron on low heat if needed</span>
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
         </div>
       </div>
 
+      {/* RELATED SAREES SECTION */}
       <section className="mt-24">
-        <h2 className="font-display text-3xl text-brand-soft">You may also like</h2>
-        <div className="ornament-rule mt-4 w-32" />
-        <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3">
+        <div className="flex items-end justify-between border-b border-border pb-6">
+          <div>
+            <p className="text-[11px] uppercase tracking-[0.24em] text-gold font-bold">Handwoven Collection</p>
+            <h2 className="mt-1 font-display text-2xl font-semibold text-brand-soft">More Creations You May Love</h2>
+          </div>
+          <Link
+            to="/shop"
+            className="text-[11px] font-semibold uppercase tracking-[0.22em] text-brand hover:text-brand-soft flex items-center gap-1"
+          >
+            Explore Catalog →
+          </Link>
+        </div>
+
+        <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {related.map((item) => (
             <SareeCard key={item.slug} saree={item} />
           ))}
         </div>
       </section>
 
-      {/* NOTIFY REQUEST MODAL */}
+      {/* NOTIFY ME POPUP MODAL */}
       {showNotifyModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs animate-in fade-in">
-          <div className="w-full max-w-md rounded-3xl border border-gold/30 bg-background p-6 sm:p-8 shadow-2xl">
+          <div className="relative w-full max-w-md rounded-3xl border border-gold/30 bg-background p-6 sm:p-8 shadow-2xl">
+            <button
+              type="button"
+              onClick={() => setShowNotifyModal(false)}
+              className="absolute right-4 top-4 rounded-full p-2 text-muted-foreground hover:bg-secondary hover:text-foreground cursor-pointer"
+            >
+              ✕
+            </button>
+
             {notifySubmitted ? (
-              <div className="text-center py-6">
-                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
-                  <Check className="h-7 w-7" />
+              <div className="py-8 text-center animate-in zoom-in-95">
+                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-600">
+                  <Check className="h-7 w-7 stroke-[3]" />
                 </div>
-                <h3 className="mt-4 font-display text-2xl text-brand-soft">Request Registered</h3>
+                <h3 className="mt-4 font-display text-xl font-medium text-brand-soft">Priority Registration Logged</h3>
                 <p className="mt-2 text-xs text-muted-foreground">
-                  We have added your details to the studio priority list. Our master weaver concierge will contact you immediately upon availability.
+                  Our studio concierge will alert you the moment this masterpiece is off the loom.
                 </p>
               </div>
             ) : (
               <form onSubmit={handleNotifySubmit} className="space-y-4">
-                <div className="flex items-center justify-between border-b border-border pb-4">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gold/20 text-brand-soft">
+                    <Bell className="h-5 w-5 text-gold" />
+                  </div>
                   <div>
-                    <p className="text-[10px] uppercase tracking-[0.25em] text-gold">Priority Alert</p>
-                    <h3 className="font-display text-xl text-brand-soft">
-                      {status === "coming_soon" ? "Coming Soon Notification" : "Restock Alert Request"}
+                    <p className="text-[10px] uppercase tracking-[0.2em] text-gold font-bold">Priority Studio Alert</p>
+                    <h3 className="font-display text-lg font-semibold text-brand-soft">
+                      {status === "coming_soon" ? "Register Launch Interest" : "Restock Notification"}
                     </h3>
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => setShowNotifyModal(false)}
-                    className="rounded-full p-2 text-muted-foreground hover:bg-muted hover:text-foreground"
-                  >
-                    ✕
-                  </button>
                 </div>
 
                 <p className="text-xs leading-relaxed text-muted-foreground">
-                  Enter your email and phone number to receive instant notification for{" "}
-                  <span className="font-medium text-foreground">{saree.name}</span>.
+                  Enter your contact details below to receive direct SMS & email alerts for <strong>{saree.name}</strong>.
                 </p>
 
-                <div className="space-y-3 pt-2">
-                  <div>
-                    <label className="block text-[11px] uppercase tracking-[0.18em] text-muted-foreground mb-1">
-                      Email Address *
-                    </label>
-                    <input
-                      type="email"
-                      required
-                      placeholder="your.email@example.com"
-                      value={notifyEmail}
-                      onChange={(e) => setNotifyEmail(e.target.value)}
-                      className="w-full rounded-xl border border-border bg-card px-4 py-2.5 text-sm outline-none transition-colors focus:border-gold"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-[11px] uppercase tracking-[0.18em] text-muted-foreground mb-1">
-                      Phone / WhatsApp (Optional)
-                    </label>
-                    <input
-                      type="tel"
-                      placeholder="+91 98765 43210"
-                      value={notifyPhone}
-                      onChange={(e) => setNotifyPhone(e.target.value)}
-                      className="w-full rounded-xl border border-border bg-card px-4 py-2.5 text-sm outline-none transition-colors focus:border-gold"
-                    />
-                  </div>
+                <div>
+                  <label className="block text-[10px] uppercase tracking-[0.18em] text-muted-foreground mb-1">
+                    Email Address *
+                  </label>
+                  <input
+                    type="email"
+                    required
+                    placeholder="your.email@example.com"
+                    value={notifyEmail}
+                    onChange={(e) => setNotifyEmail(e.target.value)}
+                    className="w-full rounded-xl border border-border bg-card px-4 py-2.5 text-xs text-foreground placeholder-muted-foreground outline-none focus:border-brand"
+                  />
                 </div>
 
-                <div className="pt-4 flex justify-end gap-3">
-                  <button
-                    type="button"
-                    onClick={() => setShowNotifyModal(false)}
-                    className="rounded-full px-5 py-2.5 text-xs text-muted-foreground hover:bg-muted"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="rounded-full bg-brand px-6 py-2.5 text-[11px] uppercase tracking-[0.2em] text-primary-foreground hover:bg-brand-soft shadow-md"
-                  >
-                    Submit Request
-                  </button>
+                <div>
+                  <label className="block text-[10px] uppercase tracking-[0.18em] text-muted-foreground mb-1">
+                    WhatsApp / Phone Number (Optional)
+                  </label>
+                  <input
+                    type="tel"
+                    placeholder="+91 98765 43210"
+                    value={notifyPhone}
+                    onChange={(e) => setNotifyPhone(e.target.value)}
+                    className="w-full rounded-xl border border-border bg-card px-4 py-2.5 text-xs text-foreground placeholder-muted-foreground outline-none focus:border-brand"
+                  />
                 </div>
+
+                <button
+                  type="submit"
+                  className="w-full rounded-full bg-brand py-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-primary-foreground hover:bg-brand-soft shadow-md cursor-pointer transition-colors"
+                >
+                  Confirm Priority Alert →
+                </button>
               </form>
             )}
           </div>
