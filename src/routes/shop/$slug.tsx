@@ -82,6 +82,18 @@ function Product() {
   const storedProduct = products.find((p) => p.slug === saree.slug);
   const status = storedProduct?.status || "in_stock";
 
+  // Lock background page scroll when modal is open
+  useEffect(() => {
+    if (showNotifyModal) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [showNotifyModal]);
+
   const gallery: SareeView[] = saree.views;
   const current: SareeView =
     gallery[Math.min(active, gallery.length - 1)] ?? { url: saree.image, label: "Full drape" };

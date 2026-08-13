@@ -115,6 +115,18 @@ export function AdminPanel() {
     setTimeout(() => setToastMessage(null), 3000);
   };
 
+  // Lock background page scroll when order details modal is open
+  useEffect(() => {
+    if (selectedOrder) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [selectedOrder]);
+
   // KPI Calculations
   const totalRevenue = orders.reduce((sum, o) => sum + (o.status !== "Cancelled" ? o.total : 0), 0);
   const totalOrdersCount = orders.length;
@@ -1184,9 +1196,10 @@ function AddProductModal({
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isCompressing, setIsCompressing] = useState(false);
 
-  // Reset form whenever modal opens
+  // Reset form whenever modal opens & lock background page scroll
   useEffect(() => {
     if (isOpen) {
+      document.body.style.overflow = "hidden";
       setName("");
       setWeave("Kanjivaram");
       setColour("Gold");
@@ -1199,7 +1212,13 @@ function AddProductModal({
       setCare("Dry clean recommended for first wash.");
       setErrorMessage(null);
       setIsCompressing(false);
+    } else {
+      document.body.style.overflow = "";
     }
+
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [isOpen]);
 
   if (!isOpen) return null;
@@ -1482,6 +1501,7 @@ function EditProductModal({
 
   useEffect(() => {
     if (product) {
+      document.body.style.overflow = "hidden";
       setName(product.name);
       setWeave(product.weave);
       setColour(product.colour);
@@ -1494,7 +1514,13 @@ function EditProductModal({
       setCare(product.care);
       setErrorMessage(null);
       setIsCompressing(false);
+    } else {
+      document.body.style.overflow = "";
     }
+
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [product]);
 
   if (!product) return null;
