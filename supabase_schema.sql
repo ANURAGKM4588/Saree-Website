@@ -24,13 +24,23 @@ CREATE TABLE IF NOT EXISTS public.products (
 CREATE TABLE IF NOT EXISTS public.orders (
   id TEXT PRIMARY KEY,
   customer_name TEXT NOT NULL,
+  email TEXT,
   phone TEXT NOT NULL,
   address TEXT NOT NULL,
+  notes TEXT,
   items JSONB NOT NULL,
   total NUMERIC NOT NULL,
   status TEXT NOT NULL DEFAULT 'Pending',
-  date TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+  payment_id TEXT,
+  payment_status TEXT,
+  date TEXT
 );
+
+-- Auto-migration for existing tables if columns were added later
+ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS email TEXT;
+ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS notes TEXT;
+ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS payment_id TEXT;
+ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS payment_status TEXT;
 
 -- 3. Notify Requests Table
 CREATE TABLE IF NOT EXISTS public.notify_requests (

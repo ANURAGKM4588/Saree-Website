@@ -281,6 +281,36 @@ function sanitizeProducts(prods: ExtendedSaree[]): ExtendedSaree[] {
   });
 }
 
+function sanitizeOrders(dbOrders: any[]): Order[] {
+  if (!Array.isArray(dbOrders) || dbOrders.length === 0) return initialOrders;
+  return dbOrders.map((o) => {
+    let itemsParsed = [];
+    if (Array.isArray(o.items)) {
+      itemsParsed = o.items;
+    } else if (typeof o.items === "string") {
+      try {
+        itemsParsed = JSON.parse(o.items);
+      } catch {
+        itemsParsed = [];
+      }
+    }
+    return {
+      id: o.id || `ORD-${Math.floor(1000 + Math.random() * 9000)}`,
+      customerName: o.customer_name || o.customerName || "Customer",
+      email: o.email || "",
+      phone: o.phone || "",
+      address: o.address || "",
+      notes: o.notes || undefined,
+      items: itemsParsed,
+      total: Number(o.total) || 0,
+      date: o.date ? String(o.date) : new Date().toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" }),
+      status: (o.status as OrderStatus) || "Pending",
+      paymentId: o.payment_id || o.paymentId || undefined,
+      paymentStatus: o.payment_status || o.paymentStatus || undefined,
+    };
+  });
+}
+
 export function ShopStoreProvider({ children }: { children: ReactNode }) {
   const [products, setProducts] = useState<ExtendedSaree[]>(() => {
     if (typeof window === "undefined") return initialProducts;
@@ -297,7 +327,8 @@ export function ShopStoreProvider({ children }: { children: ReactNode }) {
     if (typeof window === "undefined") return initialOrders;
     try {
       const raw = localStorage.getItem(ORDERS_KEY);
-      return raw ? JSON.parse(raw) : initialOrders;
+      const parsed = raw ? JSON.parse(raw) : initialOrders;
+      return sanitizeOrders(parsed);
     } catch {
       return initialOrders;
     }
@@ -343,7 +374,7 @@ export function ShopStoreProvider({ children }: { children: ReactNode }) {
         }
         const { data: dbOrders } = await supabase.from("orders").select("*");
         if (dbOrders && dbOrders.length > 0) {
-          setOrders(dbOrders);
+          setOrders(sanitizeOrders(dbOrders));
         }
         const { data: dbNotify } = await supabase.from("notify_requests").select("*");
         if (dbNotify && dbNotify.length > 0) {
@@ -414,25 +445,34 @@ export function ShopStoreProvider({ children }: { children: ReactNode }) {
     );
   }, []);
 
-  const createOrder = useCallback((orderData: Omit<Order, "id" | "date" | "status">): Order => {
+  const createOrder = useCallback((orderData: Partial<Order> & Omit<Order, "id" | "date">): Order => {
     const newOrder: Order = {
       ...orderData,
       id: `ORD-${Math.floor(1000 + Math.random() * 9000)}`,
       date: new Date().toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" }),
-      status: "Pending",
+      status: orderData.status || "Pending",
     };
     setOrders((prev) => [newOrder, ...prev]);
     if (isSupabaseConfigured) {
-      supabase.from("orders").insert({
-        id: newOrder.id,
-        customer_name: newOrder.customerName,
-        phone: newOrder.phone,
-        address: newOrder.address,
-        items: newOrder.items,
-        total: newOrder.total,
-        status: newOrder.status,
-        date: newOrder.date,
-      }).then();
+      supabase
+        .from("orders")
+        .insert({
+          id: newOrder.id,
+          customer_name: newOrder.customerName,
+          phone: newOrder.phone,
+          email: newOrder.email,
+          address: newOrder.address,
+          notes: newOrder.notes,
+          items: newOrder.items,
+          total: newOrder.total,
+          status: newOrder.status,
+          date: newOrder.date,
+          payment_id: newOrder.paymentId,
+          payment_status: newOrder.paymentStatus,
+        })
+        .then(({ error }) => {
+          if (error) console.warn("Supabase order insert warning:", error.message);
+        });
     }
     return newOrder;
   }, []);
