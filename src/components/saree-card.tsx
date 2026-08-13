@@ -21,9 +21,8 @@ export function SareeCard({ saree, tall = false }: { saree: Saree; tall?: boolea
   // Extract all product view images (Full drape, Model, Weave detail)
   const viewImages = saree.views && saree.views.length > 0 ? saree.views : [{ url: saree.image, label: "Full drape" }];
   const currentImage = viewImages[currentViewIndex]?.url || saree.image;
-  const currentLabel = viewImages[currentViewIndex]?.label || "Full drape";
 
-  // Auto-carousel on mouse hover
+  // Fast auto-carousel on mouse hover (650ms per slide)
   useEffect(() => {
     if (!isHovered || viewImages.length <= 1) {
       setCurrentViewIndex(0);
@@ -32,7 +31,7 @@ export function SareeCard({ saree, tall = false }: { saree: Saree; tall?: boolea
 
     const interval = setInterval(() => {
       setCurrentViewIndex((prev) => (prev + 1) % viewImages.length);
-    }, 1300);
+    }, 650);
 
     return () => clearInterval(interval);
   }, [isHovered, viewImages.length]);
@@ -64,11 +63,11 @@ export function SareeCard({ saree, tall = false }: { saree: Saree; tall?: boolea
         <img
           ref={imgRef}
           src={currentImage}
-          alt={`${saree.name} — ${currentLabel}`}
+          alt={`${saree.name} — ${saree.weave} saree`}
           width={912}
           height={1200}
           loading="lazy"
-          className={`w-full object-cover transition-all duration-[600ms] group-hover:scale-[1.05] ${
+          className={`w-full object-cover transition-all duration-300 group-hover:scale-[1.05] ${
             tall ? "aspect-[4/5]" : "aspect-[3/4]"
           }`}
         />
@@ -89,25 +88,6 @@ export function SareeCard({ saree, tall = false }: { saree: Saree; tall?: boolea
             </span>
           )}
         </div>
-
-        {/* Hover View Indicator Pill & Dots */}
-        {viewImages.length > 1 && (
-          <div className="absolute bottom-3 left-3 z-10 flex items-center gap-1.5 rounded-full bg-ink/75 backdrop-blur-xs px-2.5 py-1 transition-opacity duration-300">
-            <span className="text-[9px] font-semibold uppercase tracking-wider text-primary-foreground hidden sm:inline mr-1">
-              {currentLabel}
-            </span>
-            <div className="flex items-center gap-1">
-              {viewImages.map((_, idx) => (
-                <span
-                  key={idx}
-                  className={`h-1.5 rounded-full transition-all duration-300 ${
-                    idx === currentViewIndex ? "w-3 bg-gold" : "w-1.5 bg-white/40"
-                  }`}
-                />
-              ))}
-            </div>
-          </div>
-        )}
 
         {/* QUICK ADD TO CART BUTTON (Bottom-Right on Mobile, Top-Right on Desktop) */}
         <button
