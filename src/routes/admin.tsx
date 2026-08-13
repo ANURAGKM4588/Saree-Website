@@ -208,7 +208,7 @@ export function AdminPanel() {
             <div className="flex flex-wrap items-center gap-3">
               <Link
                 to="/"
-                className="inline-flex items-center gap-1.5 rounded-full border border-primary-foreground/20 bg-primary-foreground/10 px-4 py-2.5 text-[11px] font-medium uppercase tracking-[0.16em] text-primary-foreground transition-colors hover:bg-primary-foreground/20"
+                className="inline-flex items-center gap-1.5 rounded-full border border-primary-foreground/20 bg-primary-foreground/10 px-4 py-2.5 text-[11px] font-medium uppercase tracking-[0.16em] text-primary-foreground transition-colors hover:bg-primary-foreground/20 whitespace-nowrap"
               >
                 ← Back to Store
               </Link>
@@ -218,7 +218,7 @@ export function AdminPanel() {
                   setActiveTab("products");
                   setShowAddProductModal(true);
                 }}
-                className="inline-flex items-center gap-2 rounded-full bg-gold px-5 py-2.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-brand-soft transition-colors hover:bg-gold-soft shadow-md cursor-pointer"
+                className="inline-flex items-center gap-2 rounded-full bg-gold px-5 py-2.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-brand-soft transition-colors hover:bg-gold-soft shadow-md cursor-pointer whitespace-nowrap"
               >
                 <Plus className="h-4 w-4" /> Add New Product
               </button>
@@ -228,7 +228,7 @@ export function AdminPanel() {
                   resetStore();
                   showToast("Store data reset to default demo state!");
                 }}
-                className="inline-flex items-center gap-1.5 rounded-full border border-primary-foreground/20 bg-primary-foreground/10 px-4 py-2.5 text-[11px] font-medium uppercase tracking-[0.16em] text-primary-foreground transition-colors hover:bg-primary-foreground/20 cursor-pointer"
+                className="inline-flex items-center gap-1.5 rounded-full border border-primary-foreground/20 bg-primary-foreground/10 px-4 py-2.5 text-[11px] font-medium uppercase tracking-[0.16em] text-primary-foreground transition-colors hover:bg-primary-foreground/20 cursor-pointer whitespace-nowrap"
               >
                 <RefreshCw className="h-3.5 w-3.5" /> Reset Demo
               </button>

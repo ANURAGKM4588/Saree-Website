@@ -227,7 +227,7 @@ function Product() {
                   <button
                     type="button"
                     onClick={handleAddToCart}
-                    className="flex-1 rounded-full border border-brand px-8 py-3 text-[11px] uppercase tracking-[0.22em] text-brand transition-colors hover:bg-brand hover:text-primary-foreground cursor-pointer"
+                    className="flex-1 rounded-full border border-brand px-8 py-3 text-[11px] uppercase tracking-[0.22em] text-brand transition-colors hover:bg-brand hover:text-primary-foreground cursor-pointer whitespace-nowrap"
                   >
                     Add to bag
                   </button>
@@ -235,7 +235,7 @@ function Product() {
                 <button
                   type="button"
                   onClick={handleBookNow}
-                  className="w-full rounded-full bg-brand px-8 py-3 text-[11px] uppercase tracking-[0.22em] text-primary-foreground transition-colors hover:bg-brand-soft cursor-pointer shadow-md"
+                  className="w-full rounded-full bg-brand px-8 py-3 text-[11px] uppercase tracking-[0.22em] text-primary-foreground transition-colors hover:bg-brand-soft cursor-pointer shadow-md whitespace-nowrap"
                 >
                   Book now
                 </button>
@@ -254,7 +254,7 @@ function Product() {
                 <button
                   type="button"
                   onClick={() => setShowNotifyModal(true)}
-                  className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-destructive px-8 py-3 text-[11px] uppercase tracking-[0.22em] text-destructive-foreground transition-colors hover:bg-destructive/90 shadow-md cursor-pointer"
+                  className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-destructive px-8 py-3 text-[11px] uppercase tracking-[0.22em] text-destructive-foreground transition-colors hover:bg-destructive/90 shadow-md cursor-pointer whitespace-nowrap"
                 >
                   <Bell className="h-4 w-4" />
                   Notify Me When Restocked
@@ -274,7 +274,7 @@ function Product() {
                 <button
                   type="button"
                   onClick={() => setShowNotifyModal(true)}
-                  className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand px-8 py-3 text-[11px] uppercase tracking-[0.22em] text-primary-foreground transition-colors hover:bg-brand-soft shadow-md cursor-pointer"
+                  className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand px-8 py-3 text-[11px] uppercase tracking-[0.22em] text-primary-foreground transition-colors hover:bg-brand-soft shadow-md cursor-pointer whitespace-nowrap"
                 >
                   <Bell className="h-4 w-4 text-gold" />
                   Notify Me On Launch
@@ -287,7 +287,7 @@ function Product() {
               href={`https://wa.me/918075676393?text=${encodeURIComponent(`Hi Kadha Atelier, I would like to order "${saree.name}" (${formatPrice(saree.price)}).`)}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex w-full items-center justify-center gap-2 rounded-full border border-emerald-600/30 bg-emerald-500/10 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-emerald-800 transition-colors hover:bg-emerald-500/20 shadow-2xs"
+              className="flex w-full items-center justify-center gap-2 rounded-full border border-emerald-600/30 bg-emerald-500/10 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-emerald-800 transition-colors hover:bg-emerald-500/20 shadow-2xs whitespace-nowrap"
             >
               <MessageSquare className="h-4 w-4 text-emerald-600" />
               DM on WhatsApp to Order (+91 8075676393)
