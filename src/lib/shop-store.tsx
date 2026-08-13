@@ -40,6 +40,8 @@ export type Order = {
   total: number;
   date: string;
   status: OrderStatus;
+  paymentId?: string;
+  paymentStatus?: "Paid" | "Pending" | "Failed";
 };
 
 export type NotifyRequestType = "out_of_stock" | "coming_soon";
