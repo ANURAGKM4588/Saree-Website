@@ -6,7 +6,7 @@ import { useShopStore, type Order } from "@/lib/shop-store";
 import { useAuth } from "@/lib/auth";
 import { sendOrderConfirmationEmail } from "@/lib/email-service";
 import { openRazorpayCheckout } from "@/lib/razorpay";
-import { CheckCircle2, Mail, ShieldCheck, User, MapPin, Sparkles, CreditCard, Lock } from "lucide-react";
+import { CheckCircle2, Mail, ShieldCheck, User, MapPin, Sparkles, CreditCard, Lock, Plus } from "lucide-react";
 
 export const Route = createFileRoute("/booking")({
   head: () => ({
