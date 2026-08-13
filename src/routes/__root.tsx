@@ -15,7 +15,6 @@ import { CartProvider } from "../lib/cart";
 import { ShopStoreProvider } from "../lib/shop-store";
 import { SiteHeader } from "../components/site-header";
 import { SiteFooter } from "../components/site-footer";
-import { PageLoader } from "../components/page-loader";
 
 function NotFoundComponent() {
   return (
@@ -143,7 +142,6 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <ShopStoreProvider>
         <CartProvider>
-          <PageLoader />
           <div className="flex min-h-screen flex-col font-sans">
             <SiteHeader />
             <main className="flex-1">
