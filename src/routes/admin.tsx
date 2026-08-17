@@ -1996,37 +1996,85 @@ function AddProductModal({
               </div>
             </div>
 
-            {/* Blouse Option Configuration */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-semibold">
-                  Blouse Option Availability *
-                </label>
-                <select
-                  value={blouseAvailability}
-                  onChange={(e) => setBlouseAvailability(e.target.value as BlouseAvailability)}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 outline-none focus:border-gold cursor-pointer font-medium"
+            {/* Blouse Option Configuration Checklist */}
+            <div className="space-y-3 bg-slate-50/80 p-4 rounded-2xl border border-slate-200">
+              <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-800 font-bold">
+                Blouse Piece Options Checklist *
+              </label>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <label
+                  className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all ${
+                    blouseAvailability === "both" || blouseAvailability === "with_only"
+                      ? "border-gold bg-gold/10 text-slate-900 shadow-2xs font-semibold"
+                      : "border-slate-200 bg-white text-slate-500 hover:border-slate-300"
+                  }`}
                 >
-                  <option value="both">Both (With & Without Blouse)</option>
-                  <option value="with_only">With Blouse Piece Only</option>
-                  <option value="without_only">Without Blouse Piece Only</option>
-                </select>
+                  <input
+                    type="checkbox"
+                    checked={blouseAvailability === "both" || blouseAvailability === "with_only"}
+                    onChange={(e) => {
+                      const isChecked = e.target.checked;
+                      const hasWithout = blouseAvailability === "both" || blouseAvailability === "without_only";
+                      if (isChecked) {
+                        setBlouseAvailability(hasWithout ? "both" : "with_only");
+                      } else {
+                        setBlouseAvailability(hasWithout ? "without_only" : "with_only");
+                      }
+                    }}
+                    className="h-4 w-4 accent-amber-600 rounded border-slate-300"
+                  />
+                  <div>
+                    <p className="text-xs font-bold text-slate-800">✂️ With Blouse Piece</p>
+                    <p className="text-[10px] text-slate-500 font-normal">Include unstitched blouse fabric</p>
+                  </div>
+                </label>
+
+                <label
+                  className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all ${
+                    blouseAvailability === "both" || blouseAvailability === "without_only"
+                      ? "border-gold bg-gold/10 text-slate-900 shadow-2xs font-semibold"
+                      : "border-slate-200 bg-white text-slate-500 hover:border-slate-300"
+                  }`}
+                >
+                  <input
+                    type="checkbox"
+                    checked={blouseAvailability === "both" || blouseAvailability === "without_only"}
+                    onChange={(e) => {
+                      const isChecked = e.target.checked;
+                      const hasWith = blouseAvailability === "both" || blouseAvailability === "with_only";
+                      if (isChecked) {
+                        setBlouseAvailability(hasWith ? "both" : "without_only");
+                      } else {
+                        setBlouseAvailability(hasWith ? "with_only" : "without_only");
+                      }
+                    }}
+                    className="h-4 w-4 accent-amber-600 rounded border-slate-300"
+                  />
+                  <div>
+                    <p className="text-xs font-bold text-slate-800">🧵 Saree Only (Without Blouse)</p>
+                    <p className="text-[10px] text-slate-500 font-normal">Allow purchase without blouse</p>
+                  </div>
+                </label>
               </div>
 
-              <div>
-                <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-semibold">
-                  Without Blouse Discount (₹)
-                </label>
-                <input
-                  type="number"
-                  min={0}
-                  placeholder="0 (Same Price)"
-                  value={withoutBlouseDiscount}
-                  onChange={(e) => setWithoutBlouseDiscount(e.target.value === "" ? "" : Number(e.target.value))}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 outline-none focus:border-gold font-medium"
-                />
-              </div>
+              {(blouseAvailability === "both" || blouseAvailability === "without_only") && (
+                <div className="pt-2 border-t border-slate-200/60 animate-in fade-in">
+                  <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-700 mb-1 font-semibold">
+                    Without Blouse Discount (₹)
+                  </label>
+                  <input
+                    type="number"
+                    min={0}
+                    placeholder="e.g. 500 (Amount deducted from price when bought without blouse)"
+                    value={withoutBlouseDiscount}
+                    onChange={(e) => setWithoutBlouseDiscount(e.target.value === "" ? "" : Number(e.target.value))}
+                    className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-900 outline-none focus:border-gold font-medium"
+                  />
+                </div>
+              )}
             </div>
+
 
             {/* Story Blurb */}
             <div>
@@ -2449,37 +2497,85 @@ function EditProductModal({
               </div>
             </div>
 
-            {/* Blouse Option Configuration */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-semibold">
-                  Blouse Option Availability *
-                </label>
-                <select
-                  value={blouseAvailability}
-                  onChange={(e) => setBlouseAvailability(e.target.value as BlouseAvailability)}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 outline-none focus:border-gold cursor-pointer font-medium"
+            {/* Blouse Option Configuration Checklist */}
+            <div className="space-y-3 bg-slate-50/80 p-4 rounded-2xl border border-slate-200">
+              <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-800 font-bold">
+                Blouse Piece Options Checklist *
+              </label>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <label
+                  className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all ${
+                    blouseAvailability === "both" || blouseAvailability === "with_only"
+                      ? "border-gold bg-gold/10 text-slate-900 shadow-2xs font-semibold"
+                      : "border-slate-200 bg-white text-slate-500 hover:border-slate-300"
+                  }`}
                 >
-                  <option value="both">Both (With & Without Blouse)</option>
-                  <option value="with_only">With Blouse Piece Only</option>
-                  <option value="without_only">Without Blouse Piece Only</option>
-                </select>
+                  <input
+                    type="checkbox"
+                    checked={blouseAvailability === "both" || blouseAvailability === "with_only"}
+                    onChange={(e) => {
+                      const isChecked = e.target.checked;
+                      const hasWithout = blouseAvailability === "both" || blouseAvailability === "without_only";
+                      if (isChecked) {
+                        setBlouseAvailability(hasWithout ? "both" : "with_only");
+                      } else {
+                        setBlouseAvailability(hasWithout ? "without_only" : "with_only");
+                      }
+                    }}
+                    className="h-4 w-4 accent-amber-600 rounded border-slate-300"
+                  />
+                  <div>
+                    <p className="text-xs font-bold text-slate-800">✂️ With Blouse Piece</p>
+                    <p className="text-[10px] text-slate-500 font-normal">Include unstitched blouse fabric</p>
+                  </div>
+                </label>
+
+                <label
+                  className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all ${
+                    blouseAvailability === "both" || blouseAvailability === "without_only"
+                      ? "border-gold bg-gold/10 text-slate-900 shadow-2xs font-semibold"
+                      : "border-slate-200 bg-white text-slate-500 hover:border-slate-300"
+                  }`}
+                >
+                  <input
+                    type="checkbox"
+                    checked={blouseAvailability === "both" || blouseAvailability === "without_only"}
+                    onChange={(e) => {
+                      const isChecked = e.target.checked;
+                      const hasWith = blouseAvailability === "both" || blouseAvailability === "with_only";
+                      if (isChecked) {
+                        setBlouseAvailability(hasWith ? "both" : "without_only");
+                      } else {
+                        setBlouseAvailability(hasWith ? "with_only" : "without_only");
+                      }
+                    }}
+                    className="h-4 w-4 accent-amber-600 rounded border-slate-300"
+                  />
+                  <div>
+                    <p className="text-xs font-bold text-slate-800">🧵 Saree Only (Without Blouse)</p>
+                    <p className="text-[10px] text-slate-500 font-normal">Allow purchase without blouse</p>
+                  </div>
+                </label>
               </div>
 
-              <div>
-                <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-semibold">
-                  Without Blouse Discount (₹)
-                </label>
-                <input
-                  type="number"
-                  min={0}
-                  placeholder="0 (Same Price)"
-                  value={withoutBlouseDiscount}
-                  onChange={(e) => setWithoutBlouseDiscount(e.target.value === "" ? "" : Number(e.target.value))}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 outline-none focus:border-gold font-medium"
-                />
-              </div>
+              {(blouseAvailability === "both" || blouseAvailability === "without_only") && (
+                <div className="pt-2 border-t border-slate-200/60 animate-in fade-in">
+                  <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-700 mb-1 font-semibold">
+                    Without Blouse Discount (₹)
+                  </label>
+                  <input
+                    type="number"
+                    min={0}
+                    placeholder="e.g. 500 (Amount deducted from price when bought without blouse)"
+                    value={withoutBlouseDiscount}
+                    onChange={(e) => setWithoutBlouseDiscount(e.target.value === "" ? "" : Number(e.target.value))}
+                    className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-900 outline-none focus:border-gold font-medium"
+                  />
+                </div>
+              )}
             </div>
+
 
             <div>
               <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-semibold">
