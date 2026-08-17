@@ -221,6 +221,16 @@ function Product() {
           <div>
             <p className="text-[11px] uppercase tracking-[0.24em] text-gold font-bold">{saree.weave}</p>
             <h1 className="mt-2 font-display text-3xl sm:text-4xl leading-tight text-brand-soft">{saree.name}</h1>
+            
+            <div className="mt-2.5 flex items-center gap-2">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/10 border border-amber-500/25 px-3 py-1 text-[11px] font-semibold text-amber-950 shadow-2xs">
+                {blouseAvailability === "with_only"
+                  ? "✂️ With Attached Blouse Only"
+                  : blouseAvailability === "without_only"
+                  ? "🧵 Extra Blouse Piece Only"
+                  : "✂️ Both Attached & Extra Blouse Options Available"}
+              </span>
+            </div>
             <div className="mt-3 flex items-baseline gap-3">
               <p className="font-display text-2xl tabular-nums font-medium text-foreground">
                 {formatPrice(currentPrice)}

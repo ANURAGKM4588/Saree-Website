@@ -183,6 +183,15 @@ export function SareeCard({ saree, tall = false }: { saree: Saree; tall?: boolea
             </h3>
           </Link>
           <p className="mt-1 text-xs text-muted-foreground truncate">{saree.colour} · Handwoven</p>
+          <div className="mt-1 flex items-center gap-1.5">
+            <span className="text-[9px] font-semibold text-muted-foreground bg-muted/80 px-2 py-0.5 rounded-full border border-border/60">
+              {saree.blouseAvailability === "with_only"
+                ? "✂️ With Attached Blouse"
+                : saree.blouseAvailability === "without_only"
+                ? "🧵 Extra Blouse Piece"
+                : "✂️ Both Blouse Options"}
+            </span>
+          </div>
         </div>
         <p className="shrink-0 font-display text-base font-medium tabular-nums text-foreground whitespace-nowrap">
           {formatPrice(saree.price)}
