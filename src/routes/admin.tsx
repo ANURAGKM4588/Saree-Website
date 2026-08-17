@@ -1271,7 +1271,7 @@ export function AdminPanel() {
                         <tr key={emailLog.id} className="hover:bg-muted/30 transition-colors">
                           <td className="px-6 py-4 font-mono font-bold text-xs text-gold">{emailLog.id}</td>
                           <td className="px-6 py-4 font-mono text-xs font-semibold text-emerald-800">
-                            {emailLog.senderEmail || BRAND_SENDER_EMAIL}
+                            {emailLog.senderEmail || emailConfig.senderEmail}
                           </td>
                           <td className="px-6 py-4 font-mono font-bold text-xs text-brand-soft">{emailLog.orderId}</td>
                           <td className="px-6 py-4">
@@ -1605,14 +1605,18 @@ function AddProductModal({
   const [colour, setColour] = useState("Gold");
   const [price, setPrice] = useState<number | "">(4500);
   const [status, setStatus] = useState<ProductStatus>("in_stock");
+
+  // Cover Page & Gallery State
   const [image, setImage] = useState("/Product/turmeric-zari-brocade.png");
+
   const [blurb, setBlurb] = useState("Handcrafted masterpiece woven with rich heritage craftsmanship.");
   const [fabric, setFabric] = useState("Handwoven pure silk cotton");
   const [blouse, setBlouse] = useState("0.8m unstitched blouse piece included");
   const [care, setCare] = useState("Dry clean recommended for first wash.");
+
+  // Additional Images State
   const [views, setViews] = useState<{ url: string; label: string }[]>([]);
-  const [newViewLabel, setNewViewLabel] = useState("On the model");
-  const [newViewUrlInput, setNewViewUrlInput] = useState("");
+
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isCompressing, setIsCompressing] = useState(false);
 
@@ -1625,7 +1629,7 @@ function AddProductModal({
       setPrice(4500);
       setStatus("in_stock");
       setImage("/Product/turmeric-zari-brocade.png");
-      setViews([{ url: "/Product/turmeric-zari-brocade.png", label: "Full drape" }]);
+      setViews([{ url: "/Product/turmeric-zari-brocade.png", label: "Cover Page Image" }]);
       setBlurb("Handcrafted masterpiece woven with rich heritage craftsmanship.");
       setFabric("Handwoven pure silk cotton");
       setBlouse("0.8m unstitched blouse piece included");
@@ -1643,27 +1647,58 @@ function AddProductModal({
 
   if (!isOpen) return null;
 
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, isNewView = false) => {
+  // Upload Cover Page Image Handler
+  const handleCoverFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     try {
       setIsCompressing(true);
       const compressedUrl = await compressImageFile(file, 800, 0.75);
-      if (isNewView) {
-        setViews((prev) => [...prev, { url: compressedUrl, label: newViewLabel }]);
-        if (!image) setImage(compressedUrl);
-      } else {
-        setImage(compressedUrl);
-        if (!views.some((v) => v.url === compressedUrl)) {
-          setViews((prev) => [{ url: compressedUrl, label: "Full drape" }, ...prev]);
-        }
+      setImage(compressedUrl);
+      setViews((prev) => {
+        if (prev.some((v) => v.url === compressedUrl)) return prev;
+        return [{ url: compressedUrl, label: "Cover Page Image" }, ...prev];
+      });
+    } catch (err) {
+      console.error("Compression failed:", err);
+    } finally {
+      setIsCompressing(false);
+      e.target.value = "";
+    }
+  };
+
+  // Upload Additional Images Handler (Supports Multiple File Selection)
+  const handleAdditionalFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    try {
+      setIsCompressing(true);
+      const fileList = Array.from(files);
+      const compressedUrls = await Promise.all(
+        fileList.map((file) => compressImageFile(file, 800, 0.75))
+      );
+
+      const newEntries = compressedUrls.map((url, i) => ({
+        url,
+        label: `Featured Image ${views.length + i + 1}`,
+      }));
+
+      setViews((prev) => [...prev, ...newEntries]);
+      if (!image && compressedUrls.length > 0) {
+        setImage(compressedUrls[0]);
       }
     } catch (err) {
       console.error("Compression failed:", err);
     } finally {
       setIsCompressing(false);
+      e.target.value = "";
     }
+  };
+
+  const handleSetAsCover = (url: string) => {
+    setImage(url);
   };
 
   const handleDeleteView = (indexToDelete: number) => {
@@ -1673,14 +1708,6 @@ function AddProductModal({
     if (targetUrl === image && updated.length > 0) {
       setImage(updated[0].url);
     }
-  };
-
-  const handleAddUrlView = () => {
-    if (!newViewUrlInput.trim()) return;
-    const url = newViewUrlInput.trim();
-    setViews((prev) => [...prev, { url, label: newViewLabel }]);
-    if (!image) setImage(url);
-    setNewViewUrlInput("");
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -1708,8 +1735,8 @@ function AddProductModal({
       slug = `${slug}-${Date.now().toString().slice(-4)}`;
     }
 
-    const imageUrl = image.trim() || (views.length > 0 ? views[0].url : "/Product/turmeric-zari-brocade.png");
-    const finalViews = views.length > 0 ? views : [{ url: imageUrl, label: "Full drape" }];
+    const imageUrl = image || (views.length > 0 ? views[0].url : "/Product/turmeric-zari-brocade.png");
+    const finalViews = views.length > 0 ? views : [{ url: imageUrl, label: "Cover Page Image" }];
 
     onAddProduct({
       slug,
@@ -1727,7 +1754,7 @@ function AddProductModal({
       care: care.trim() || "Dry clean recommended for first wash.",
     });
 
-    onShowToast(`Saree "${name.trim()}" published to catalog with ${finalViews.length} photo views!`);
+    onShowToast(`Saree "${name.trim()}" published successfully!`);
     onClose();
   };
 
@@ -1761,117 +1788,109 @@ function AddProductModal({
         )}
 
         <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
-          {/* LEFT COLUMN: PRODUCT PHOTO GALLERY MANAGER */}
-          <div className="md:col-span-5 space-y-4 bg-cream/30 p-5 rounded-2xl border border-gold/20">
-            <div className="flex items-center justify-between">
-              <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-700 font-bold flex items-center gap-1.5">
-                <ImageIcon className="h-4 w-4 text-gold" /> Product Photo Gallery ({views.length})
+          {/* LEFT COLUMN: COVER PAGE IMAGE & ADDITIONAL IMAGES */}
+          <div className="md:col-span-5 space-y-6 bg-slate-50/70 p-5 rounded-2xl border border-slate-200">
+            {/* SECTION 1: COVER PAGE IMAGE ADDING */}
+            <div className="space-y-3 bg-white p-4 rounded-xl border border-gold/30 shadow-2xs">
+              <div className="flex items-center justify-between">
+                <label className="text-[11px] uppercase tracking-[0.18em] text-slate-800 font-bold flex items-center gap-1.5">
+                  <Sparkles className="h-4 w-4 text-gold shrink-0" />
+                  <span>Cover Page Image</span>
+                </label>
+                <span className="text-[9px] font-bold uppercase tracking-wider text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">
+                  Main Store Cover
+                </span>
+              </div>
+
+              {/* Cover Image Preview */}
+              <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl border-2 border-gold/50 bg-slate-100 shadow-xs group">
+                <img src={image} alt="Cover Page" className="h-full w-full object-cover" />
+                <span className="absolute top-2 left-2 rounded-full bg-gold px-2.5 py-1 text-[10px] font-bold text-brand-soft shadow-xs">
+                  ★ Cover Page Image
+                </span>
+                {isCompressing && (
+                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center text-white text-xs font-semibold">
+                    Processing Image...
+                  </div>
+                )}
+              </div>
+
+              {/* Cover Image File Upload */}
+              <label className="w-full rounded-xl border border-gold/40 bg-gold/10 hover:bg-gold/20 py-2.5 px-4 flex items-center justify-center gap-2 cursor-pointer text-xs font-bold text-brand-soft transition-colors shadow-2xs whitespace-nowrap">
+                <UploadCloud className="h-4 w-4 text-gold shrink-0" />
+                <span className="whitespace-nowrap">Upload Cover Photo</span>
+                <input type="file" accept="image/*" onChange={handleCoverFileUpload} className="hidden" />
               </label>
-              <span className="text-[10px] text-slate-500 font-semibold">Hover Preview Ready</span>
             </div>
 
-            {/* Active Primary Cover Photo Box */}
-            <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border-2 border-gold/40 bg-white shadow-xs group">
-              <img src={image} alt="Primary Cover" className="h-full w-full object-cover" />
-              <span className="absolute top-2 right-2 rounded-full bg-gold px-2.5 py-1 text-[10px] font-bold text-brand-soft shadow-xs">
-                Primary Cover Photo
-              </span>
-            </div>
+            {/* SECTION 2: ADDITIONAL IMAGES SECTION */}
+            <div className="space-y-3 bg-white p-4 rounded-xl border border-slate-200 shadow-2xs">
+              <div className="flex items-center justify-between">
+                <label className="text-[11px] uppercase tracking-[0.18em] text-slate-800 font-bold flex items-center gap-1.5 whitespace-nowrap">
+                  <ImageIcon className="h-4 w-4 text-brand shrink-0" />
+                  <span className="whitespace-nowrap">Additional Images ({views.length})</span>
+                </label>
+              </div>
 
-            {/* LIST ALL PRODUCT VIEW IMAGES WITH DELETE & MAKE COVER ACTIONS */}
-            <div className="space-y-2.5 pt-1">
-              <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-500 block">
-                Manage Views & Image Details:
-              </span>
+              {/* Additional Photo File Upload (Multiple Selection Enabled) */}
+              <label className="w-full rounded-xl border border-slate-300 bg-white hover:bg-slate-100 py-2.5 px-4 flex items-center justify-center gap-2 cursor-pointer text-xs font-bold text-slate-700 transition-colors shadow-2xs whitespace-nowrap">
+                <UploadCloud className="h-4 w-4 text-brand shrink-0" />
+                <span className="whitespace-nowrap">+ Upload Additional Photos</span>
+                <input type="file" accept="image/*" multiple onChange={handleAdditionalFileUpload} className="hidden" />
+              </label>
 
-              <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
-                {views.map((view, idx) => (
-                  <div
-                    key={idx}
-                    className={`flex items-center justify-between gap-3 p-2.5 rounded-xl border transition-all ${
-                      view.url === image
-                        ? "border-gold bg-gold/10 shadow-2xs"
-                        : "border-slate-200 bg-white hover:border-slate-300"
-                    }`}
-                  >
-                    <img
-                      src={view.url}
-                      alt={view.label}
-                      className="h-12 w-10 rounded-lg object-cover bg-slate-100 shrink-0 border border-slate-200"
-                    />
+              {/* Uploaded Additional Images Gallery */}
+              <div className="space-y-2 pt-2 border-t border-slate-100">
+                <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-500 block whitespace-nowrap">
+                  Uploaded Gallery Images:
+                </span>
 
-                    <div className="flex-1 min-w-0">
-                      <span className="text-xs font-semibold text-slate-800 block truncate">{view.label}</span>
-                      {view.url === image ? (
-                        <span className="text-[9px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full inline-block mt-0.5">
-                          ✓ Primary Cover
-                        </span>
-                      ) : (
+                <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
+                  {views.length === 0 ? (
+                    <p className="text-xs text-slate-400 italic text-center py-2 whitespace-nowrap">No additional images added.</p>
+                  ) : (
+                    views.map((view, idx) => (
+                      <div
+                        key={idx}
+                        className={`flex items-center justify-between gap-3 p-2.5 rounded-xl border transition-all ${
+                          view.url === image
+                            ? "border-gold bg-gold/10 shadow-2xs"
+                            : "border-slate-200 bg-white hover:border-slate-300"
+                        }`}
+                      >
+                        <img
+                          src={view.url}
+                          alt="Gallery item"
+                          className="h-12 w-10 rounded-lg object-cover bg-slate-100 shrink-0 border border-slate-200"
+                        />
+
+                        <div className="flex-1 min-w-0">
+                          {view.url === image ? (
+                            <span className="text-[9px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full inline-block whitespace-nowrap">
+                              ★ Cover Page Image
+                            </span>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={() => handleSetAsCover(view.url)}
+                              className="text-[10px] text-brand hover:underline font-semibold inline-flex items-center gap-1 cursor-pointer whitespace-nowrap"
+                            >
+                              ★ Set as Cover Page
+                            </button>
+                          )}
+                        </div>
+
                         <button
                           type="button"
-                          onClick={() => setImage(view.url)}
-                          className="text-[10px] text-brand hover:underline font-semibold mt-0.5 block"
+                          onClick={() => handleDeleteView(idx)}
+                          title="Remove Image"
+                          className="flex h-8 w-8 items-center justify-center rounded-lg border border-red-200 bg-red-50 text-red-600 hover:bg-red-600 hover:text-white transition-colors cursor-pointer shrink-0"
                         >
-                          Make Cover
+                          <Trash2 className="h-4 w-4" />
                         </button>
-                      )}
-                    </div>
-
-                    <button
-                      type="button"
-                      onClick={() => handleDeleteView(idx)}
-                      title="Delete Image View"
-                      className="flex h-8 w-8 items-center justify-center rounded-lg border border-red-200 bg-red-50 text-red-600 hover:bg-red-600 hover:text-white transition-colors cursor-pointer shrink-0"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* ADD NEW IMAGE VIEW SECTION */}
-            <div className="rounded-xl border border-dashed border-gold/50 bg-white p-3.5 space-y-3">
-              <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-brand-soft block">
-                + Add Additional Saree Image View:
-              </span>
-
-              <div className="space-y-2">
-                <select
-                  value={newViewLabel}
-                  onChange={(e) => setNewViewLabel(e.target.value)}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs text-slate-800 font-semibold outline-none focus:border-gold"
-                >
-                  <option value="On the model">On the model</option>
-                  <option value="Weave detail">Weave detail</option>
-                  <option value="Pallu close-up">Pallu close-up</option>
-                  <option value="Blouse piece">Blouse piece</option>
-                  <option value="Full drape">Full drape</option>
-                </select>
-
-                <div className="flex gap-2">
-                  <label className="flex-1 rounded-xl border border-gold/40 bg-gold/10 hover:bg-gold/20 py-2 px-3 flex items-center justify-center gap-1.5 cursor-pointer text-xs font-semibold text-brand-soft transition-colors shadow-2xs">
-                    <UploadCloud className="h-4 w-4 text-gold shrink-0" />
-                    <span>Upload Photo</span>
-                    <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, true)} className="hidden" />
-                  </label>
-                </div>
-
-                <div className="flex gap-2 pt-1">
-                  <input
-                    type="text"
-                    placeholder="Or paste image URL"
-                    value={newViewUrlInput}
-                    onChange={(e) => setNewViewUrlInput(e.target.value)}
-                    className="flex-1 rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-mono outline-none focus:border-gold text-slate-800"
-                  />
-                  <button
-                    type="button"
-                    onClick={handleAddUrlView}
-                    className="rounded-xl bg-brand px-3 py-1.5 text-xs font-bold text-white hover:bg-brand-soft cursor-pointer transition-colors"
-                  >
-                    Add
-                  </button>
+                      </div>
+                    ))
+                  )}
                 </div>
               </div>
             </div>
@@ -1879,7 +1898,6 @@ function AddProductModal({
 
           {/* RIGHT COLUMN: DETAILS FORM FIELDS */}
           <div className="md:col-span-7 space-y-4">
-            {/* Title */}
             <div>
               <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-semibold">
                 Saree Title / Name *
@@ -1971,17 +1989,17 @@ function AddProductModal({
             </div>
 
             {/* Action Bar */}
-            <div className="pt-4 flex justify-end gap-3 border-t border-slate-100">
+            <div className="pt-4 flex justify-end items-center gap-3 border-t border-slate-100">
               <button
                 type="button"
                 onClick={onClose}
-                className="rounded-full px-5 py-2.5 text-xs font-medium text-slate-500 hover:bg-slate-100 cursor-pointer transition-colors"
+                className="rounded-full px-5 py-2.5 text-xs font-medium text-slate-500 hover:bg-slate-100 cursor-pointer transition-colors whitespace-nowrap"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="rounded-full bg-brand px-8 py-2.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-white hover:bg-brand-soft shadow-md cursor-pointer transition-transform active:scale-95 font-bold"
+                className="rounded-full bg-brand px-8 py-2.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-white hover:bg-brand-soft shadow-md cursor-pointer transition-transform active:scale-95 font-bold whitespace-nowrap"
               >
                 Publish Saree Product
               </button>
@@ -2010,14 +2028,18 @@ function EditProductModal({
   const [colour, setColour] = useState("Gold");
   const [price, setPrice] = useState<number | "">(4500);
   const [status, setStatus] = useState<ProductStatus>("in_stock");
+
+  // Cover Page Image State
   const [image, setImage] = useState("");
+
   const [blurb, setBlurb] = useState("");
   const [fabric, setFabric] = useState("");
   const [blouse, setBlouse] = useState("");
   const [care, setCare] = useState("");
+
+  // Additional Images State
   const [views, setViews] = useState<{ url: string; label: string }[]>([]);
-  const [newViewLabel, setNewViewLabel] = useState("On the model");
-  const [newViewUrlInput, setNewViewUrlInput] = useState("");
+
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isCompressing, setIsCompressing] = useState(false);
 
@@ -2037,7 +2059,7 @@ function EditProductModal({
       const initialViews =
         product.views && product.views.length > 0
           ? product.views
-          : [{ url: product.image, label: "Full drape" }];
+          : [{ url: product.image, label: "Cover Page Image" }];
       setViews(initialViews);
       setErrorMessage(null);
       setIsCompressing(false);
@@ -2052,28 +2074,58 @@ function EditProductModal({
 
   if (!product) return null;
 
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, isNewView = false) => {
+  // Upload Cover Page Image Handler
+  const handleCoverFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     try {
       setIsCompressing(true);
       const compressedUrl = await compressImageFile(file, 800, 0.75);
-      if (isNewView) {
-        setViews((prev) => [...prev, { url: compressedUrl, label: newViewLabel }]);
-        if (!image) setImage(compressedUrl);
-      } else {
-        setImage(compressedUrl);
-        // Ensure primary image is in views
-        if (!views.some((v) => v.url === compressedUrl)) {
-          setViews((prev) => [{ url: compressedUrl, label: "Full drape" }, ...prev]);
-        }
+      setImage(compressedUrl);
+      setViews((prev) => {
+        if (prev.some((v) => v.url === compressedUrl)) return prev;
+        return [{ url: compressedUrl, label: "Cover Page Image" }, ...prev];
+      });
+    } catch (err) {
+      console.error("Compression failed:", err);
+    } finally {
+      setIsCompressing(false);
+      e.target.value = "";
+    }
+  };
+
+  // Upload Additional Images Handler (Supports Multiple File Selection)
+  const handleAdditionalFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    try {
+      setIsCompressing(true);
+      const fileList = Array.from(files);
+      const compressedUrls = await Promise.all(
+        fileList.map((file) => compressImageFile(file, 800, 0.75))
+      );
+
+      const newEntries = compressedUrls.map((url, i) => ({
+        url,
+        label: `Featured Image ${views.length + i + 1}`,
+      }));
+
+      setViews((prev) => [...prev, ...newEntries]);
+      if (!image && compressedUrls.length > 0) {
+        setImage(compressedUrls[0]);
       }
     } catch (err) {
       console.error("Compression failed:", err);
     } finally {
       setIsCompressing(false);
+      e.target.value = "";
     }
+  };
+
+  const handleSetAsCover = (url: string) => {
+    setImage(url);
   };
 
   const handleDeleteView = (indexToDelete: number) => {
@@ -2081,18 +2133,9 @@ function EditProductModal({
     const updated = views.filter((_, i) => i !== indexToDelete);
     setViews(updated);
 
-    // If deleted image was primary cover, reset cover to first remaining image
     if (targetUrl === image && updated.length > 0) {
       setImage(updated[0].url);
     }
-  };
-
-  const handleAddUrlView = () => {
-    if (!newViewUrlInput.trim()) return;
-    const url = newViewUrlInput.trim();
-    setViews((prev) => [...prev, { url, label: newViewLabel }]);
-    if (!image) setImage(url);
-    setNewViewUrlInput("");
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -2110,8 +2153,8 @@ function EditProductModal({
       return;
     }
 
-    const imageUrl = image.trim() || (views.length > 0 ? views[0].url : product.image);
-    const finalViews = views.length > 0 ? views : [{ url: imageUrl, label: "Full drape" }];
+    const imageUrl = image || (views.length > 0 ? views[0].url : product.image);
+    const finalViews = views.length > 0 ? views : [{ url: imageUrl, label: "Cover Page Image" }];
 
     onUpdateProduct(product.slug, {
       name: name.trim(),
@@ -2128,7 +2171,7 @@ function EditProductModal({
       care: care.trim(),
     });
 
-    onShowToast(`Product "${name.trim()}" updated successfully with ${finalViews.length} view images!`);
+    onShowToast(`Product "${name.trim()}" updated successfully!`);
     onClose();
   };
 
@@ -2162,117 +2205,109 @@ function EditProductModal({
         )}
 
         <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
-          {/* LEFT COLUMN: PRODUCT PHOTO GALLERY MANAGER */}
-          <div className="md:col-span-5 space-y-4 bg-cream/30 p-5 rounded-2xl border border-gold/20">
-            <div className="flex items-center justify-between">
-              <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-700 font-bold flex items-center gap-1.5">
-                <ImageIcon className="h-4 w-4 text-gold" /> Product Photo Gallery ({views.length})
+          {/* LEFT COLUMN: COVER PAGE IMAGE & ADDITIONAL IMAGES */}
+          <div className="md:col-span-5 space-y-6 bg-slate-50/70 p-5 rounded-2xl border border-slate-200">
+            {/* SECTION 1: COVER PAGE IMAGE EDITING */}
+            <div className="space-y-3 bg-white p-4 rounded-xl border border-gold/30 shadow-2xs">
+              <div className="flex items-center justify-between">
+                <label className="text-[11px] uppercase tracking-[0.18em] text-slate-800 font-bold flex items-center gap-1.5 whitespace-nowrap">
+                  <Sparkles className="h-4 w-4 text-gold shrink-0" />
+                  <span className="whitespace-nowrap">Cover Page Image</span>
+                </label>
+                <span className="text-[9px] font-bold uppercase tracking-wider text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full whitespace-nowrap">
+                  Main Store Cover
+                </span>
+              </div>
+
+              {/* Cover Image Preview */}
+              <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl border-2 border-gold/50 bg-slate-100 shadow-xs group">
+                <img src={image} alt="Cover Page" className="h-full w-full object-cover" />
+                <span className="absolute top-2 left-2 rounded-full bg-gold px-2.5 py-1 text-[10px] font-bold text-brand-soft shadow-xs whitespace-nowrap">
+                  ★ Cover Page Image
+                </span>
+                {isCompressing && (
+                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center text-white text-xs font-semibold whitespace-nowrap">
+                    Processing Image...
+                  </div>
+                )}
+              </div>
+
+              {/* Cover Image File Upload */}
+              <label className="w-full rounded-xl border border-gold/40 bg-gold/10 hover:bg-gold/20 py-2.5 px-4 flex items-center justify-center gap-2 cursor-pointer text-xs font-bold text-brand-soft transition-colors shadow-2xs whitespace-nowrap">
+                <UploadCloud className="h-4 w-4 text-gold shrink-0" />
+                <span className="whitespace-nowrap">Upload New Cover Photo</span>
+                <input type="file" accept="image/*" onChange={handleCoverFileUpload} className="hidden" />
               </label>
-              <span className="text-[10px] text-slate-500 font-semibold">Hover Preview Ready</span>
             </div>
 
-            {/* Active Primary Cover Photo Box */}
-            <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border-2 border-gold/40 bg-white shadow-xs group">
-              <img src={image} alt="Primary Cover" className="h-full w-full object-cover" />
-              <span className="absolute top-2 right-2 rounded-full bg-gold px-2.5 py-1 text-[10px] font-bold text-brand-soft shadow-xs">
-                Primary Cover Photo
-              </span>
-            </div>
+            {/* SECTION 2: ADDITIONAL IMAGES SECTION */}
+            <div className="space-y-3 bg-white p-4 rounded-xl border border-slate-200 shadow-2xs">
+              <div className="flex items-center justify-between">
+                <label className="text-[11px] uppercase tracking-[0.18em] text-slate-800 font-bold flex items-center gap-1.5 whitespace-nowrap">
+                  <ImageIcon className="h-4 w-4 text-brand shrink-0" />
+                  <span className="whitespace-nowrap">Additional Images ({views.length})</span>
+                </label>
+              </div>
 
-            {/* LIST ALL PRODUCT VIEW IMAGES WITH DELETE & MAKE COVER ACTIONS */}
-            <div className="space-y-2.5 pt-1">
-              <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-500 block">
-                Manage Views & Image Details:
-              </span>
+              {/* Additional Photo File Upload (Multiple Selection Enabled) */}
+              <label className="w-full rounded-xl border border-slate-300 bg-white hover:bg-slate-100 py-2.5 px-4 flex items-center justify-center gap-2 cursor-pointer text-xs font-bold text-slate-700 transition-colors shadow-2xs whitespace-nowrap">
+                <UploadCloud className="h-4 w-4 text-brand shrink-0" />
+                <span className="whitespace-nowrap">+ Upload Additional Photos</span>
+                <input type="file" accept="image/*" multiple onChange={handleAdditionalFileUpload} className="hidden" />
+              </label>
 
-              <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
-                {views.map((view, idx) => (
-                  <div
-                    key={idx}
-                    className={`flex items-center justify-between gap-3 p-2.5 rounded-xl border transition-all ${
-                      view.url === image
-                        ? "border-gold bg-gold/10 shadow-2xs"
-                        : "border-slate-200 bg-white hover:border-slate-300"
-                    }`}
-                  >
-                    <img
-                      src={view.url}
-                      alt={view.label}
-                      className="h-12 w-10 rounded-lg object-cover bg-slate-100 shrink-0 border border-slate-200"
-                    />
+              {/* Uploaded Additional Images Gallery */}
+              <div className="space-y-2 pt-2 border-t border-slate-100">
+                <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-500 block whitespace-nowrap">
+                  Uploaded Gallery Images:
+                </span>
 
-                    <div className="flex-1 min-w-0">
-                      <span className="text-xs font-semibold text-slate-800 block truncate">{view.label}</span>
-                      {view.url === image ? (
-                        <span className="text-[9px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full inline-block mt-0.5">
-                          ✓ Primary Cover
-                        </span>
-                      ) : (
+                <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
+                  {views.length === 0 ? (
+                    <p className="text-xs text-slate-400 italic text-center py-2 whitespace-nowrap">No additional images added.</p>
+                  ) : (
+                    views.map((view, idx) => (
+                      <div
+                        key={idx}
+                        className={`flex items-center justify-between gap-3 p-2.5 rounded-xl border transition-all ${
+                          view.url === image
+                            ? "border-gold bg-gold/10 shadow-2xs"
+                            : "border-slate-200 bg-white hover:border-slate-300"
+                        }`}
+                      >
+                        <img
+                          src={view.url}
+                          alt="Gallery item"
+                          className="h-12 w-10 rounded-lg object-cover bg-slate-100 shrink-0 border border-slate-200"
+                        />
+
+                        <div className="flex-1 min-w-0">
+                          {view.url === image ? (
+                            <span className="text-[9px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full inline-block whitespace-nowrap">
+                              ★ Cover Page Image
+                            </span>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={() => handleSetAsCover(view.url)}
+                              className="text-[10px] text-brand hover:underline font-semibold inline-flex items-center gap-1 cursor-pointer whitespace-nowrap"
+                            >
+                              ★ Set as Cover Page
+                            </button>
+                          )}
+                        </div>
+
                         <button
                           type="button"
-                          onClick={() => setImage(view.url)}
-                          className="text-[10px] text-brand hover:underline font-semibold mt-0.5 block"
+                          onClick={() => handleDeleteView(idx)}
+                          title="Remove Image"
+                          className="flex h-8 w-8 items-center justify-center rounded-lg border border-red-200 bg-red-50 text-red-600 hover:bg-red-600 hover:text-white transition-colors cursor-pointer shrink-0"
                         >
-                          Make Cover
+                          <Trash2 className="h-4 w-4" />
                         </button>
-                      )}
-                    </div>
-
-                    <button
-                      type="button"
-                      onClick={() => handleDeleteView(idx)}
-                      title="Delete Image View"
-                      className="flex h-8 w-8 items-center justify-center rounded-lg border border-red-200 bg-red-50 text-red-600 hover:bg-red-600 hover:text-white transition-colors cursor-pointer shrink-0"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* ADD NEW IMAGE VIEW SECTION */}
-            <div className="rounded-xl border border-dashed border-gold/50 bg-white p-3.5 space-y-3">
-              <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-brand-soft block">
-                + Add Additional Saree Image View:
-              </span>
-
-              <div className="space-y-2">
-                <select
-                  value={newViewLabel}
-                  onChange={(e) => setNewViewLabel(e.target.value)}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs text-slate-800 font-semibold outline-none focus:border-gold"
-                >
-                  <option value="On the model">On the model</option>
-                  <option value="Weave detail">Weave detail</option>
-                  <option value="Pallu close-up">Pallu close-up</option>
-                  <option value="Blouse piece">Blouse piece</option>
-                  <option value="Full drape">Full drape</option>
-                </select>
-
-                <div className="flex gap-2">
-                  <label className="flex-1 rounded-xl border border-gold/40 bg-gold/10 hover:bg-gold/20 py-2 px-3 flex items-center justify-center gap-1.5 cursor-pointer text-xs font-semibold text-brand-soft transition-colors shadow-2xs">
-                    <UploadCloud className="h-4 w-4 text-gold shrink-0" />
-                    <span>Upload Photo</span>
-                    <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, true)} className="hidden" />
-                  </label>
-                </div>
-
-                <div className="flex gap-2 pt-1">
-                  <input
-                    type="text"
-                    placeholder="Or paste image URL"
-                    value={newViewUrlInput}
-                    onChange={(e) => setNewViewUrlInput(e.target.value)}
-                    className="flex-1 rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-mono outline-none focus:border-gold text-slate-800"
-                  />
-                  <button
-                    type="button"
-                    onClick={handleAddUrlView}
-                    className="rounded-xl bg-brand px-3 py-1.5 text-xs font-bold text-white hover:bg-brand-soft cursor-pointer transition-colors"
-                  >
-                    Add
-                  </button>
+                      </div>
+                    ))
+                  )}
                 </div>
               </div>
             </div>
@@ -2365,17 +2400,17 @@ function EditProductModal({
               />
             </div>
 
-            <div className="pt-4 flex justify-end gap-3 border-t border-slate-100">
+            <div className="pt-4 flex justify-end items-center gap-3 border-t border-slate-100">
               <button
                 type="button"
                 onClick={onClose}
-                className="rounded-full px-5 py-2.5 text-xs font-medium text-slate-500 hover:bg-slate-100 cursor-pointer transition-colors"
+                className="rounded-full px-5 py-2.5 text-xs font-medium text-slate-500 hover:bg-slate-100 cursor-pointer transition-colors whitespace-nowrap"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="rounded-full bg-brand px-8 py-2.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-white hover:bg-brand-soft shadow-md cursor-pointer transition-transform active:scale-95 font-bold"
+                className="rounded-full bg-brand px-8 py-2.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-white hover:bg-brand-soft shadow-md cursor-pointer transition-transform active:scale-95 font-bold whitespace-nowrap"
               >
                 Save Changes
               </button>
@@ -2386,3 +2421,4 @@ function EditProductModal({
     </div>
   );
 }
+
