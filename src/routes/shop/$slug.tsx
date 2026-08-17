@@ -71,6 +71,9 @@ function Product() {
   const [qty, setQty] = useState(1);
   const [active, setActive] = useState(0);
 
+  // Blouse Option State: "with" (default) or "without"
+  const [selectedBlouseOption, setSelectedBlouseOption] = useState<"with" | "without">("with");
+
   // Notify Modal State
   const [showNotifyModal, setShowNotifyModal] = useState(false);
   const [notifyEmail, setNotifyEmail] = useState("");
@@ -79,6 +82,13 @@ function Product() {
 
   const storedProduct = products.find((p) => p.slug === saree.slug);
   const status = storedProduct?.status || "in_stock";
+  const blouseAvailability = storedProduct?.blouseAvailability || saree.blouseAvailability || "both";
+  const withoutBlouseDiscount = storedProduct?.withoutBlouseDiscount ?? saree.withoutBlouseDiscount ?? 0;
+
+  const currentPrice =
+    selectedBlouseOption === "without" && withoutBlouseDiscount > 0
+      ? Math.max(1, saree.price - withoutBlouseDiscount)
+      : saree.price;
 
   // Lock background page scroll when modal is open
   useEffect(() => {
@@ -103,16 +113,17 @@ function Product() {
 
   const handleAddToCart = () => {
     triggerFlyToCartAnimation(mainImgRef.current);
-    add(saree.slug, qty);
+    add(saree.slug, qty, selectedBlouseOption);
     incrementCartAdds(saree.slug, qty);
   };
 
   const handleBookNow = () => {
     triggerFlyToCartAnimation(mainImgRef.current);
-    add(saree.slug, qty);
+    add(saree.slug, qty, selectedBlouseOption);
     incrementCartAdds(saree.slug, qty);
     navigate({ to: "/booking" });
   };
+
 
   const handleNotifySubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -210,7 +221,16 @@ function Product() {
           <div>
             <p className="text-[11px] uppercase tracking-[0.24em] text-gold font-bold">{saree.weave}</p>
             <h1 className="mt-2 font-display text-3xl sm:text-4xl leading-tight text-brand-soft">{saree.name}</h1>
-            <p className="mt-3 font-display text-2xl tabular-nums font-medium">{formatPrice(saree.price)}</p>
+            <div className="mt-3 flex items-baseline gap-3">
+              <p className="font-display text-2xl tabular-nums font-medium text-foreground">
+                {formatPrice(currentPrice)}
+              </p>
+              {selectedBlouseOption === "without" && withoutBlouseDiscount > 0 && (
+                <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+                  ✂️ {formatPrice(withoutBlouseDiscount)} Discount Applied
+                </span>
+              )}
+            </div>
             <p className="mt-1 text-[11px] text-muted-foreground">
               Inclusive of taxes · Free shipping inside Kerala
             </p>
@@ -240,6 +260,79 @@ function Product() {
               <dd className="font-medium text-foreground">{saree.care}</dd>
             </div>
           </dl>
+
+          {/* Interactive Blouse Option Selection Card */}
+          {blouseAvailability === "both" ? (
+            <div className="space-y-2 rounded-2xl border border-border bg-card p-4">
+              <label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-bold block mb-1">
+                Select Blouse Option *
+              </label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={() => setSelectedBlouseOption("with")}
+                  className={`flex flex-col items-start justify-between rounded-xl border p-3.5 text-left transition-all cursor-pointer ${
+                    selectedBlouseOption === "with"
+                      ? "border-brand bg-brand/5 ring-2 ring-gold/40"
+                      : "border-border hover:border-border/80 bg-background"
+                  }`}
+                >
+                  <div className="flex items-center justify-between w-full">
+                    <span className="text-xs font-bold text-foreground flex items-center gap-1.5 whitespace-nowrap">
+                      ✂️ With Blouse Piece
+                    </span>
+                    {selectedBlouseOption === "with" && (
+                      <span className="h-2 w-2 rounded-full bg-brand"></span>
+                    )}
+                  </div>
+                  <span className="text-[10px] text-muted-foreground mt-1">
+                    0.8m unstitched piece included
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setSelectedBlouseOption("without")}
+                  className={`flex flex-col items-start justify-between rounded-xl border p-3.5 text-left transition-all cursor-pointer ${
+                    selectedBlouseOption === "without"
+                      ? "border-brand bg-brand/5 ring-2 ring-gold/40"
+                      : "border-border hover:border-border/80 bg-background"
+                  }`}
+                >
+                  <div className="flex items-center justify-between w-full">
+                    <span className="text-xs font-bold text-foreground flex items-center gap-1.5 whitespace-nowrap">
+                      🧵 Without Blouse Piece
+                    </span>
+                    {selectedBlouseOption === "without" && (
+                      <span className="h-2 w-2 rounded-full bg-brand"></span>
+                    )}
+                  </div>
+                  <span className="text-[10px] text-muted-foreground mt-1">
+                    {withoutBlouseDiscount > 0
+                      ? `Save ${formatPrice(withoutBlouseDiscount)} on saree`
+                      : "Saree length only"}
+                  </span>
+                </button>
+              </div>
+            </div>
+          ) : blouseAvailability === "with_only" ? (
+            <div className="rounded-2xl border border-border bg-card p-3.5 flex items-center gap-3">
+              <span className="text-sm">✂️</span>
+              <div>
+                <p className="text-xs font-bold text-foreground">With Blouse Piece Only</p>
+                <p className="text-[10px] text-muted-foreground">Unstitched 0.8m matching blouse fabric included.</p>
+              </div>
+            </div>
+          ) : (
+            <div className="rounded-2xl border border-border bg-card p-3.5 flex items-center gap-3">
+              <span className="text-sm">🧵</span>
+              <div>
+                <p className="text-xs font-bold text-foreground">Without Blouse Piece (Saree Only)</p>
+                <p className="text-[10px] text-muted-foreground">Blouse piece is not included with this drape.</p>
+              </div>
+            </div>
+          )}
+
 
           {/* Action CTAs */}
           <div className="space-y-3">

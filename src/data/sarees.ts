@@ -1,5 +1,7 @@
 export type SareeView = { url: string; label: string };
 
+export type BlouseAvailability = "both" | "with_only" | "without_only";
+
 export type Saree = {
   slug: string;
   name: string;
@@ -12,7 +14,10 @@ export type Saree = {
   fabric: string;
   blouse: string;
   care: string;
+  blouseAvailability?: BlouseAvailability;
+  withoutBlouseDiscount?: number;
 };
+
 
 const views = (flat: string, model: string, detail: string): SareeView[] => [
   { url: flat, label: "Full drape" },

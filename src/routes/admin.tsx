@@ -8,7 +8,8 @@ import {
   type ExtendedSaree,
   type Order,
 } from "@/lib/shop-store";
-import { formatPrice, weaves } from "@/data/sarees";
+import { formatPrice, weaves, type BlouseAvailability } from "@/data/sarees";
+
 import {
   DollarSign,
   ShoppingCart,
@@ -771,7 +772,22 @@ export function AdminPanel() {
                         <h3 className="font-display text-lg font-semibold text-brand-soft">{p.name}</h3>
                         <span className="font-display text-base font-semibold tabular-nums">{formatPrice(p.price)}</span>
                       </div>
-                      <p className="mt-1 text-xs text-muted-foreground line-clamp-2">{p.blurb}</p>
+                      <div className="mt-1 flex items-center gap-2">
+                        <span className="text-[10px] font-semibold text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
+                          {p.blouseAvailability === "with_only"
+                            ? "✂️ With Blouse Only"
+                            : p.blouseAvailability === "without_only"
+                            ? "🧵 Without Blouse Only"
+                            : "✂️ Both Options Available"}
+                        </span>
+                        {p.withoutBlouseDiscount && p.withoutBlouseDiscount > 0 ? (
+                          <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">
+                            -₹{p.withoutBlouseDiscount} Without Blouse
+                          </span>
+                        ) : null}
+                      </div>
+                      <p className="mt-1.5 text-xs text-muted-foreground line-clamp-2">{p.blurb}</p>
+
 
                       <div className="mt-3 flex items-center justify-between text-xs text-muted-foreground border-t border-border pt-3">
                         <span className="inline-flex items-center gap-1 font-medium text-foreground">
@@ -1619,6 +1635,8 @@ function AddProductModal({
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isCompressing, setIsCompressing] = useState(false);
+  const [blouseAvailability, setBlouseAvailability] = useState<BlouseAvailability>("both");
+  const [withoutBlouseDiscount, setWithoutBlouseDiscount] = useState<number | "">(0);
 
   useEffect(() => {
     if (isOpen) {
@@ -1634,6 +1652,8 @@ function AddProductModal({
       setFabric("Handwoven pure silk cotton");
       setBlouse("0.8m unstitched blouse piece included");
       setCare("Dry clean recommended for first wash.");
+      setBlouseAvailability("both");
+      setWithoutBlouseDiscount(0);
       setErrorMessage(null);
       setIsCompressing(false);
     } else {
@@ -1644,6 +1664,7 @@ function AddProductModal({
       document.body.style.overflow = "";
     };
   }, [isOpen]);
+
 
   if (!isOpen) return null;
 
@@ -1752,6 +1773,8 @@ function AddProductModal({
       fabric: fabric.trim() || "Handwoven silk cotton",
       blouse: blouse.trim() || "Blouse piece included",
       care: care.trim() || "Dry clean recommended for first wash.",
+      blouseAvailability,
+      withoutBlouseDiscount: Number(withoutBlouseDiscount) || 0,
     });
 
     onShowToast(`Saree "${name.trim()}" published successfully!`);
@@ -1974,6 +1997,38 @@ function AddProductModal({
               </div>
             </div>
 
+            {/* Blouse Option Configuration */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-semibold">
+                  Blouse Option Availability *
+                </label>
+                <select
+                  value={blouseAvailability}
+                  onChange={(e) => setBlouseAvailability(e.target.value as BlouseAvailability)}
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 outline-none focus:border-gold cursor-pointer font-medium"
+                >
+                  <option value="both">Both (With & Without Blouse)</option>
+                  <option value="with_only">With Blouse Piece Only</option>
+                  <option value="without_only">Without Blouse Piece Only</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-semibold">
+                  Without Blouse Discount (₹)
+                </label>
+                <input
+                  type="number"
+                  min={0}
+                  placeholder="0 (Same Price)"
+                  value={withoutBlouseDiscount}
+                  onChange={(e) => setWithoutBlouseDiscount(e.target.value === "" ? "" : Number(e.target.value))}
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 outline-none focus:border-gold font-medium"
+                />
+              </div>
+            </div>
+
             {/* Story Blurb */}
             <div>
               <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-semibold">
@@ -1987,6 +2042,7 @@ function AddProductModal({
                 className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 outline-none focus:border-gold font-medium resize-none"
               />
             </div>
+
 
             {/* Action Bar */}
             <div className="pt-4 flex justify-end items-center gap-3 border-t border-slate-100">
@@ -2042,6 +2098,8 @@ function EditProductModal({
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isCompressing, setIsCompressing] = useState(false);
+  const [blouseAvailability, setBlouseAvailability] = useState<BlouseAvailability>("both");
+  const [withoutBlouseDiscount, setWithoutBlouseDiscount] = useState<number | "">(0);
 
   useEffect(() => {
     if (product) {
@@ -2056,6 +2114,8 @@ function EditProductModal({
       setFabric(product.fabric);
       setBlouse(product.blouse);
       setCare(product.care);
+      setBlouseAvailability(product.blouseAvailability || "both");
+      setWithoutBlouseDiscount(product.withoutBlouseDiscount || 0);
       const initialViews =
         product.views && product.views.length > 0
           ? product.views
@@ -2073,6 +2133,7 @@ function EditProductModal({
   }, [product]);
 
   if (!product) return null;
+
 
   // Upload Cover Page Image Handler
   const handleCoverFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -2169,6 +2230,8 @@ function EditProductModal({
       fabric: fabric.trim(),
       blouse: blouse.trim(),
       care: care.trim(),
+      blouseAvailability,
+      withoutBlouseDiscount: Number(withoutBlouseDiscount) || 0,
     });
 
     onShowToast(`Product "${name.trim()}" updated successfully!`);
@@ -2388,6 +2451,38 @@ function EditProductModal({
               </div>
             </div>
 
+            {/* Blouse Option Configuration */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-semibold">
+                  Blouse Option Availability *
+                </label>
+                <select
+                  value={blouseAvailability}
+                  onChange={(e) => setBlouseAvailability(e.target.value as BlouseAvailability)}
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 outline-none focus:border-gold cursor-pointer font-medium"
+                >
+                  <option value="both">Both (With & Without Blouse)</option>
+                  <option value="with_only">With Blouse Piece Only</option>
+                  <option value="without_only">Without Blouse Piece Only</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-semibold">
+                  Without Blouse Discount (₹)
+                </label>
+                <input
+                  type="number"
+                  min={0}
+                  placeholder="0 (Same Price)"
+                  value={withoutBlouseDiscount}
+                  onChange={(e) => setWithoutBlouseDiscount(e.target.value === "" ? "" : Number(e.target.value))}
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 outline-none focus:border-gold font-medium"
+                />
+              </div>
+            </div>
+
             <div>
               <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-semibold">
                 Short Story / Craft Blurb
@@ -2399,6 +2494,7 @@ function EditProductModal({
                 className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 outline-none focus:border-gold font-medium resize-none"
               />
             </div>
+
 
             <div className="pt-4 flex justify-end items-center gap-3 border-t border-slate-100">
               <button

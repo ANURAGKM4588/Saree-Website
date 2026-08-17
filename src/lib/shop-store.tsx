@@ -27,7 +27,9 @@ export type OrderItem = {
   qty: number;
   price: number;
   image: string;
+  blouseOption?: "with" | "without";
 };
+
 
 export type Order = {
   id: string;

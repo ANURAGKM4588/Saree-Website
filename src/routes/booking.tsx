@@ -66,7 +66,15 @@ function Booking() {
     const saree = getSaree(line.slug);
     return saree ? [{ ...line, saree }] : [];
   });
-  const total = items.reduce((sum, i) => sum + i.saree.price * i.qty, 0);
+
+  const getItemPrice = (item: (typeof items)[0]) => {
+    if (item.blouseOption === "without" && item.saree.withoutBlouseDiscount) {
+      return Math.max(1, item.saree.price - item.saree.withoutBlouseDiscount);
+    }
+    return item.saree.price;
+  };
+
+  const total = items.reduce((sum, i) => sum + getItemPrice(i) * i.qty, 0);
 
   const processOrderCreation = (
     customerName: string,
@@ -80,8 +88,9 @@ function Booking() {
       slug: i.saree.slug,
       name: i.saree.name,
       qty: i.qty,
-      price: i.saree.price,
+      price: getItemPrice(i),
       image: i.saree.image,
+      blouseOption: i.blouseOption || "with",
     }));
 
     const newOrder = createOrder({
@@ -96,6 +105,7 @@ function Booking() {
       paymentId: paymentId,
       paymentStatus: paymentId ? "Paid" : "Pending",
     });
+
 
     // Save address for future orders if checked and logged in
     if (user && saveAddressChecked && address) {
@@ -447,25 +457,35 @@ function Booking() {
           </h2>
 
           <ul className="divide-y divide-border space-y-4">
-            {items.map((item) => (
-              <li key={item.slug} className="flex items-center gap-4 pt-4 first:pt-0">
-                <img
-                  src={item.saree.image}
-                  alt={item.saree.name}
-                  width={60}
-                  height={80}
-                  className="h-16 w-12 rounded-xl object-cover bg-secondary border border-border shrink-0"
-                />
-                <div className="flex-1 min-w-0">
-                  <p className="font-display text-sm font-semibold truncate text-foreground">{item.saree.name}</p>
-                  <p className="text-xs text-muted-foreground">Qty: {item.qty} × {formatPrice(item.saree.price)}</p>
-                </div>
-                <span className="font-display text-sm font-bold tabular-nums text-brand-soft">
-                  {formatPrice(item.saree.price * item.qty)}
-                </span>
-              </li>
-            ))}
+            {items.map((item) => {
+              const itemPrice = getItemPrice(item);
+              const itemKey = `${item.slug}-${item.blouseOption || "with"}`;
+              return (
+                <li key={itemKey} className="flex items-center gap-4 pt-4 first:pt-0">
+                  <img
+                    src={item.saree.image}
+                    alt={item.saree.name}
+                    width={60}
+                    height={80}
+                    className="h-16 w-12 rounded-xl object-cover bg-secondary border border-border shrink-0"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <p className="font-display text-sm font-semibold truncate text-foreground">{item.saree.name}</p>
+                    <div className="flex items-center gap-2 mt-0.5">
+                      <span className="text-xs text-muted-foreground">Qty: {item.qty} × {formatPrice(itemPrice)}</span>
+                      <span className="text-[9px] font-semibold text-brand-soft bg-gold/10 border border-gold/30 px-1.5 py-0.5 rounded-md">
+                        {item.blouseOption === "without" ? "🧵 Without Blouse" : "✂️ With Blouse"}
+                      </span>
+                    </div>
+                  </div>
+                  <span className="font-display text-sm font-bold tabular-nums text-brand-soft">
+                    {formatPrice(itemPrice * item.qty)}
+                  </span>
+                </li>
+              );
+            })}
           </ul>
+
 
           <div className="border-t border-border pt-4 space-y-2">
             <div className="flex justify-between text-xs text-muted-foreground">

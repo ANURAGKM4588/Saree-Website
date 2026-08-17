@@ -24,7 +24,15 @@ function Bag() {
     const saree = getSaree(line.slug);
     return saree ? [{ ...line, saree }] : [];
   });
-  const subtotal = items.reduce((sum, i) => sum + i.saree.price * i.qty, 0);
+
+  const getItemPrice = (item: (typeof items)[0]) => {
+    if (item.blouseOption === "without" && item.saree.withoutBlouseDiscount) {
+      return Math.max(1, item.saree.price - item.saree.withoutBlouseDiscount);
+    }
+    return item.saree.price;
+  };
+
+  const subtotal = items.reduce((sum, i) => sum + getItemPrice(i) * i.qty, 0);
 
   return (
     <div className="mx-auto max-w-4xl px-6 py-16">
@@ -45,42 +53,56 @@ function Bag() {
       ) : (
         <>
           <ul className="mt-10 divide-y divide-border rounded-xl border border-border bg-card px-6">
-            {items.map((item) => (
-              <li key={item.slug} className="flex gap-6 py-6">
-                <img
-                  src={item.saree.image}
-                  alt={item.saree.name}
-                  width={912}
-                  height={1200}
-                  loading="lazy"
-                  className="h-32 w-24 shrink-0 rounded-lg bg-secondary object-cover"
-                />
-                <div className="flex flex-1 flex-col justify-between">
-                  <div className="flex justify-between gap-4">
-                    <div>
-                      <p className="font-display text-lg">{item.saree.name}</p>
-                      <p className="mt-1 text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
-                        {item.saree.weave}
+            {items.map((item) => {
+              const itemPrice = getItemPrice(item);
+              const itemKey = `${item.slug}-${item.blouseOption || "with"}`;
+              return (
+                <li key={itemKey} className="flex gap-6 py-6">
+                  <img
+                    src={item.saree.image}
+                    alt={item.saree.name}
+                    width={912}
+                    height={1200}
+                    loading="lazy"
+                    className="h-32 w-24 shrink-0 rounded-lg bg-secondary object-cover"
+                  />
+                  <div className="flex flex-1 flex-col justify-between">
+                    <div className="flex justify-between gap-4">
+                      <div>
+                        <p className="font-display text-lg">{item.saree.name}</p>
+                        <div className="flex items-center gap-2 mt-1">
+                          <span className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground font-medium">
+                            {item.saree.weave}
+                          </span>
+                          <span className="text-muted-foreground">•</span>
+                          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full border bg-secondary/80 text-foreground">
+                            {item.blouseOption === "without" ? "🧵 Without Blouse Piece" : "✂️ With Blouse Piece"}
+                          </span>
+                        </div>
+                      </div>
+                      <p className="text-sm tabular-nums font-semibold whitespace-nowrap">
+                        {formatPrice(itemPrice * item.qty)}
                       </p>
                     </div>
-                    <p className="text-sm tabular-nums whitespace-nowrap">
-                      {formatPrice(item.saree.price * item.qty)}
-                    </p>
+                    <div className="flex items-center gap-6">
+                      <QuantityStepper
+                        value={item.qty}
+                        onChange={(n) => setQty(item.slug, n, item.blouseOption)}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => remove(item.slug, item.blouseOption)}
+                        className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground hover:text-destructive whitespace-nowrap cursor-pointer"
+                      >
+                        Remove
+                      </button>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-6">
-                    <QuantityStepper value={item.qty} onChange={(n) => setQty(item.slug, n)} />
-                    <button
-                      type="button"
-                      onClick={() => remove(item.slug)}
-                      className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground hover:text-destructive whitespace-nowrap"
-                    >
-                      Remove
-                    </button>
-                  </div>
-                </div>
-              </li>
-            ))}
+                </li>
+              );
+            })}
           </ul>
+
 
           <div className="mt-8 flex items-center justify-between rounded-xl bg-cream px-6 py-5">
             <p className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground whitespace-nowrap">Subtotal</p>
