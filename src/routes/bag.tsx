@@ -76,7 +76,7 @@ function Bag() {
                           </span>
                           <span className="text-muted-foreground">•</span>
                           <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full border bg-secondary/80 text-foreground">
-                            {item.blouseOption === "without" ? "🧵 Without Blouse Piece" : "✂️ With Blouse Piece"}
+                            {item.blouseOption === "without" ? "🧵 Extra Blouse Piece" : "✂️ With Attached Blouse"}
                           </span>
                         </div>
                       </div>

@@ -279,14 +279,14 @@ function Product() {
                 >
                   <div className="flex items-center justify-between w-full">
                     <span className="text-xs font-bold text-foreground flex items-center gap-1.5 whitespace-nowrap">
-                      ✂️ With Blouse Piece
+                      ✂️ With Attached Blouse
                     </span>
                     {selectedBlouseOption === "with" && (
                       <span className="h-2 w-2 rounded-full bg-brand"></span>
                     )}
                   </div>
                   <span className="text-[10px] text-muted-foreground mt-1">
-                    0.8m unstitched piece included
+                    Matching attached blouse fabric included
                   </span>
                 </button>
 
@@ -301,7 +301,7 @@ function Product() {
                 >
                   <div className="flex items-center justify-between w-full">
                     <span className="text-xs font-bold text-foreground flex items-center gap-1.5 whitespace-nowrap">
-                      🧵 Without Blouse Piece
+                      🧵 Extra Blouse Piece
                     </span>
                     {selectedBlouseOption === "without" && (
                       <span className="h-2 w-2 rounded-full bg-brand"></span>
@@ -310,7 +310,7 @@ function Product() {
                   <span className="text-[10px] text-muted-foreground mt-1">
                     {withoutBlouseDiscount > 0
                       ? `Save ${formatPrice(withoutBlouseDiscount)} on saree`
-                      : "Saree length only"}
+                      : "Extra unstitched blouse piece"}
                   </span>
                 </button>
               </div>
@@ -319,19 +319,20 @@ function Product() {
             <div className="rounded-2xl border border-border bg-card p-3.5 flex items-center gap-3">
               <span className="text-sm">✂️</span>
               <div>
-                <p className="text-xs font-bold text-foreground">With Blouse Piece Only</p>
-                <p className="text-[10px] text-muted-foreground">Unstitched 0.8m matching blouse fabric included.</p>
+                <p className="text-xs font-bold text-foreground">With Attached Blouse Only</p>
+                <p className="text-[10px] text-muted-foreground">Matching attached blouse fabric included.</p>
               </div>
             </div>
           ) : (
             <div className="rounded-2xl border border-border bg-card p-3.5 flex items-center gap-3">
               <span className="text-sm">🧵</span>
               <div>
-                <p className="text-xs font-bold text-foreground">Without Blouse Piece (Saree Only)</p>
-                <p className="text-[10px] text-muted-foreground">Blouse piece is not included with this drape.</p>
+                <p className="text-xs font-bold text-foreground">Extra Blouse Piece</p>
+                <p className="text-[10px] text-muted-foreground">Includes additional unstitched blouse piece.</p>
               </div>
             </div>
           )}
+
 
 
           {/* Action CTAs */}

@@ -2025,8 +2025,8 @@ function AddProductModal({
                     className="h-4 w-4 accent-amber-600 rounded border-slate-300"
                   />
                   <div>
-                    <p className="text-xs font-bold text-slate-800">✂️ With Blouse Piece</p>
-                    <p className="text-[10px] text-slate-500 font-normal">Include unstitched blouse fabric</p>
+                    <p className="text-xs font-bold text-slate-800">✂️ With Attached Blouse</p>
+                    <p className="text-[10px] text-slate-500 font-normal">Saree comes with attached blouse fabric</p>
                   </div>
                 </label>
 
@@ -2052,10 +2052,11 @@ function AddProductModal({
                     className="h-4 w-4 accent-amber-600 rounded border-slate-300"
                   />
                   <div>
-                    <p className="text-xs font-bold text-slate-800">🧵 Saree Only (Without Blouse)</p>
-                    <p className="text-[10px] text-slate-500 font-normal">Allow purchase without blouse</p>
+                    <p className="text-xs font-bold text-slate-800">🧵 Extra Blouse Piece</p>
+                    <p className="text-[10px] text-slate-500 font-normal">Includes extra unstitched blouse piece</p>
                   </div>
                 </label>
+
               </div>
 
               {(blouseAvailability === "both" || blouseAvailability === "without_only") && (
@@ -2526,8 +2527,8 @@ function EditProductModal({
                     className="h-4 w-4 accent-amber-600 rounded border-slate-300"
                   />
                   <div>
-                    <p className="text-xs font-bold text-slate-800">✂️ With Blouse Piece</p>
-                    <p className="text-[10px] text-slate-500 font-normal">Include unstitched blouse fabric</p>
+                    <p className="text-xs font-bold text-slate-800">✂️ With Attached Blouse</p>
+                    <p className="text-[10px] text-slate-500 font-normal">Saree comes with attached blouse fabric</p>
                   </div>
                 </label>
 
@@ -2553,10 +2554,11 @@ function EditProductModal({
                     className="h-4 w-4 accent-amber-600 rounded border-slate-300"
                   />
                   <div>
-                    <p className="text-xs font-bold text-slate-800">🧵 Saree Only (Without Blouse)</p>
-                    <p className="text-[10px] text-slate-500 font-normal">Allow purchase without blouse</p>
+                    <p className="text-xs font-bold text-slate-800">🧵 Extra Blouse Piece</p>
+                    <p className="text-[10px] text-slate-500 font-normal">Includes extra unstitched blouse piece</p>
                   </div>
                 </label>
+
               </div>
 
               {(blouseAvailability === "both" || blouseAvailability === "without_only") && (

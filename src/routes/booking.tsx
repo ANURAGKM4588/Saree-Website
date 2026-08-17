@@ -474,7 +474,7 @@ function Booking() {
                     <div className="flex items-center gap-2 mt-0.5">
                       <span className="text-xs text-muted-foreground">Qty: {item.qty} × {formatPrice(itemPrice)}</span>
                       <span className="text-[9px] font-semibold text-brand-soft bg-gold/10 border border-gold/30 px-1.5 py-0.5 rounded-md">
-                        {item.blouseOption === "without" ? "🧵 Without Blouse" : "✂️ With Blouse"}
+                        {item.blouseOption === "without" ? "🧵 Extra Blouse Piece" : "✂️ With Attached Blouse"}
                       </span>
                     </div>
                   </div>
