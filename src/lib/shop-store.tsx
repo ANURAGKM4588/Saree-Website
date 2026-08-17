@@ -77,7 +77,7 @@ type ShopStoreContextType = {
   resetStore: () => void;
 };
 
-const PRODUCTS_KEY = "kadha_admin_products_v5";
+const PRODUCTS_KEY = "kadha_admin_products_v6";
 const ORDERS_KEY = "kadha_admin_orders_v2";
 const NOTIFY_KEY = "kadha_admin_notify_v2";
 
@@ -101,16 +101,26 @@ function sanitizeProducts(prods: ExtendedSaree[]): ExtendedSaree[] {
   if (!Array.isArray(prods) || prods.length === 0) return initialProducts;
   return prods.map((p) => {
     let cleanImage = p.image;
-    // If image is missing or an old uncompressed giant base64 (> 100KB string length), sanitize to default asset
-    if (!cleanImage || (typeof cleanImage === "string" && cleanImage.length > 100000)) {
-      cleanImage = "/Product/turmeric-zari-brocade.png";
+    const defaultSareeMatch = defaultSarees.find((s) => s.slug === p.slug);
+    const fallbackImage = defaultSareeMatch?.image || "/Product/turmeric-zari-brocade.png";
+
+    if (!cleanImage || (typeof cleanImage === "string" && cleanImage.length > 5000000)) {
+      cleanImage = fallbackImage;
+    } else if (
+      defaultSareeMatch &&
+      p.slug !== "turmeric-zari-brocade" &&
+      cleanImage === "/Product/turmeric-zari-brocade.png"
+    ) {
+      cleanImage = defaultSareeMatch.image;
     }
+
     return {
       ...p,
       image: cleanImage,
     };
   });
 }
+
 
 function sanitizeOrders(dbOrders: any[]): Order[] {
   if (!Array.isArray(dbOrders) || dbOrders.length === 0) return initialOrders;
