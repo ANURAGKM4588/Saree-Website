@@ -1973,16 +1973,15 @@ function AddProductModal({
                 <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-semibold">
                   Weave Type
                 </label>
-                <select
+                <input
+                  type="text"
+                  placeholder="e.g. Kanjivaram, Banarasi, Sungudi..."
                   value={weave}
                   onChange={(e) => setWeave(e.target.value)}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 outline-none focus:border-gold cursor-pointer font-medium"
-                >
-                  {weaves.map((w) => (
-                    <option key={w} value={w}>{w}</option>
-                  ))}
-                </select>
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 outline-none focus:border-gold font-medium"
+                />
               </div>
+
 
               <div>
                 <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-semibold">
@@ -2427,16 +2426,15 @@ function EditProductModal({
                 <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-semibold">
                   Weave Type
                 </label>
-                <select
+                <input
+                  type="text"
+                  placeholder="e.g. Kanjivaram, Banarasi, Sungudi..."
                   value={weave}
                   onChange={(e) => setWeave(e.target.value)}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 outline-none focus:border-gold cursor-pointer font-medium"
-                >
-                  {weaves.map((w) => (
-                    <option key={w} value={w}>{w}</option>
-                  ))}
-                </select>
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 outline-none focus:border-gold font-medium"
+                />
               </div>
+
 
               <div>
                 <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-semibold">
