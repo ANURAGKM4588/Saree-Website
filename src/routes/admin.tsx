@@ -2,7 +2,6 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import {
   useShopStore,
-  getSmartProductImage,
   type ProductStatus,
   type OrderStatus,
   type NotifyRequestStatus,
@@ -747,7 +746,7 @@ export function AdminPanel() {
                 >
                   <div>
                     <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl bg-secondary">
-                      <img src={getSmartProductImage(p)} alt={p.name} className="h-full w-full object-cover" />
+                      <img src={p.image} alt={p.name} className="h-full w-full object-cover" />
                       <span className="absolute left-3 top-3 glass-panel rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-brand-soft">
                         {p.weave}
                       </span>
@@ -1566,8 +1565,8 @@ export function AdminPanel() {
   );
 }
 
-// FAST OFFSCREEN CANVAS IMAGE COMPRESSOR (Prevents large base64 browser freezes)
-function compressImageFile(file: File, maxWidth = 800, quality = 0.75): Promise<string> {
+// FAST OFFSCREEN CANVAS IMAGE COMPRESSOR (Produces compact JPEG base64 strings ~40KB for ultra-fast localStorage saving)
+function compressImageFile(file: File, maxWidth = 600, quality = 0.65): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -2158,8 +2157,7 @@ function EditProductModal({
       setColour(product.colour);
       setPrice(product.price);
       setStatus(product.status);
-      const smartCover = getSmartProductImage(product);
-      setImage(smartCover);
+      setImage(product.image || "/Product/turmeric-zari-brocade.png");
       setBlurb(product.blurb);
       setFabric(product.fabric);
       setBlouse(product.blouse);
@@ -2169,7 +2167,7 @@ function EditProductModal({
       const initialViews =
         product.views && product.views.length > 0
           ? product.views
-          : [{ url: smartCover, label: "Cover Page Image" }];
+          : [{ url: product.image || "/Product/turmeric-zari-brocade.png", label: "Cover Page Image" }];
       setViews(initialViews);
       setErrorMessage(null);
       setIsCompressing(false);
