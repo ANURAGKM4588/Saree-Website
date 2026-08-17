@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import {
   useShopStore,
+  getSmartProductImage,
   type ProductStatus,
   type OrderStatus,
   type NotifyRequestStatus,
@@ -746,7 +747,7 @@ export function AdminPanel() {
                 >
                   <div>
                     <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl bg-secondary">
-                      <img src={p.image} alt={p.name} className="h-full w-full object-cover" />
+                      <img src={getSmartProductImage(p)} alt={p.name} className="h-full w-full object-cover" />
                       <span className="absolute left-3 top-3 glass-panel rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-brand-soft">
                         {p.weave}
                       </span>
@@ -775,9 +776,9 @@ export function AdminPanel() {
                       <div className="mt-1 flex items-center gap-2">
                         <span className="text-[10px] font-semibold text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
                           {p.blouseAvailability === "with_only"
-                            ? "✂️ With Blouse Only"
+                            ? "✂️ With Attached Blouse Only"
                             : p.blouseAvailability === "without_only"
-                            ? "🧵 Without Blouse Only"
+                            ? "🧵 Extra Blouse Piece Only"
                             : "✂️ Both Options Available"}
                         </span>
                         {p.withoutBlouseDiscount && p.withoutBlouseDiscount > 0 ? (
@@ -2157,7 +2158,8 @@ function EditProductModal({
       setColour(product.colour);
       setPrice(product.price);
       setStatus(product.status);
-      setImage(product.image);
+      const smartCover = getSmartProductImage(product);
+      setImage(smartCover);
       setBlurb(product.blurb);
       setFabric(product.fabric);
       setBlouse(product.blouse);
@@ -2167,7 +2169,7 @@ function EditProductModal({
       const initialViews =
         product.views && product.views.length > 0
           ? product.views
-          : [{ url: product.image, label: "Cover Page Image" }];
+          : [{ url: smartCover, label: "Cover Page Image" }];
       setViews(initialViews);
       setErrorMessage(null);
       setIsCompressing(false);

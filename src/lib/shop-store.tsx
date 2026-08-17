@@ -77,9 +77,56 @@ type ShopStoreContextType = {
   resetStore: () => void;
 };
 
-const PRODUCTS_KEY = "kadha_admin_products_v6";
+const PRODUCTS_KEY = "kadha_admin_products_v7";
 const ORDERS_KEY = "kadha_admin_orders_v2";
 const NOTIFY_KEY = "kadha_admin_notify_v2";
+
+export function getSmartProductImage(p: ExtendedSaree): string {
+  if (p.image && p.image !== "/Product/turmeric-zari-brocade.png") {
+    return p.image;
+  }
+  if (p.slug === "turmeric-zari-brocade") {
+    return "/Product/turmeric-zari-brocade.png";
+  }
+
+  if (Array.isArray(p.views) && p.views.length > 0) {
+    const nonDefaultView = p.views.find((v) => v.url && v.url !== "/Product/turmeric-zari-brocade.png");
+    if (nonDefaultView) return nonDefaultView.url;
+  }
+
+  const defaultBySlug = defaultSarees.find((s) => s.slug === p.slug);
+  if (defaultBySlug?.image && defaultBySlug.image !== "/Product/turmeric-zari-brocade.png") {
+    return defaultBySlug.image;
+  }
+
+  const defaultByName = defaultSarees.find((s) => s.name.toLowerCase() === p.name.toLowerCase());
+  if (defaultByName?.image && defaultByName.image !== "/Product/turmeric-zari-brocade.png") {
+    return defaultByName.image;
+  }
+
+  const searchStr = `${p.name} ${p.colour || ""} ${p.weave || ""}`.toLowerCase();
+
+  if (searchStr.includes("maroon") || searchStr.includes("red") || searchStr.includes("ruby") || searchStr.includes("crimson")) {
+    return "/Product/Sungudi cotton red.png";
+  }
+  if (searchStr.includes("brown") || searchStr.includes("earth") || searchStr.includes("copper") || searchStr.includes("coffee")) {
+    return "/Product/Sungudi cotton brown.png";
+  }
+  if (searchStr.includes("orange") || searchStr.includes("marigold") || searchStr.includes("amber")) {
+    return "/Product/Sungudi cotton orange.png";
+  }
+  if (searchStr.includes("mul mul") || searchStr.includes("sunrise") || searchStr.includes("blue") || searchStr.includes("chanderi")) {
+    return "/Product/sunrise-stripe-cotton.png";
+  }
+  if (searchStr.includes("mustard") || searchStr.includes("yellow") || searchStr.includes("saffron")) {
+    return "/Product/Sungudi cotton yellow.png";
+  }
+  if (searchStr.includes("green") || searchStr.includes("emerald")) {
+    return "/Product/ChatGPT Image Aug 11, 2026, 12_01_09 AM.png";
+  }
+
+  return p.image || "/Product/mustard-kanchi-cotton.png";
+}
 
 const initialProducts: ExtendedSaree[] = defaultSarees.map((saree, idx) => {
   return {
@@ -100,26 +147,23 @@ const ShopStoreContext = createContext<ShopStoreContextType | null>(null);
 function sanitizeProducts(prods: ExtendedSaree[]): ExtendedSaree[] {
   if (!Array.isArray(prods) || prods.length === 0) return initialProducts;
   return prods.map((p) => {
-    let cleanImage = p.image;
-    const defaultSareeMatch = defaultSarees.find((s) => s.slug === p.slug);
-    const fallbackImage = defaultSareeMatch?.image || "/Product/turmeric-zari-brocade.png";
-
-    if (!cleanImage || (typeof cleanImage === "string" && cleanImage.length > 5000000)) {
-      cleanImage = fallbackImage;
-    } else if (
-      defaultSareeMatch &&
-      p.slug !== "turmeric-zari-brocade" &&
-      cleanImage === "/Product/turmeric-zari-brocade.png"
-    ) {
-      cleanImage = defaultSareeMatch.image;
-    }
+    const cleanImage = getSmartProductImage(p);
+    const updatedViews =
+      Array.isArray(p.views) && p.views.length > 0
+        ? p.views.map((v) => ({
+            ...v,
+            url: v.url === "/Product/turmeric-zari-brocade.png" && p.slug !== "turmeric-zari-brocade" ? cleanImage : v.url,
+          }))
+        : [{ url: cleanImage, label: "Cover Page Image" }];
 
     return {
       ...p,
       image: cleanImage,
+      views: updatedViews,
     };
   });
 }
+
 
 
 function sanitizeOrders(dbOrders: any[]): Order[] {
