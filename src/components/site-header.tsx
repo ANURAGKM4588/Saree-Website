@@ -24,22 +24,6 @@ export function SiteHeader() {
 
   return (
     <div className="sticky top-0 z-40">
-      {/* Top E-Commerce Announcement Bar */}
-      <div className="bg-brand-soft text-center text-[10px] uppercase tracking-[0.22em] text-primary-foreground">
-        <div className="mx-auto max-w-[1400px] px-4 py-2 flex items-center justify-center gap-3 font-medium flex-wrap">
-          <span>Complimentary Insured Delivery Across Kerala & India</span>
-          <span className="hidden sm:inline text-gold">·</span>
-          <a
-            href="https://wa.me/918156938843"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-gold transition-colors inline-flex items-center gap-1 font-semibold"
-          >
-            <MessageSquare className="h-3 w-3 text-emerald-400" /> WhatsApp Direct Order: +91 8156938843
-          </a>
-        </div>
-      </div>
-
       {/* Main E-Commerce Navigation Bar */}
       <header className="border-b border-border bg-background shadow-xs relative z-50">
         <div className="mx-auto flex h-[72px] max-w-[1400px] items-center justify-between px-5 lg:px-8">
