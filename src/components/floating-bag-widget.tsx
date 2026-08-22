@@ -19,28 +19,37 @@ export function FloatingBagWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const lastScrollY = useRef(0);
+  const ticking = useRef(false);
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Scroll direction listener: slide out down when scrolling down, slide in when scrolling up
+  // 120 FPS Apple-style Scroll direction listener with requestAnimationFrame & hardware acceleration
   useEffect(() => {
     const handleScroll = () => {
-      const currentScrollY = window.scrollY;
+      if (!ticking.current) {
+        window.requestAnimationFrame(() => {
+          const currentScrollY = window.scrollY;
 
-      if (currentScrollY > 100) {
-        if (currentScrollY > lastScrollY.current + 6) {
-          // Scrolling DOWN: Slide button out to bottom
-          setIsVisible(false);
-        } else if (currentScrollY < lastScrollY.current - 6) {
-          // Scrolling UP: Slide button back into view
-          setIsVisible(true);
-        }
-      } else {
-        // Near top of page: Always visible
-        setIsVisible(true);
+          if (currentScrollY > 120) {
+            const diff = currentScrollY - lastScrollY.current;
+            if (diff > 12) {
+              // Scrolling DOWN: Slide button out smoothly to bottom
+              setIsVisible(false);
+            } else if (diff < -12) {
+              // Scrolling UP: Slide button back smoothly into view
+              setIsVisible(true);
+            }
+          } else {
+            // Near top of page: Always visible
+            setIsVisible(true);
+          }
+
+          lastScrollY.current = currentScrollY;
+          ticking.current = false;
+        });
+
+        ticking.current = true;
       }
-
-      lastScrollY.current = currentScrollY;
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -76,11 +85,15 @@ export function FloatingBagWidget() {
   return (
     <aside
       aria-label="Floating Shopping Bag"
-      className={`fixed bottom-5 right-4 sm:bottom-6 sm:right-6 z-50 flex flex-col items-end transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+      className={`fixed bottom-5 right-4 sm:bottom-6 sm:right-6 z-50 flex flex-col items-end transform-gpu will-change-transform transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${
         isVisible || isOpen
-          ? "translate-y-0 opacity-100 pointer-events-auto"
-          : "translate-y-28 opacity-0 pointer-events-none"
+          ? "translate-y-0 scale-100 opacity-100 pointer-events-auto"
+          : "translate-y-[130%] scale-90 opacity-0 pointer-events-none"
       }`}
+      style={{
+        backfaceVisibility: "hidden",
+        WebkitBackfaceVisibility: "hidden",
+      }}
     >
       {/* EXPANDED DYNAMIC BAG PANEL (Light Theme Vertical Shape Popup) */}
       {isOpen && (
