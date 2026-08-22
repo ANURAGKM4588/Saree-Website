@@ -33,9 +33,8 @@ export const weaves = ["Kanjivaram", "Banarasi", "Chanderi", "Chettinad", "Ikat"
 export const getSaree = (slug: string): Saree | undefined => {
   if (typeof window !== "undefined") {
     try {
-      const keys = ["kadha_admin_products_v9", "kadha_admin_products_v8", "kadha_admin_products_v7", "kadha_admin_products_v6", "kadha_admin_products_v5", "kadha_admin_products_v4", "kadha_admin_products_v3", "kadha_admin_products_v2", "kadha_admin_products_v1"];
-      for (const key of keys) {
-        const raw = localStorage.getItem(key);
+      for (let i = 25; i >= 1; i--) {
+        const raw = localStorage.getItem(`kadha_admin_products_v${i}`);
         if (raw) {
           const stored: Saree[] = JSON.parse(raw);
           const match = stored.find((s) => s.slug === slug);

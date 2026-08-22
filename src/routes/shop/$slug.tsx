@@ -24,8 +24,23 @@ import {
 export const Route = createFileRoute("/shop/$slug")({
   loader: ({ params }) => {
     const saree = getSaree(params.slug);
-    if (!saree) throw notFound();
-    return saree;
+    if (saree) return saree;
+
+    const title = params.slug.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+    return {
+      slug: params.slug,
+      name: title,
+      weave: "Handloom",
+      colour: "Multi",
+      price: 4999,
+      image: "/logo/Favicon.png",
+      views: [{ url: "/logo/Favicon.png", label: "Cover Page Image" }],
+      blurb: "Handcrafted authentic handloom saree.",
+      fabric: "Pure Handwoven Fabric",
+      blouse: "Blouse piece included",
+      care: "Dry clean recommended.",
+      blouseAvailability: "both",
+    } as Saree;
   },
   head: ({ loaderData }) => ({
     meta: loaderData
@@ -53,7 +68,7 @@ export const Route = createFileRoute("/shop/$slug")({
                 price: loaderData.price,
                 priceCurrency: "INR",
                 availability: "https://schema.org/InStock",
-                url: `https://thread-so-fine.lovable.app/shop/${loaderData.slug}`,
+                url: `https://kadha.shop/shop/${loaderData.slug}`,
               },
             }),
           },
@@ -64,12 +79,16 @@ export const Route = createFileRoute("/shop/$slug")({
 });
 
 function Product() {
-  const saree = Route.useLoaderData();
+  const params = Route.useParams();
+  const loadedSaree = Route.useLoaderData();
   const { add } = useCart();
   const { products, incrementCartAdds, createNotifyRequest } = useShopStore();
   const navigate = useNavigate();
   const [qty, setQty] = useState(1);
   const [active, setActive] = useState(0);
+
+  const storedProduct = products.find((p) => p.slug === (loadedSaree?.slug || params.slug));
+  const saree = storedProduct || loadedSaree;
 
   // Blouse Option State: "with" (default) or "without"
   const [selectedBlouseOption, setSelectedBlouseOption] = useState<"with" | "without">("with");
@@ -80,7 +99,6 @@ function Product() {
   const [notifyPhone, setNotifyPhone] = useState("");
   const [notifySubmitted, setNotifySubmitted] = useState(false);
 
-  const storedProduct = products.find((p) => p.slug === saree.slug);
   const status = storedProduct?.status || "in_stock";
   const blouseAvailability = storedProduct?.blouseAvailability || saree.blouseAvailability || "both";
   const withoutBlouseDiscount = storedProduct?.withoutBlouseDiscount ?? saree.withoutBlouseDiscount ?? 0;
