@@ -64,6 +64,13 @@ export function SareeCard({ saree, tall = false }: { saree: Saree; tall?: boolea
     navigate({ to: "/booking" });
   };
 
+  // Calculate original MRP & discount %
+  const originalMrp =
+    saree.originalPrice && saree.originalPrice > saree.price
+      ? saree.originalPrice
+      : Math.round(saree.price * 1.25);
+  const discountPercent = Math.round(((originalMrp - saree.price) / originalMrp) * 100);
+
   return (
     <div
       className="group relative flex h-full flex-col cursor-pointer"
@@ -98,6 +105,11 @@ export function SareeCard({ saree, tall = false }: { saree: Saree; tall?: boolea
           <span className="glass-panel rounded-full px-2.5 py-0.5 sm:px-3 sm:py-1 text-[9px] sm:text-[10px] font-medium uppercase tracking-[0.16em] text-brand-soft whitespace-nowrap">
             {saree.weave}
           </span>
+          {discountPercent > 0 && status === "in_stock" && (
+            <span className="rounded-full bg-emerald-700 px-2.5 py-0.5 sm:px-3 sm:py-1 text-[8px] sm:text-[9px] font-extrabold uppercase tracking-[0.14em] text-white shadow-md whitespace-nowrap">
+              {discountPercent}% OFF
+            </span>
+          )}
           {status === "out_of_stock" && (
             <span className="rounded-full bg-destructive/90 px-2.5 py-0.5 sm:px-3 sm:py-1 text-[8px] sm:text-[9px] font-semibold uppercase tracking-[0.16em] text-destructive-foreground shadow-sm whitespace-nowrap">
               Out of Stock
@@ -175,27 +187,34 @@ export function SareeCard({ saree, tall = false }: { saree: Saree; tall?: boolea
         </div>
       </div>
 
-      <div className="flex flex-1 items-start justify-between gap-4 px-1 pt-4">
+      <div className="flex flex-1 items-start justify-between gap-3 px-1 pt-4">
         <div className="min-w-0">
           <Link to="/shop/$slug" params={{ slug: saree.slug }} className="hover:underline">
-            <h3 className="truncate font-display text-lg font-medium leading-tight tracking-tight text-brand-soft">
+            <h3 className="truncate font-display text-base sm:text-lg font-semibold leading-tight tracking-tight text-slate-900">
               {saree.name}
             </h3>
           </Link>
-          <p className="mt-1 text-xs text-muted-foreground truncate">{saree.colour} · Handwoven</p>
+          <p className="mt-0.5 text-xs text-muted-foreground truncate">{saree.colour} · Handwoven</p>
           <div className="mt-1 flex items-center gap-1.5">
-            <span className="text-[9px] font-semibold text-muted-foreground bg-muted/80 px-2 py-0.5 rounded-full border border-border/60">
+            <span className="text-[9px] font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full border border-slate-200">
               {saree.blouseAvailability === "with_only"
-                ? "✂️ With Attached Blouse"
+                ? "✂️ Attached Blouse"
                 : saree.blouseAvailability === "without_only"
-                ? "🧵 Extra Blouse Piece"
-                : "✂️ Both Blouse Options"}
+                ? "🧵 Extra Blouse"
+                : "✂️ Both Options"}
             </span>
           </div>
         </div>
-        <p className="shrink-0 font-display text-base font-medium tabular-nums text-foreground whitespace-nowrap">
-          {formatPrice(saree.price)}
-        </p>
+
+        {/* PRICING BLOCK: Crossed-out Old Price & Highlighted New Offer Price */}
+        <div className="shrink-0 text-right flex flex-col items-end">
+          <span className="text-xs text-slate-400 line-through font-sans tabular-nums font-normal">
+            {formatPrice(originalMrp)}
+          </span>
+          <p className="font-display text-base sm:text-lg font-bold tabular-nums text-emerald-800 dark:text-emerald-400 whitespace-nowrap">
+            {formatPrice(saree.price)}
+          </p>
+        </div>
       </div>
     </div>
   );

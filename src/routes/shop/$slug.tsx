@@ -231,16 +231,33 @@ function Product() {
                   : "✂️ Both Attached & Extra Blouse Options Available"}
               </span>
             </div>
-            <div className="mt-3 flex items-baseline gap-3">
-              <p className="font-display text-2xl tabular-nums font-medium text-foreground">
-                {formatPrice(currentPrice)}
-              </p>
-              {selectedBlouseOption === "without" && withoutBlouseDiscount > 0 && (
-                <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
-                  ✂️ {formatPrice(withoutBlouseDiscount)} Discount Applied
-                </span>
-              )}
-            </div>
+            {(() => {
+              const originalMrp =
+                saree.originalPrice && saree.originalPrice > currentPrice
+                  ? saree.originalPrice
+                  : Math.round(currentPrice * 1.25);
+              const discountPercent = Math.round(((originalMrp - currentPrice) / originalMrp) * 100);
+              return (
+                <div className="mt-4 flex flex-wrap items-baseline gap-3">
+                  <span className="text-base sm:text-lg text-slate-400 line-through font-sans tabular-nums font-normal">
+                    {formatPrice(originalMrp)}
+                  </span>
+                  <p className="font-display text-3xl sm:text-4xl tabular-nums font-bold text-emerald-800">
+                    {formatPrice(currentPrice)}
+                  </p>
+                  {discountPercent > 0 && (
+                    <span className="rounded-full bg-emerald-700 px-3 py-1 text-xs font-extrabold text-white shadow-xs">
+                      {discountPercent}% OFF
+                    </span>
+                  )}
+                  {selectedBlouseOption === "without" && withoutBlouseDiscount > 0 && (
+                    <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+                      ✂️ {formatPrice(withoutBlouseDiscount)} Discount Applied
+                    </span>
+                  )}
+                </div>
+              );
+            })()}
             <p className="mt-1 text-[11px] text-muted-foreground">
               Inclusive of taxes · Free shipping inside Kerala
             </p>

@@ -8,6 +8,7 @@ export type Saree = {
   weave: string;
   colour: string;
   price: number;
+  originalPrice?: number;
   image: string;
   views: SareeView[];
   blurb: string;

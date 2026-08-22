@@ -1619,6 +1619,7 @@ function AddProductModal({
   const [weave, setWeave] = useState("Kanjivaram");
   const [colour, setColour] = useState("");
   const [price, setPrice] = useState<number | "">("");
+  const [originalPrice, setOriginalPrice] = useState<number | "">("");
   const [status, setStatus] = useState<ProductStatus>("in_stock");
 
   // Cover Page & Gallery State
@@ -1645,6 +1646,7 @@ function AddProductModal({
       setWeave("Kanjivaram");
       setColour("");
       setPrice("");
+      setOriginalPrice("");
       setStatus("in_stock");
       setImage("");
       setViews([]);
@@ -1780,6 +1782,7 @@ function AddProductModal({
       weave,
       colour: colour.trim() || "Multi",
       price: numPrice,
+      originalPrice: Number(originalPrice) || undefined,
       status,
       stockQty: status === "in_stock" ? 1 : 0,
       image: imageUrl,
@@ -1961,8 +1964,8 @@ function AddProductModal({
               />
             </div>
 
-            {/* Stock Status & Price */}
-            <div className="grid grid-cols-2 gap-3">
+            {/* Stock Status & Pricing */}
+            <div className="grid grid-cols-3 gap-3">
               <div>
                 <label className="block text-[10px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-bold">
                   Stock Status *
@@ -1970,26 +1973,40 @@ function AddProductModal({
                 <select
                   value={status}
                   onChange={(e) => setStatus(e.target.value as ProductStatus)}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2 text-xs text-slate-900 outline-none focus:border-gold cursor-pointer font-medium"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-900 outline-none focus:border-gold cursor-pointer font-medium"
                 >
-                  <option value="in_stock">In Stock (Live on Store)</option>
-                  <option value="out_of_stock">Out of Stock (Request Alert)</option>
-                  <option value="coming_soon">Coming Soon (Priority Booking)</option>
+                  <option value="in_stock">In Stock (Live)</option>
+                  <option value="out_of_stock">Out of Stock</option>
+                  <option value="coming_soon">Coming Soon</option>
                 </select>
               </div>
 
               <div>
-                <label className="block text-[10px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-bold">
-                  Price (INR ₹) *
+                <label className="block text-[10px] uppercase tracking-[0.18em] text-emerald-800 mb-1 font-bold">
+                  Offer Price (₹) *
                 </label>
                 <input
                   type="number"
                   required
                   min={1}
-                  placeholder="e.g. 4500"
+                  placeholder="e.g. 4500 (Selling)"
                   value={price}
                   onChange={(e) => setPrice(e.target.value === "" ? "" : Number(e.target.value))}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2 text-xs text-slate-900 outline-none focus:border-gold font-medium"
+                  className="w-full rounded-xl border border-emerald-300 bg-emerald-50/40 px-3 py-2 text-xs text-slate-900 outline-none focus:border-gold font-bold"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[10px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-bold">
+                  Original MRP (₹)
+                </label>
+                <input
+                  type="number"
+                  min={1}
+                  placeholder="e.g. 6000 (Crossed)"
+                  value={originalPrice}
+                  onChange={(e) => setOriginalPrice(e.target.value === "" ? "" : Number(e.target.value))}
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-900 outline-none focus:border-gold font-medium"
                 />
               </div>
             </div>
@@ -2119,6 +2136,7 @@ function EditProductModal({
   const [weave, setWeave] = useState("Kanjivaram");
   const [colour, setColour] = useState("Gold");
   const [price, setPrice] = useState<number | "">(4500);
+  const [originalPrice, setOriginalPrice] = useState<number | "">("");
   const [status, setStatus] = useState<ProductStatus>("in_stock");
 
   // Cover Page Image State
@@ -2145,6 +2163,7 @@ function EditProductModal({
       setWeave(product.weave);
       setColour(product.colour);
       setPrice(product.price);
+      setOriginalPrice(product.originalPrice || "");
       setStatus(product.status);
       setImage(product.image || "/Product/turmeric-zari-brocade.png");
       setBlurb(product.blurb);
@@ -2268,6 +2287,7 @@ function EditProductModal({
       weave,
       colour: colour.trim(),
       price: numPrice,
+      originalPrice: Number(originalPrice) || undefined,
       status,
       stockQty: status === "in_stock" ? 1 : 0,
       image: imageUrl,
@@ -2438,7 +2458,8 @@ function EditProductModal({
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
+            {/* Stock Status & Pricing */}
+            <div className="grid grid-cols-3 gap-3">
               <div>
                 <label className="block text-[10px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-bold">
                   Stock Status *
@@ -2446,26 +2467,40 @@ function EditProductModal({
                 <select
                   value={status}
                   onChange={(e) => setStatus(e.target.value as ProductStatus)}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2 text-xs text-slate-900 outline-none focus:border-gold cursor-pointer font-medium"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-900 outline-none focus:border-gold cursor-pointer font-medium"
                 >
-                  <option value="in_stock">In Stock (Available)</option>
-                  <option value="out_of_stock">Out of Stock (Request Notify)</option>
-                  <option value="coming_soon">Coming Soon (Register Interest)</option>
+                  <option value="in_stock">In Stock (Live)</option>
+                  <option value="out_of_stock">Out of Stock</option>
+                  <option value="coming_soon">Coming Soon</option>
                 </select>
               </div>
 
               <div>
-                <label className="block text-[10px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-bold">
-                  Price (INR ₹) *
+                <label className="block text-[10px] uppercase tracking-[0.18em] text-emerald-800 mb-1 font-bold">
+                  Offer Price (₹) *
                 </label>
                 <input
                   type="number"
                   required
                   min={1}
-                  placeholder="e.g. 4500"
+                  placeholder="e.g. 4500 (Selling)"
                   value={price}
                   onChange={(e) => setPrice(e.target.value === "" ? "" : Number(e.target.value))}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2 text-xs text-slate-900 outline-none focus:border-gold font-medium"
+                  className="w-full rounded-xl border border-emerald-300 bg-emerald-50/40 px-3 py-2 text-xs text-slate-900 outline-none focus:border-gold font-bold"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[10px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-bold">
+                  Original MRP (₹)
+                </label>
+                <input
+                  type="number"
+                  min={1}
+                  placeholder="e.g. 6000 (Crossed)"
+                  value={originalPrice}
+                  onChange={(e) => setOriginalPrice(e.target.value === "" ? "" : Number(e.target.value))}
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-900 outline-none focus:border-gold font-medium"
                 />
               </div>
             </div>
