@@ -24,47 +24,49 @@ export const Route = createFileRoute("/about")({
 function About() {
   return (
     <div className="min-h-screen bg-background font-sans text-foreground pb-24">
-      {/* 1. HERO BANNER & STORY SPLIT SECTION */}
-      <div className="relative overflow-hidden bg-brand-soft text-primary-foreground py-20 px-6 sm:px-12 lg:px-16 border-b border-gold/20">
-        {/* Decorative subtle background gold glows */}
-        <div className="absolute -top-24 -left-24 h-96 w-96 rounded-full bg-gold/10 blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-24 -right-24 h-96 w-96 rounded-full bg-gold/10 blur-3xl pointer-events-none" />
+      {/* 1. ELEGANT WARM LIGHT HERO SECTION */}
+      <div className="relative overflow-hidden bg-cream/40 py-16 sm:py-24 px-6 sm:px-12 lg:px-16 border-b border-gold/20">
+        {/* Subtle decorative gold glows */}
+        <div className="absolute top-0 right-1/4 h-80 w-80 rounded-full bg-gold/10 blur-3xl pointer-events-none" />
 
-        <div className="mx-auto max-w-[1300px]">
+        <div className="mx-auto max-w-[1280px]">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-            {/* Left Column: Headline & Narrative */}
+            {/* Left Column: Story Headline & Narrative */}
             <div className="lg:col-span-7 space-y-6">
-              <div className="inline-flex items-center gap-2 rounded-full bg-gold/20 border border-gold/40 px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.25em] text-gold gold-frame">
+              <div className="inline-flex items-center gap-2 rounded-full bg-gold/15 border border-gold/30 px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.25em] text-gold gold-frame">
                 <Sparkles className="h-3.5 w-3.5" /> About Kadha Studio
               </div>
 
-              <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl text-primary-foreground leading-[1.1] font-semibold">
+              <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl text-brand-soft leading-[1.1] font-semibold">
                 Kadha means story. <br className="hidden sm:inline" />
                 <span className="text-gold italic font-normal">Ours is told in thread.</span>
               </h1>
 
-              <div className="h-0.5 w-20 bg-gold/50" />
+              <div className="h-0.5 w-20 bg-gold/60" />
 
-              <p className="text-base sm:text-lg leading-relaxed text-primary-foreground/90 font-light">
+              <p className="text-base sm:text-lg leading-relaxed text-muted-foreground font-normal">
                 Kadha was born out of a shared passion and an unbreakable bond between two close friends. We always believed that the beauty of Indian tradition lies in its authenticity. Growing up, we watched the women around us drape stories of grace, strength, and joy through their sarees.
               </p>
 
-              {/* Quote Card */}
-              <div className="relative rounded-2xl bg-white/10 p-6 border border-gold/30 backdrop-blur-xs shadow-lg">
-                <p className="font-display text-lg sm:text-xl text-gold italic leading-relaxed">
+              {/* Light Quote Card */}
+              <div className="relative rounded-2xl bg-white/90 p-6 sm:p-7 border border-gold/30 shadow-md">
+                <div className="absolute -top-3 left-6 bg-gold px-3 py-0.5 text-[9px] font-bold uppercase tracking-wider text-brand-soft rounded-full shadow-2xs">
+                  Shared Dream
+                </div>
+                <p className="font-display text-lg sm:text-xl text-brand-soft italic leading-relaxed pt-1">
                   "We wanted to create something meaningful together—a place where tradition meets uncompromised quality. That shared dream became Kadha."
                 </p>
               </div>
             </div>
 
-            {/* Right Column: Featured Image in Luxury Gold Offset Frame */}
+            {/* Right Column: Featured Image in Gold Frame */}
             <div className="lg:col-span-5 relative">
               <div className="relative mx-auto max-w-md lg:max-w-none">
-                {/* Gold offset background box */}
-                <div className="absolute -inset-3 rounded-3xl bg-gold/20 gold-frame rotate-1 scale-[1.02] pointer-events-none" />
+                {/* Gold offset frame */}
+                <div className="absolute -inset-3 rounded-3xl bg-gold/15 gold-frame rotate-1 scale-[1.02] pointer-events-none" />
                 
-                {/* Main Image Frame */}
-                <div className="relative overflow-hidden rounded-3xl border-2 border-gold/40 bg-brand shadow-2xl">
+                {/* Main Image Enclosure */}
+                <div className="relative overflow-hidden rounded-3xl border-2 border-gold/40 bg-white shadow-2xl">
                   <img
                     src="/logo/About us.png"
                     alt="Kadha Studio About Us"
@@ -73,8 +75,8 @@ function About() {
                     loading="lazy"
                     className="w-full h-auto max-h-[520px] object-cover transition-transform duration-700 hover:scale-105"
                   />
-                  <div className="absolute bottom-4 left-4 right-4 rounded-xl bg-black/60 backdrop-blur-md p-3 border border-white/10 text-center">
-                    <span className="text-[10px] uppercase tracking-[0.22em] text-gold font-bold">
+                  <div className="absolute bottom-4 left-4 right-4 rounded-xl bg-white/90 backdrop-blur-md p-3 border border-gold/30 text-center shadow-md">
+                    <span className="text-[10px] uppercase tracking-[0.22em] text-brand-soft font-bold">
                       Curated with Love • Checked with Care
                     </span>
                   </div>
@@ -86,8 +88,8 @@ function About() {
       </div>
 
       {/* 2. OUR PROMISE & 3 PILLARS SECTION */}
-      <div className="mx-auto max-w-[1300px] px-6 sm:px-12 pt-20">
-        <div className="rounded-3xl bg-cream/70 p-8 sm:p-14 border border-gold/30 shadow-sm relative overflow-hidden">
+      <div className="mx-auto max-w-[1280px] px-6 sm:px-12 pt-20">
+        <div className="rounded-3xl bg-cream/60 p-8 sm:p-14 border border-gold/30 shadow-xs relative overflow-hidden">
           <div className="text-center max-w-3xl mx-auto space-y-3">
             <span className="text-[11px] uppercase tracking-[0.25em] text-gold font-bold block">
               Uncompromised Quality Standard
@@ -145,32 +147,30 @@ function About() {
         </div>
       </div>
 
-      {/* 3. SIGNATURE CLOSING BANNER */}
-      <div className="mx-auto max-w-[1300px] px-6 sm:px-12 pt-16">
-        <div className="relative overflow-hidden rounded-3xl bg-brand-soft p-10 sm:p-16 text-center text-primary-foreground border-2 border-gold/40 shadow-2xl gold-frame">
-          <div className="absolute -right-16 -top-16 h-64 w-64 rounded-full bg-gold/10 blur-2xl pointer-events-none" />
-
+      {/* 3. SIGNATURE CLOSING BANNER (WARM CREAM & GOLD THEME) */}
+      <div className="mx-auto max-w-[1280px] px-6 sm:px-12 pt-16">
+        <div className="relative overflow-hidden rounded-3xl bg-cream/90 p-10 sm:p-16 text-center border-2 border-gold/40 shadow-xl">
           <div className="relative max-w-3xl mx-auto space-y-6">
             <span className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-[0.25em] text-gold font-bold">
               <Sparkles className="h-3.5 w-3.5" /> Welcome To The Family
             </span>
 
-            <h2 className="font-display text-3xl sm:text-5xl font-semibold leading-tight text-primary-foreground">
+            <h2 className="font-display text-3xl sm:text-5xl font-semibold leading-tight text-brand-soft">
               You are Part of Our Kadha
             </h2>
 
-            <p className="text-sm sm:text-base leading-relaxed text-primary-foreground/90 font-light">
+            <p className="text-sm sm:text-base leading-relaxed text-muted-foreground font-normal">
               When you wear a Kadha saree, you aren't just wearing an outfit—you are carrying forward centuries of craftsmanship and becoming a part of our dream.
             </p>
 
-            <p className="text-base sm:text-lg font-medium text-gold italic">
+            <p className="text-base sm:text-lg font-medium text-brand-soft italic">
               Thank you for letting us be a small part of your special memories and everyday celebrations.
             </p>
 
             <div className="pt-4">
               <Link
                 to="/shop"
-                className="inline-flex items-center gap-2 rounded-full bg-gold px-9 py-4 text-xs font-semibold uppercase tracking-[0.22em] text-brand-soft transition-all hover:bg-gold-soft hover:scale-105 shadow-xl cursor-pointer"
+                className="inline-flex items-center gap-2 rounded-full bg-gold px-9 py-4 text-xs font-semibold uppercase tracking-[0.22em] text-brand-soft transition-all hover:bg-gold-soft hover:scale-105 shadow-md cursor-pointer"
               >
                 Explore Our Collection
               </Link>
