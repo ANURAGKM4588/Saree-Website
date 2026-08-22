@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { HeroCarousel } from "@/components/hero-carousel";
+import { HeroSectionOption6 } from "@/components/hero-section-option6";
 import weaver from "@/assets/weaver.jpg";
 import { SareeCard } from "@/components/saree-card";
 import { sarees, weaves } from "@/data/sarees";
@@ -31,7 +31,7 @@ function Index() {
 
   return (
     <div className="pb-4">
-      <HeroCarousel />
+      <HeroSectionOption6 />
 
       {/* Piece of the week */}
       {featured && (
