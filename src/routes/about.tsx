@@ -28,24 +28,15 @@ function About() {
         
         {/* LEFT SIDE: Sticky Full Image Frame */}
         <div className="lg:col-span-5 relative">
-          <div className="lg:sticky lg:top-24 h-full min-h-[400px] lg:min-h-[680px] rounded-3xl overflow-hidden border border-slate-200 shadow-xl bg-slate-900 flex flex-col justify-end">
+          <div className="lg:sticky lg:top-24 h-full min-h-[400px] lg:min-h-[680px] rounded-3xl overflow-hidden border border-slate-200 shadow-xl bg-slate-100">
             <img
               src="/logo/About us.png"
               alt="Kadha Studio About Us"
               width={1408}
               height={912}
               loading="lazy"
-              className="absolute inset-0 w-full h-full object-cover opacity-90 transition-transform duration-700 hover:scale-105"
+              className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
             />
-            {/* Gradient Overlay & Caption Badge */}
-            <div className="relative z-10 p-6 sm:p-8 bg-gradient-to-t from-black/80 via-black/40 to-transparent space-y-2">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-gold/90 px-3.5 py-1 text-[10px] font-bold uppercase tracking-widest text-slate-950">
-                <Sparkles className="h-3 w-3" /> Handpicked Heritage
-              </span>
-              <p className="text-xs text-slate-200 font-medium">
-                Curated with Love • Checked with Care
-              </p>
-            </div>
           </div>
         </div>
 
