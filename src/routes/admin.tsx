@@ -1997,16 +1997,16 @@ function AddProductModal({
               </div>
 
               <div>
-                <label className="block text-[10px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-bold">
-                  Original MRP (₹)
+                <label className="block text-[10px] uppercase tracking-[0.18em] text-red-700 mb-1 font-bold">
+                  Was Price / MRP (₹)
                 </label>
                 <input
                   type="number"
                   min={1}
-                  placeholder="e.g. 6000 (Crossed)"
+                  placeholder="e.g. 6000 (Crossed price)"
                   value={originalPrice}
                   onChange={(e) => setOriginalPrice(e.target.value === "" ? "" : Number(e.target.value))}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-900 outline-none focus:border-gold font-medium"
+                  className="w-full rounded-xl border border-red-200 bg-red-50/30 px-3 py-2 text-xs text-slate-900 outline-none focus:border-gold font-medium"
                 />
               </div>
             </div>
@@ -2491,16 +2491,16 @@ function EditProductModal({
               </div>
 
               <div>
-                <label className="block text-[10px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-bold">
-                  Original MRP (₹)
+                <label className="block text-[10px] uppercase tracking-[0.18em] text-red-700 mb-1 font-bold">
+                  Was Price / MRP (₹)
                 </label>
                 <input
                   type="number"
                   min={1}
-                  placeholder="e.g. 6000 (Crossed)"
+                  placeholder="e.g. 6000 (Crossed price)"
                   value={originalPrice}
                   onChange={(e) => setOriginalPrice(e.target.value === "" ? "" : Number(e.target.value))}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-900 outline-none focus:border-gold font-medium"
+                  className="w-full rounded-xl border border-red-200 bg-red-50/30 px-3 py-2 text-xs text-slate-900 outline-none focus:border-gold font-medium"
                 />
               </div>
             </div>
