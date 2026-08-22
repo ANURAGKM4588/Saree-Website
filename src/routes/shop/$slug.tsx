@@ -256,13 +256,15 @@ function Product() {
                   : Math.round(currentPrice * 1.25);
               const discountPercent = Math.round(((originalMrp - currentPrice) / originalMrp) * 100);
               return (
-                <div className="mt-4 flex flex-wrap items-baseline gap-3">
-                  <span className="text-base sm:text-lg text-slate-400 line-through font-sans tabular-nums font-normal">
-                    {formatPrice(originalMrp)}
-                  </span>
-                  <p className="font-display text-3xl sm:text-4xl tabular-nums font-bold text-emerald-800">
+                <div className="mt-4 flex flex-wrap items-baseline gap-2.5">
+                  <p className="font-display text-3xl sm:text-4xl tabular-nums font-extrabold text-emerald-800">
                     {formatPrice(currentPrice)}
                   </p>
+                  {originalMrp > currentPrice && (
+                    <span className="text-base sm:text-lg text-slate-400 line-through font-sans tabular-nums font-normal">
+                      {formatPrice(originalMrp)}
+                    </span>
+                  )}
                   {discountPercent > 0 && (
                     <span className="rounded-full bg-emerald-700 px-3 py-1 text-xs font-extrabold text-white shadow-xs">
                       {discountPercent}% OFF

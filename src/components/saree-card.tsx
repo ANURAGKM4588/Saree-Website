@@ -187,33 +187,40 @@ export function SareeCard({ saree, tall = false }: { saree: Saree; tall?: boolea
         </div>
       </div>
 
-      <div className="flex flex-1 items-start justify-between gap-3 px-1 pt-4">
-        <div className="min-w-0">
-          <Link to="/shop/$slug" params={{ slug: saree.slug }} className="hover:underline">
-            <h3 className="truncate font-display text-base sm:text-lg font-semibold leading-tight tracking-tight text-slate-900">
-              {saree.name}
-            </h3>
-          </Link>
-          <p className="mt-0.5 text-xs text-muted-foreground truncate">{saree.colour} · Handwoven</p>
-          <div className="mt-1 flex items-center gap-1.5">
-            <span className="text-[9px] font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full border border-slate-200">
-              {saree.blouseAvailability === "with_only"
-                ? "✂️ Attached Blouse"
-                : saree.blouseAvailability === "without_only"
-                ? "🧵 Extra Blouse"
-                : "✂️ Both Options"}
+      <div className="flex flex-1 flex-col px-1 pt-3">
+        <Link to="/shop/$slug" params={{ slug: saree.slug }} className="hover:underline">
+          <h3 className="font-display text-sm sm:text-base font-semibold leading-tight text-slate-900 line-clamp-2">
+            {saree.name}
+          </h3>
+        </Link>
+        <p className="mt-0.5 text-[11px] sm:text-xs text-slate-500 truncate">{saree.colour} · Handwoven</p>
+
+        {/* PRICING & OFFER BLOCK */}
+        <div className="mt-2 flex items-center flex-wrap gap-1.5">
+          <span className="font-display text-base sm:text-lg font-extrabold tabular-nums text-emerald-800 dark:text-emerald-400">
+            {formatPrice(saree.price)}
+          </span>
+          {originalMrp > saree.price && (
+            <span className="text-xs text-slate-400 line-through font-sans tabular-nums font-normal">
+              {formatPrice(originalMrp)}
             </span>
-          </div>
+          )}
+          {discountPercent > 0 && (
+            <span className="text-[9px] font-extrabold text-emerald-800 bg-emerald-100 px-1.5 py-0.5 rounded border border-emerald-200/60">
+              {discountPercent}% OFF
+            </span>
+          )}
         </div>
 
-        {/* PRICING BLOCK: Crossed-out Old Price & Highlighted New Offer Price */}
-        <div className="shrink-0 text-right flex flex-col items-end">
-          <span className="text-xs text-slate-400 line-through font-sans tabular-nums font-normal">
-            {formatPrice(originalMrp)}
+        {/* BLOUSE BADGE */}
+        <div className="mt-1.5 flex items-center">
+          <span className="text-[9px] font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full border border-slate-200/80">
+            {saree.blouseAvailability === "with_only"
+              ? "✂️ Attached Blouse"
+              : saree.blouseAvailability === "without_only"
+              ? "🧵 Extra Blouse"
+              : "✂️ Both Options"}
           </span>
-          <p className="font-display text-base sm:text-lg font-bold tabular-nums text-emerald-800 dark:text-emerald-400 whitespace-nowrap">
-            {formatPrice(saree.price)}
-          </p>
         </div>
       </div>
     </div>
