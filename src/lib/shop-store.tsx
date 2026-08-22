@@ -204,9 +204,18 @@ export function ShopStoreProvider({ children }: { children: ReactNode }) {
 
     async function syncSupabaseData() {
       try {
-        const { data: dbProducts } = await supabase.from("products").select("*");
-        if (dbProducts && dbProducts.length > 0) {
-          setProducts(sanitizeProducts(dbProducts));
+        const { data: dbProducts, error: dbErr } = await supabase.from("products").select("*");
+        if (!dbErr && dbProducts && dbProducts.length > 0) {
+          const cleanDb = sanitizeProducts(dbProducts);
+          setProducts((prev) => {
+            const map = new Map<string, ExtendedSaree>();
+            prev.forEach((p) => map.set(p.slug, p));
+            cleanDb.forEach((p) => {
+              const existing = map.get(p.slug);
+              map.set(p.slug, existing ? { ...existing, ...p } : p);
+            });
+            return Array.from(map.values());
+          });
         }
         const { data: dbOrders } = await supabase.from("orders").select("*");
         if (dbOrders && dbOrders.length > 0) {
