@@ -77,7 +77,7 @@ function About() {
                 Uncompromised Quality Standard
               </span>
               <h2 className="mt-2 font-display text-3xl sm:text-4xl font-semibold text-brand-soft">
-                Our Promise: Curated with Love, Checked with Care
+                Curated with Love, Checked with Care
               </h2>
               <p className="mt-3 text-sm text-muted-foreground font-medium italic">
                 "We don’t just sell sarees; we handpick them as if we were choosing them for our own family."
