@@ -96,34 +96,36 @@ const ShopStoreContext = createContext<ShopStoreContextType | null>(null);
 
 function sanitizeProducts(prods: any[]): ExtendedSaree[] {
   if (!Array.isArray(prods) || prods.length === 0) return initialProducts;
-  return prods.map((p) => {
-    const cleanImage = p.image || "/logo/Favicon.png";
-    const updatedViews =
-      Array.isArray(p.views) && p.views.length > 0
-        ? p.views
-        : [{ url: cleanImage, label: "Cover Page Image" }];
+  return prods
+    .filter(Boolean)
+    .map((p) => {
+      const cleanImage = p.image || "/logo/Favicon.png";
+      const updatedViews =
+        Array.isArray(p.views) && p.views.length > 0
+          ? p.views
+          : [{ url: cleanImage, label: "Cover Page Image" }];
 
-    return {
-      slug: p.slug,
-      name: p.name,
-      weave: p.weave,
-      colour: p.colour,
-      price: Number(p.price) || 0,
-      originalPrice: p.original_price ? Number(p.original_price) : p.originalPrice ? Number(p.originalPrice) : undefined,
-      status: p.status || "in_stock",
-      stockQty: p.stock_qty ?? p.stockQty ?? 1,
-      cartAddsCount: p.cart_adds_count ?? p.cartAddsCount ?? 0,
-      image: cleanImage,
-      views: updatedViews,
-      blurb: p.blurb || "",
-      fabric: p.fabric || "",
-      blouse: p.blouse || "",
-      care: p.care || "",
-      blouseAvailability: p.blouse_availability || p.blouseAvailability || "both",
-      withoutBlouseDiscount: p.without_blouse_discount ?? p.withoutBlouseDiscount ?? 0,
-      publishedAt: p.published_at || p.publishedAt,
-    };
-  });
+      return {
+        slug: String(p.slug || `saree-${Math.random().toString().slice(2, 6)}`),
+        name: String(p.name || "Handwoven Saree"),
+        weave: String(p.weave || "Cotton"),
+        colour: String(p.colour || "Multi"),
+        price: Number(p.price) || 0,
+        originalPrice: p.original_price ? Number(p.original_price) : p.originalPrice ? Number(p.originalPrice) : undefined,
+        status: p.status || "in_stock",
+        stockQty: p.stock_qty ?? p.stockQty ?? 1,
+        cartAddsCount: p.cart_adds_count ?? p.cartAddsCount ?? 0,
+        image: cleanImage,
+        views: updatedViews,
+        blurb: p.blurb || "",
+        fabric: p.fabric || "",
+        blouse: p.blouse || "",
+        care: p.care || "",
+        blouseAvailability: p.blouse_availability || p.blouseAvailability || "both",
+        withoutBlouseDiscount: p.without_blouse_discount ?? p.withoutBlouseDiscount ?? 0,
+        publishedAt: p.published_at || p.publishedAt,
+      };
+    });
 }
 
 
