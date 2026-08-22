@@ -30,7 +30,7 @@ function About() {
           <Sparkles className="h-3.5 w-3.5" /> About Kadha Studio
         </span>
         <h1 className="mt-6 font-display text-4xl sm:text-5xl text-brand-soft leading-tight font-semibold">
-          How Our Journey Began
+          Kadha means story. Ours is told in thread.
         </h1>
         <div className="mt-4 mx-auto h-0.5 w-16 bg-gold/60" />
       </div>
