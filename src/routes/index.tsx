@@ -98,14 +98,14 @@ function Index() {
           </div>
         </div>
         <div className="mt-7 flex flex-wrap gap-3">
-          {weaves.map((weave) => (
+          {Array.from(new Set([...products.map((p) => p.weave).filter(Boolean), ...weaves])).map((w) => (
             <Link
-              key={weave}
+              key={w}
               to="/shop"
-              search={{ weave }}
-              className="rounded-full border border-border bg-card px-6 py-3 text-sm text-brand-soft transition-colors hover:border-ink hover:bg-ink hover:text-primary-foreground"
+              search={{ weave: w }}
+              className="rounded-full border border-border bg-card px-5 py-2.5 text-xs font-medium text-brand-soft transition-colors hover:border-ink hover:bg-ink hover:text-primary-foreground shadow-2xs"
             >
-              {weave}
+              {w}
             </Link>
           ))}
         </div>

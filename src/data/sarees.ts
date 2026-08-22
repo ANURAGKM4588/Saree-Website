@@ -28,7 +28,17 @@ const views = (flat: string, model: string, detail: string): SareeView[] => [
 
 export const sarees: Saree[] = [];
 
-export const weaves = ["Kanjivaram", "Banarasi", "Chanderi", "Chettinad", "Ikat", "Cotton"];
+export const weaves = [
+  "Mulmul Cotton",
+  "Sungudi Cotton",
+  "Kanjivaram",
+  "Banarasi",
+  "Chanderi",
+  "Chettinad",
+  "Ikat",
+  "Tissue Silk",
+  "Tussar Silk",
+];
 
 export const getSaree = (slug: string): Saree | undefined => {
   if (typeof window !== "undefined") {

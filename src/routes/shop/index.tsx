@@ -53,10 +53,13 @@ function Shop() {
   const { weave } = Route.useSearch();
   const { products } = useShopStore();
 
+  const productWeaves = Array.from(new Set(products.map((p) => p.weave).filter(Boolean)));
+  const activeWeaves = Array.from(new Set([...productWeaves, ...weaves]));
+
   const list = weave ? products.filter((s) => s.weave === weave) : products;
 
   const pill =
-    "rounded-full px-5 py-2 text-[10px] uppercase tracking-[0.2em] transition-colors border";
+    "rounded-full px-5 py-2 text-[10px] uppercase tracking-[0.2em] transition-colors border font-semibold";
 
   return (
     <div className="pb-8">
@@ -72,10 +75,10 @@ function Shop() {
       </div>
 
       <div className="mx-auto max-w-[1400px] px-5 lg:px-8">
-        <h2 className="mt-12 text-center text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
-          Browse by weave
+        <h2 className="mt-12 text-center text-[10px] uppercase tracking-[0.3em] text-muted-foreground font-semibold">
+          Browse by weave category
         </h2>
-        <div className="mt-10 flex flex-wrap justify-center gap-3">
+        <div className="mt-8 flex flex-wrap justify-center gap-3">
           <Link
             to="/shop"
             className={`${pill} ${
@@ -86,7 +89,7 @@ function Shop() {
           >
             All
           </Link>
-          {weaves.map((w) => (
+          {activeWeaves.map((w) => (
             <Link
               key={w}
               to="/shop"
