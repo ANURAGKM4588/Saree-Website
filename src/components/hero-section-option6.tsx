@@ -38,7 +38,7 @@ export function HeroSectionOption6() {
         onMouseMove={handleMouseMove}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        className="relative w-full min-h-[560px] sm:min-h-[640px] lg:min-h-[720px] group cursor-crosshair select-none"
+        className="relative w-full min-h-[560px] sm:min-h-[640px] lg:min-h-[720px] group cursor-default select-none"
       >
         {/* BASE LAYER: BLACK & WHITE / GRAYSCALE HERO IMAGE */}
         <img
