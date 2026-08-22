@@ -247,6 +247,7 @@ export function ShopStoreProvider({ children }: { children: ReactNode }) {
         weave: item.weave,
         colour: item.colour,
         price: item.price,
+        original_price: item.originalPrice,
         status: item.status,
         stock_qty: item.stockQty,
         image: item.image,
@@ -255,9 +256,13 @@ export function ShopStoreProvider({ children }: { children: ReactNode }) {
         fabric: item.fabric,
         blouse: item.blouse,
         care: item.care,
+        blouse_availability: item.blouseAvailability,
+        without_blouse_discount: item.withoutBlouseDiscount,
         cart_adds_count: item.cartAddsCount,
         published_at: item.publishedAt,
-      }).then();
+      }).then(({ error }) => {
+        if (error) console.warn("Supabase addProduct error:", error.message);
+      });
     }
   }, []);
 
