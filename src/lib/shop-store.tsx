@@ -159,11 +159,28 @@ function sanitizeOrders(dbOrders: any[]): Order[] {
   });
 }
 
-export function ShopStoreProvider({ children }: { children: ReactNode }) {
-  const [products, setProducts] = useState<ExtendedSaree[]>(() => {
-    if (typeof window === "undefined") return initialProducts;
+function loadInitialProducts(): ExtendedSaree[] {
+  if (typeof window === "undefined") return initialProducts;
+  const keysToSearch = [
+    PRODUCTS_KEY,
+    "kadha_admin_products_v25",
+    "kadha_admin_products_v20",
+    "kadha_admin_products_v15",
+    "kadha_admin_products_v12",
+    "kadha_admin_products_v9",
+    "kadha_admin_products_v8",
+    "kadha_admin_products_v7",
+    "kadha_admin_products_v6",
+    "kadha_admin_products_v5",
+    "kadha_admin_products_v4",
+    "kadha_admin_products_v3",
+    "kadha_admin_products_v2",
+    "kadha_admin_products_v1",
+  ];
+
+  for (const key of keysToSearch) {
     try {
-      const raw = localStorage.getItem(PRODUCTS_KEY);
+      const raw = localStorage.getItem(key);
       if (raw) {
         const parsed = JSON.parse(raw);
         if (Array.isArray(parsed) && parsed.length > 0) {
@@ -171,8 +188,12 @@ export function ShopStoreProvider({ children }: { children: ReactNode }) {
         }
       }
     } catch { }
-    return initialProducts;
-  });
+  }
+  return initialProducts;
+}
+
+export function ShopStoreProvider({ children }: { children: ReactNode }) {
+  const [products, setProducts] = useState<ExtendedSaree[]>(loadInitialProducts);
 
   const [orders, setOrders] = useState<Order[]>(() => {
     if (typeof window === "undefined") return initialOrders;
@@ -222,6 +243,32 @@ export function ShopStoreProvider({ children }: { children: ReactNode }) {
         const { data: dbProducts, error: dbErr } = await supabase.from("products").select("*");
         if (!dbErr && Array.isArray(dbProducts) && dbProducts.length > 0) {
           setProducts(sanitizeProducts(dbProducts));
+        } else if (!dbErr && Array.isArray(dbProducts) && dbProducts.length === 0) {
+          const localProds = loadInitialProducts();
+          if (localProds.length > 0) {
+            localProds.forEach((item) => {
+              supabase.from("products").upsert({
+                slug: item.slug,
+                name: item.name,
+                weave: item.weave,
+                colour: item.colour,
+                price: item.price,
+                original_price: item.originalPrice,
+                status: item.status,
+                stock_qty: item.stockQty,
+                image: item.image,
+                views: item.views,
+                blurb: item.blurb,
+                fabric: item.fabric,
+                blouse: item.blouse,
+                care: item.care,
+                blouse_availability: item.blouseAvailability,
+                without_blouse_discount: item.withoutBlouseDiscount,
+                cart_adds_count: item.cartAddsCount,
+                published_at: item.publishedAt,
+              }).then();
+            });
+          }
         }
         const { data: dbOrders } = await supabase.from("orders").select("*");
         if (dbOrders && dbOrders.length > 0) {
