@@ -63,8 +63,8 @@ export function FloatingBagWidget() {
     setIsOpen(false);
   }, [location.pathname]);
 
-  // Do not show on Admin panel
-  if (location.pathname.startsWith("/admin")) {
+  // Only show the floating bag button on the Home page ("/")
+  if (location.pathname !== "/") {
     return null;
   }
 
