@@ -24,15 +24,8 @@ export function HeroSectionOption6() {
         {/* ALL-WHITE ELEGANT & MINIMAL TEXT OVERLAY ON IMAGE */}
         <div className="relative z-10 mx-auto max-w-[1400px] flex h-full min-h-[560px] sm:min-h-[640px] lg:min-h-[720px] flex-col justify-between p-6 sm:p-12 lg:p-16">
           
-          {/* TOP EYEBROW BADGE (FONT-SANS SUBHEADING) */}
-          <div className="flex items-center justify-between pt-2 sm:pt-4">
-            <div className="inline-flex items-center gap-2.5 rounded-full border border-white/30 bg-white/10 px-4.5 py-2 backdrop-blur-md">
-              <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse" />
-              <span className="font-sans text-[10px] font-bold uppercase tracking-[0.25em] text-white">
-                Kadha Handwoven Studio · Kerala 2026
-              </span>
-            </div>
-
+          {/* TOP BAR */}
+          <div className="flex items-center justify-end pt-2 sm:pt-4">
             <div className="hidden sm:inline-flex items-center gap-1.5 font-sans text-xs font-semibold uppercase tracking-[0.2em] text-white/90">
               <Sparkles className="h-3.5 w-3.5 text-white" /> Insured Free Kerala Delivery
             </div>
