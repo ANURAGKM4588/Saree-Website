@@ -53,8 +53,9 @@ function Shop() {
   const { weave } = Route.useSearch();
   const { products } = useShopStore();
 
-  const productWeaves = Array.from(new Set(products.map((p) => p.weave).filter(Boolean)));
-  const activeWeaves = Array.from(new Set([...productWeaves, ...weaves]));
+  const activeWeaves = Array.from(
+    new Set(products.map((p) => p.weave?.trim()).filter(Boolean) as string[])
+  );
 
   const list = weave ? products.filter((s) => s.weave === weave) : products;
 
@@ -75,35 +76,39 @@ function Shop() {
       </div>
 
       <div className="mx-auto max-w-[1400px] px-5 lg:px-8">
-        <h2 className="mt-12 text-center text-[10px] uppercase tracking-[0.3em] text-muted-foreground font-semibold">
-          Browse by weave category
-        </h2>
-        <div className="mt-8 flex flex-wrap justify-center gap-3">
-          <Link
-            to="/shop"
-            className={`${pill} ${
-              weave
-                ? "border-border text-muted-foreground hover:border-gold hover:text-brand"
-                : "border-brand bg-brand text-primary-foreground"
-            }`}
-          >
-            All
-          </Link>
-          {activeWeaves.map((w) => (
-            <Link
-              key={w}
-              to="/shop"
-              search={{ weave: w }}
-              className={`${pill} ${
-                w === weave
-                  ? "border-brand bg-brand text-primary-foreground"
-                  : "border-border text-muted-foreground hover:border-gold hover:text-brand"
-              }`}
-            >
-              {w}
-            </Link>
-          ))}
-        </div>
+        {activeWeaves.length > 0 && (
+          <>
+            <h2 className="mt-12 text-center text-[10px] uppercase tracking-[0.3em] text-muted-foreground font-semibold">
+              Browse by weave category
+            </h2>
+            <div className="mt-8 flex flex-wrap justify-center gap-3">
+              <Link
+                to="/shop"
+                className={`${pill} ${
+                  weave
+                    ? "border-border text-muted-foreground hover:border-gold hover:text-brand"
+                    : "border-brand bg-brand text-primary-foreground"
+                }`}
+              >
+                All ({products.length})
+              </Link>
+              {activeWeaves.map((w) => (
+                <Link
+                  key={w}
+                  to="/shop"
+                  search={{ weave: w }}
+                  className={`${pill} ${
+                    w === weave
+                      ? "border-brand bg-brand text-primary-foreground"
+                      : "border-border text-muted-foreground hover:border-gold hover:text-brand"
+                  }`}
+                >
+                  {w}
+                </Link>
+              ))}
+            </div>
+          </>
+        )}
 
         <h2 className="mt-14 text-center font-display text-2xl text-brand-soft">
           {weave ? `${weave} sarees` : "Every saree in the collection"}

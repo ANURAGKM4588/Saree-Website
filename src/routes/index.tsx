@@ -88,28 +88,36 @@ function Index() {
       </section>
 
       {/* Weave pills */}
-      <section className="mx-auto max-w-[1400px] px-5 pt-16 lg:px-8">
-        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-end gap-4">
-          <div className="min-w-0">
-            <p className="text-xs font-medium uppercase tracking-[0.2em] text-brand">Shop by weave</p>
-            <h2 className="mt-3 font-display text-3xl font-semibold tracking-tight text-brand-soft sm:text-4xl">
-              Find your drape
-            </h2>
-          </div>
-        </div>
-        <div className="mt-7 flex flex-wrap gap-3">
-          {Array.from(new Set([...products.map((p) => p.weave).filter(Boolean), ...weaves])).map((w) => (
-            <Link
-              key={w}
-              to="/shop"
-              search={{ weave: w }}
-              className="rounded-full border border-border bg-card px-5 py-2.5 text-xs font-medium text-brand-soft transition-colors hover:border-ink hover:bg-ink hover:text-primary-foreground shadow-2xs"
-            >
-              {w}
-            </Link>
-          ))}
-        </div>
-      </section>
+      {(() => {
+        const liveWeaves = Array.from(
+          new Set(products.map((p) => p.weave?.trim()).filter(Boolean) as string[])
+        );
+        if (liveWeaves.length === 0) return null;
+        return (
+          <section className="mx-auto max-w-[1400px] px-5 pt-16 lg:px-8">
+            <div className="grid grid-cols-[minmax(0,1fr)_auto] items-end gap-4">
+              <div className="min-w-0">
+                <p className="text-xs font-medium uppercase tracking-[0.2em] text-brand">Shop by category</p>
+                <h2 className="mt-3 font-display text-3xl font-semibold tracking-tight text-brand-soft sm:text-4xl">
+                  Find your drape
+                </h2>
+              </div>
+            </div>
+            <div className="mt-7 flex flex-wrap gap-3">
+              {liveWeaves.map((w) => (
+                <Link
+                  key={w}
+                  to="/shop"
+                  search={{ weave: w }}
+                  className="rounded-full border border-border bg-card px-5 py-2.5 text-xs font-semibold text-brand-soft transition-colors hover:border-ink hover:bg-ink hover:text-primary-foreground shadow-2xs"
+                >
+                  {w}
+                </Link>
+              ))}
+            </div>
+          </section>
+        );
+      })()}
 
       {/* Collection rail */}
       <section className="mx-auto max-w-[1400px] px-5 pt-16 lg:px-8">
