@@ -49,12 +49,12 @@ function About() {
       {/* Featured Banner Image */}
       <div className="mt-12 overflow-hidden rounded-3xl border border-gold/30 shadow-xl">
         <img
-          src={weaver}
-          alt="Master weavers crafting handloom sarees"
+          src="/logo/About us.png"
+          alt="Kadha Studio About Us"
           width={1408}
           height={912}
           loading="lazy"
-          className="aspect-[16/9] w-full object-cover"
+          className="w-full h-auto max-h-[500px] object-cover"
         />
       </div>
 
