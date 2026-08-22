@@ -779,17 +779,6 @@ export function AdminPanel() {
               </div>
             </div>
 
-            {/* Products Drag & Drop Instruction Banner */}
-            <div className="flex items-center justify-between rounded-2xl bg-amber-500/10 border border-amber-500/30 px-4 py-3 text-xs text-amber-950 font-medium">
-              <span className="flex items-center gap-2">
-                <GripVertical className="h-4 w-4 text-gold" />
-                <span><strong>Drag & Drop Reordering:</strong> Drag any saree card by its top handle bar to rearrange product sequence on your store!</span>
-              </span>
-              <span className="text-[10px] font-bold uppercase tracking-wider bg-brand text-primary-foreground px-2.5 py-1 rounded-full">
-                {products.length} Items
-              </span>
-            </div>
-
             {/* Products Grid / Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredProducts.map((p, index) => {
