@@ -81,7 +81,12 @@ const PRODUCTS_KEY = "kadha_admin_products_v10";
 const ORDERS_KEY = "kadha_admin_orders_v2";
 const NOTIFY_KEY = "kadha_admin_notify_v2";
 
-const initialProducts: ExtendedSaree[] = [];
+const initialProducts: ExtendedSaree[] = defaultSarees.map((s) => ({
+  ...s,
+  status: "in_stock",
+  cartAddsCount: 0,
+  stockQty: 1,
+}));
 
 const initialOrders: Order[] = [];
 
@@ -143,12 +148,17 @@ export function ShopStoreProvider({ children }: { children: ReactNode }) {
   const [products, setProducts] = useState<ExtendedSaree[]>(() => {
     if (typeof window === "undefined") return initialProducts;
     try {
-      const raw = localStorage.getItem(PRODUCTS_KEY);
-      const parsed = raw ? JSON.parse(raw) : initialProducts;
-      return sanitizeProducts(parsed);
-    } catch {
-      return initialProducts;
-    }
+      for (let i = 25; i >= 1; i--) {
+        const raw = localStorage.getItem(`kadha_admin_products_v${i}`);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            return sanitizeProducts(parsed);
+          }
+        }
+      }
+    } catch {}
+    return initialProducts;
   });
 
   const [orders, setOrders] = useState<Order[]>(() => {
