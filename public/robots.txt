@@ -13,4 +13,4 @@ Allow: /
 User-agent: *
 Allow: /
 
-Sitemap: https://thread-so-fine.lovable.app/sitemap.xml
+Sitemap: https://kadha.shop/sitemap.xml
