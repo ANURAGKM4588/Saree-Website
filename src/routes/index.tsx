@@ -8,13 +8,13 @@ import { useShopStore } from "@/lib/shop-store";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Kadha — Handwoven Sarees, Quietly Made" },
+      { title: "Kadha Sarees" },
       {
         name: "description",
         content:
           "Kadha offers a small, considered collection of handwoven Kanjivaram, Banarasi, Chanderi and linen sarees. Simple to browse, simple to book.",
       },
-      { property: "og:title", content: "Kadha — Handwoven Sarees, Quietly Made" },
+      { property: "og:title", content: "Kadha Sarees" },
       {
         property: "og:description",
         content: "A small, considered collection of handwoven sarees. The story begins here.",

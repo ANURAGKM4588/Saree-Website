@@ -27,7 +27,7 @@ const htmlContent = `<!DOCTYPE html>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Kadha — Handwoven Sarees</title>
+    <title>Kadha Sarees</title>
     <meta name="description" content="Kadha: a small, considered collection of handwoven sarees. The story begins here." />
     <link rel="icon" href="/logo/Favicon.png" type="image/png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
