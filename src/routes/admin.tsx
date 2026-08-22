@@ -42,6 +42,7 @@ import {
   MapPin,
   User,
   MessageSquare,
+  GripVertical,
 } from "lucide-react";
 import {
   ResponsiveContainer,
@@ -92,6 +93,7 @@ export function AdminPanel() {
     addProduct,
     updateProduct,
     deleteProduct,
+    reorderProducts,
     updateOrderStatus,
     updateNotifyStatus,
     deleteNotifyRequest,
@@ -100,6 +102,47 @@ export function AdminPanel() {
 
   const [activeTab, setActiveTab] = useState<TabType>("overview");
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  // Drag and drop product reordering state
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
+
+  const handleDragStart = (e: React.DragEvent, index: number) => {
+    setDraggedIndex(index);
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/plain", index.toString());
+  };
+
+  const handleDragOver = (e: React.DragEvent, index: number) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+    if (dragOverIndex !== index) {
+      setDragOverIndex(index);
+    }
+  };
+
+  const handleDragEnd = () => {
+    setDraggedIndex(null);
+    setDragOverIndex(null);
+  };
+
+  const handleDrop = (e: React.DragEvent, dropTargetIndex: number) => {
+    e.preventDefault();
+    if (draggedIndex === null || draggedIndex === dropTargetIndex) {
+      setDraggedIndex(null);
+      setDragOverIndex(null);
+      return;
+    }
+
+    const updatedList = [...products];
+    const [movedItem] = updatedList.splice(draggedIndex, 1);
+    updatedList.splice(dropTargetIndex, 0, movedItem);
+
+    reorderProducts(updatedList);
+    showToast(`Reordered "${movedItem.name}" to position #${dropTargetIndex + 1}!`);
+    setDraggedIndex(null);
+    setDragOverIndex(null);
+  };
 
   // Filters state
   const [orderFilter, setOrderFilter] = useState<string>("all");
@@ -736,15 +779,51 @@ export function AdminPanel() {
               </div>
             </div>
 
+            {/* Products Drag & Drop Instruction Banner */}
+            <div className="flex items-center justify-between rounded-2xl bg-amber-500/10 border border-amber-500/30 px-4 py-3 text-xs text-amber-950 font-medium">
+              <span className="flex items-center gap-2">
+                <GripVertical className="h-4 w-4 text-gold" />
+                <span><strong>Drag & Drop Reordering:</strong> Drag any saree card by its top handle bar to rearrange product sequence on your store!</span>
+              </span>
+              <span className="text-[10px] font-bold uppercase tracking-wider bg-brand text-primary-foreground px-2.5 py-1 rounded-full">
+                {products.length} Items
+              </span>
+            </div>
+
             {/* Products Grid / Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredProducts.map((p) => (
-                <div
-                  key={p.slug}
-                  className="group relative flex flex-col justify-between rounded-3xl border border-border bg-card p-5 shadow-xs hover:border-gold/50 transition-all"
-                >
-                  <div>
-                    <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl bg-secondary shadow-xs">
+              {filteredProducts.map((p, index) => {
+                const isDragging = draggedIndex === index;
+                const isTarget = dragOverIndex === index;
+
+                return (
+                  <div
+                    key={p.slug}
+                    draggable
+                    onDragStart={(e) => handleDragStart(e, index)}
+                    onDragOver={(e) => handleDragOver(e, index)}
+                    onDragEnd={handleDragEnd}
+                    onDrop={(e) => handleDrop(e, index)}
+                    className={`group relative flex flex-col justify-between rounded-3xl border bg-card p-5 shadow-xs transition-all cursor-grab active:cursor-grabbing ${
+                      isDragging
+                        ? "opacity-40 border-dashed border-gold scale-95"
+                        : isTarget
+                        ? "ring-4 ring-gold/60 scale-[1.02] border-brand shadow-lg"
+                        : "border-border hover:border-gold/50"
+                    }`}
+                  >
+                    <div>
+                      {/* DRAG HANDLE BAR */}
+                      <div className="mb-3 flex items-center justify-between text-[11px] font-semibold text-muted-foreground bg-secondary/80 px-3 py-1.5 rounded-xl border border-border/60">
+                        <span className="flex items-center gap-1.5 text-brand font-bold">
+                          <GripVertical className="h-4 w-4 text-gold" /> Drag to Arrange
+                        </span>
+                        <span className="font-mono text-[10px] font-bold text-slate-700 bg-background px-2.5 py-0.5 rounded-md border border-border shadow-2xs">
+                          Order #{index + 1}
+                        </span>
+                      </div>
+
+                      <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl bg-secondary shadow-xs">
                       <img
                         src={p.image}
                         alt={p.name}
@@ -854,7 +933,8 @@ export function AdminPanel() {
                     </div>
                   </div>
                 </div>
-              ))}
+              );
+            })}
             </div>
           </div>
         )}

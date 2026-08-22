@@ -68,6 +68,7 @@ type ShopStoreContextType = {
   addProduct: (product: Omit<ExtendedSaree, "cartAddsCount"> & { cartAddsCount?: number }) => void;
   updateProduct: (slug: string, fields: Partial<ExtendedSaree>) => void;
   deleteProduct: (slug: string) => void;
+  reorderProducts: (newProducts: ExtendedSaree[]) => void;
   incrementCartAdds: (slug: string, qty?: number) => void;
   createOrder: (orderData: Omit<Order, "id" | "date" | "status">) => Order;
   updateOrderStatus: (orderId: string, status: OrderStatus) => void;
@@ -398,9 +399,16 @@ export function ShopStoreProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const incrementCartAdds = useCallback((slug: string, qty = 1) => {
+  const reorderProducts = useCallback((newProducts: ExtendedSaree[]) => {
+    setProducts(newProducts);
+    try {
+      localStorage.setItem(PRODUCTS_KEY, JSON.stringify(newProducts));
+    } catch {}
+  }, []);
+
+  const incrementCartAdds = useCallback((slug: string, qty: number = 1) => {
     setProducts((prev) =>
-      prev.map((p) => (p.slug === slug ? { ...p, cartAddsCount: p.cartAddsCount + qty } : p))
+      prev.map((p) => (p.slug === slug ? { ...p, cartAddsCount: (p.cartAddsCount || 0) + qty } : p))
     );
   }, []);
 
@@ -505,6 +513,7 @@ export function ShopStoreProvider({ children }: { children: ReactNode }) {
       addProduct,
       updateProduct,
       deleteProduct,
+      reorderProducts,
       incrementCartAdds,
       createOrder,
       updateOrderStatus,
@@ -521,6 +530,7 @@ export function ShopStoreProvider({ children }: { children: ReactNode }) {
       addProduct,
       updateProduct,
       deleteProduct,
+      reorderProducts,
       incrementCartAdds,
       createOrder,
       updateOrderStatus,
