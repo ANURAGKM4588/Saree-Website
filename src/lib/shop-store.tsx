@@ -77,7 +77,7 @@ type ShopStoreContextType = {
   resetStore: () => void;
 };
 
-const PRODUCTS_KEY = "kadha_admin_products_v15";
+const PRODUCTS_KEY = "kadha_admin_products_v20";
 const ORDERS_KEY = "kadha_admin_orders_v3";
 const NOTIFY_KEY = "kadha_admin_notify_v3";
 
@@ -155,7 +155,7 @@ export function ShopStoreProvider({ children }: { children: ReactNode }) {
           return sanitizeProducts(parsed);
         }
       }
-    } catch {}
+    } catch { }
     return initialProducts;
   });
 
@@ -183,19 +183,19 @@ export function ShopStoreProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     try {
       localStorage.setItem(PRODUCTS_KEY, JSON.stringify(products));
-    } catch {}
+    } catch { }
   }, [products]);
 
   useEffect(() => {
     try {
       localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
-    } catch {}
+    } catch { }
   }, [orders]);
 
   useEffect(() => {
     try {
       localStorage.setItem(NOTIFY_KEY, JSON.stringify(notifyRequests));
-    } catch {}
+    } catch { }
   }, [notifyRequests]);
 
   // Sync from Supabase on mount if keys are configured

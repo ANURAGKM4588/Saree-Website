@@ -19,7 +19,6 @@ export type Saree = {
   withoutBlouseDiscount?: number;
 };
 
-
 const views = (flat: string, model: string, detail: string): SareeView[] => [
   { url: flat, label: "Full drape" },
   { url: model, label: "On the model" },
@@ -30,8 +29,57 @@ import hero1 from "@/assets/hero-1.jpg";
 import hero2 from "@/assets/hero-2.jpg";
 import hero3 from "@/assets/hero-3.jpg";
 import heroBanner from "@/assets/hero-banner.jpg";
+import weaver from "@/assets/weaver.jpg";
 
 export const sarees: Saree[] = [
+  {
+    slug: "turmeric-zari-brocade",
+    name: "Turmeric Zari Brocade Kanjivaram",
+    weave: "Kanjivaram",
+    colour: "Turmeric & Gold",
+    price: 6200,
+    originalPrice: 7800,
+    image: hero1,
+    views: [{ url: hero1, label: "Full drape" }],
+    blurb: "Rich turmeric yellow Kanjivaram woven with heavy zari korvai border and traditional body motifs.",
+    fabric: "Pure Kanchipuram Silk",
+    blouse: "Unstitched contrast blouse piece included",
+    care: "Dry clean only.",
+    blouseAvailability: "both",
+    withoutBlouseDiscount: 500,
+  },
+  {
+    slug: "amber-peacock-silk-cotton",
+    name: "Amber Peacock Silk Cotton Kanjivaram",
+    weave: "Kanjivaram",
+    colour: "Amber Gold",
+    price: 5600,
+    originalPrice: 6900,
+    image: hero2,
+    views: [{ url: hero2, label: "Full drape" }],
+    blurb: "Lustrous amber silk-cotton blend featuring peacock Mayil motifs along the zari border.",
+    fabric: "Handwoven Silk-Cotton Blend",
+    blouse: "Unstitched blouse piece included",
+    care: "Dry clean recommended.",
+    blouseAvailability: "both",
+    withoutBlouseDiscount: 400,
+  },
+  {
+    slug: "coffee-peacock-chettinad",
+    name: "Coffee Peacock Chettinad Cotton",
+    weave: "Chettinad",
+    colour: "Deep Coffee & Maroon",
+    price: 5200,
+    originalPrice: 6500,
+    image: hero3,
+    views: [{ url: hero3, label: "Full drape" }],
+    blurb: "Heritage Chettinad cotton saree in rich coffee hue with handwoven peacock border.",
+    fabric: "High Count Handloom Cotton",
+    blouse: "Unstitched blouse piece included",
+    care: "Gentle hand wash with mild detergent.",
+    blouseAvailability: "both",
+    withoutBlouseDiscount: 400,
+  },
   {
     slug: "mulmul-cotton-handblock-drape",
     name: "Pure Mulmul Cotton Floral Handblock Saree",
@@ -39,8 +87,8 @@ export const sarees: Saree[] = [
     colour: "Pastel Pink & Cream",
     price: 3499,
     originalPrice: 4500,
-    image: hero1,
-    views: [{ url: hero1, label: "Full drape" }],
+    image: heroBanner,
+    views: [{ url: heroBanner, label: "Full drape" }],
     blurb: "Soft, breathable pure Mulmul cotton handblock printed saree crafted by master artisans.",
     fabric: "100% Pure Breathable Mulmul Cotton",
     blouse: "Unstitched matching blouse piece included",
@@ -55,46 +103,14 @@ export const sarees: Saree[] = [
     colour: "Emerald & Gold Zari",
     price: 2999,
     originalPrice: 3999,
-    image: hero2,
-    views: [{ url: hero2, label: "Full drape" }],
+    image: weaver,
+    views: [{ url: weaver, label: "Full drape" }],
     blurb: "Authentic hand-dyed Madurai Sungudi cotton saree with traditional zari border.",
     fabric: "Pure Handloom Sungudi Cotton",
     blouse: "Attached blouse piece included",
     care: "Dry clean recommended for initial wash.",
     blouseAvailability: "both",
     withoutBlouseDiscount: 250,
-  },
-  {
-    slug: "royal-kanjivaram-zari-brocade-saree",
-    name: "Royal Kanjivaram Pure Silk Zari Brocade",
-    weave: "Kanjivaram",
-    colour: "Deep Crimson & Gold",
-    price: 14999,
-    originalPrice: 18500,
-    image: hero3,
-    views: [{ url: hero3, label: "Full drape" }],
-    blurb: "Heirloom Kanjivaram pure silk saree woven with real gold zari borders and korvai weave.",
-    fabric: "Pure Kanchipuram Mulberry Silk",
-    blouse: "Rich brocade unstitched blouse piece included",
-    care: "Dry clean only.",
-    blouseAvailability: "both",
-    withoutBlouseDiscount: 1000,
-  },
-  {
-    slug: "varanasi-banarasi-katan-silk-saree",
-    name: "Varanasi Banarasi Katan Silk Brocade",
-    weave: "Banarasi",
-    colour: "Midnight Blue & Silver",
-    price: 12499,
-    originalPrice: 15999,
-    image: heroBanner,
-    views: [{ url: heroBanner, label: "Full drape" }],
-    blurb: "Exquisite handwoven Banarasi katan silk saree featuring intricate kadwa zari weaving.",
-    fabric: "Pure Banarasi Katan Silk",
-    blouse: "Matching silk blouse piece included",
-    care: "Dry clean only.",
-    blouseAvailability: "both",
-    withoutBlouseDiscount: 800,
   },
 ];
 
@@ -106,8 +122,7 @@ export const weaves = [
   "Chanderi",
   "Chettinad",
   "Ikat",
-  "Tissue Silk",
-  "Tussar Silk",
+  "Cotton",
 ];
 
 export const getSaree = (slug: string): Saree | undefined => {
