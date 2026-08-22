@@ -77,7 +77,7 @@ type ShopStoreContextType = {
   resetStore: () => void;
 };
 
-const PRODUCTS_KEY = "kadha_admin_products_v9";
+const PRODUCTS_KEY = "kadha_admin_products_v10";
 const ORDERS_KEY = "kadha_admin_orders_v2";
 const NOTIFY_KEY = "kadha_admin_notify_v2";
 
@@ -351,12 +351,18 @@ export function ShopStoreProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const resetStore = useCallback(() => {
-    setProducts(initialProducts);
-    setOrders(initialOrders);
-    setNotifyRequests(initialNotifyRequests);
+    setProducts([]);
+    setOrders([]);
+    setNotifyRequests([]);
+    for (let i = 1; i <= 10; i++) {
+      localStorage.removeItem(`kadha_admin_products_v${i}`);
+    }
     localStorage.removeItem(PRODUCTS_KEY);
     localStorage.removeItem(ORDERS_KEY);
     localStorage.removeItem(NOTIFY_KEY);
+    if (isSupabaseConfigured) {
+      supabase.from("products").delete().neq("slug", "").then();
+    }
   }, []);
 
   const value = useMemo(

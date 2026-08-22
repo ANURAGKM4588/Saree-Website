@@ -81,21 +81,7 @@ import {
 
 type TabType = "overview" | "orders" | "products" | "notify" | "cart_analytics" | "emails";
 
-const PRESET_IMAGES = [
-  { url: "/Product/turmeric-zari-brocade.png", label: "Turmeric Zari" },
-  { url: "/Product/amber-peacock-silk-cotton.png", label: "Amber Peacock" },
-  { url: "/Product/coffee-peacock-chettinad.png", label: "Coffee Chettinad" },
-  { url: "/Product/ivory-ikat-handloom.png", label: "Ivory Ikat" },
-  { url: "/Product/kumkum-chettinad-cotton.png", label: "Kumkum Cotton" },
-  { url: "/Product/mustard-kanchi-cotton.png", label: "Mustard Kanchi" },
-  { url: "/Product/olive-ikat-handloom.png", label: "Olive Ikat" },
-  { url: "/Product/rainbow-check-cotton.png", label: "Rainbow Check" },
-  { url: "/Product/sunrise-stripe-cotton.png", label: "Sunrise Stripe" },
-  { url: "/Product/Sungudi cotton red.png", label: "Sungudi Red" },
-  { url: "/Product/Sungudi cotton orange.png", label: "Sungudi Orange" },
-  { url: "/Product/Sungudi cotton yellow.png", label: "Sungudi Yellow" },
-  { url: "/Product/Sungudi cotton brown.png", label: "Sungudi Brown" },
-];
+const PRESET_IMAGES: { url: string; label: string }[] = [];
 
 export function AdminPanel() {
   const {
@@ -239,6 +225,19 @@ export function AdminPanel() {
             </div>
 
             <div className="flex flex-wrap items-center gap-3">
+              <button
+                type="button"
+                onClick={() => {
+                  if (window.confirm("Are you sure you want to delete ALL saree products and start completely freshly from scratch?")) {
+                    resetStore();
+                    showToast("All product records and stock details cleared cleanly!");
+                  }
+                }}
+                className="inline-flex items-center gap-2 rounded-full border border-destructive/40 bg-destructive/10 px-4 py-2.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-destructive hover:bg-destructive hover:text-white transition-colors cursor-pointer whitespace-nowrap"
+              >
+                <Trash2 className="h-4 w-4" /> Clear All Stock Products
+              </button>
+
               <button
                 type="button"
                 onClick={() => {
