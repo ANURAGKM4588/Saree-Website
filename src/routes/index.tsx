@@ -101,12 +101,6 @@ function Index() {
               loading="lazy"
               className="aspect-[4/3] w-full rounded-[2rem] object-cover"
             />
-            <div className="absolute -bottom-6 -right-2 hidden rounded-3xl bg-ink px-7 py-6 text-primary-foreground sm:block">
-              <p className="font-display text-3xl font-semibold tracking-tight text-gold">
-                Since 1998
-              </p>
-              <p className="mt-1 text-xs text-primary-foreground/70">Three generations</p>
-            </div>
           </div>
           <div>
             <p className="text-xs font-medium uppercase tracking-[0.2em] text-brand">
