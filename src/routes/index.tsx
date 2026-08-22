@@ -109,6 +109,7 @@ function Index() {
                   key={w}
                   to="/shop"
                   search={{ weave: w }}
+                  resetScroll={false}
                   className="rounded-full border border-border bg-card px-5 py-2.5 text-xs font-semibold text-brand-soft transition-colors hover:border-ink hover:bg-ink hover:text-primary-foreground shadow-2xs"
                 >
                   {w}

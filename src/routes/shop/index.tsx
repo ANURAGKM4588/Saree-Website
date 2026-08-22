@@ -84,6 +84,7 @@ function Shop() {
             <div className="mt-8 flex flex-wrap justify-center gap-3">
               <Link
                 to="/shop"
+                resetScroll={false}
                 className={`${pill} ${
                   weave
                     ? "border-border text-muted-foreground hover:border-gold hover:text-brand"
@@ -97,6 +98,7 @@ function Shop() {
                   key={w}
                   to="/shop"
                   search={{ weave: w }}
+                  resetScroll={false}
                   className={`${pill} ${
                     w === weave
                       ? "border-brand bg-brand text-primary-foreground"
