@@ -213,15 +213,17 @@ export function SareeCard({ saree, tall = false }: { saree: Saree; tall?: boolea
         )}
 
         {/* BLOUSE BADGE */}
-        <div className="mt-1.5 flex items-center">
-          <span className="text-[9px] font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full border border-slate-200/80">
-            {saree.blouseAvailability === "with_only"
-              ? "✂️ Attached Blouse"
-              : saree.blouseAvailability === "without_only"
-              ? "🧵 Extra Blouse"
-              : "✂️ Both Options"}
-          </span>
-        </div>
+        {saree.blouseAvailability && saree.blouseAvailability !== "none" && (
+          <div className="mt-1.5 flex items-center">
+            <span className="text-[9px] font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full border border-slate-200/80">
+              {saree.blouseAvailability === "with_only"
+                ? "✂️ Attached Blouse"
+                : saree.blouseAvailability === "without_only"
+                ? "🧵 Extra Blouse"
+                : "✂️ Both Options"}
+            </span>
+          </div>
+        )}
       </div>
     </div>
   );

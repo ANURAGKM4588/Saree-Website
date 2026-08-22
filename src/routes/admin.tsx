@@ -776,13 +776,15 @@ export function AdminPanel() {
                         <span className="font-display text-base font-semibold tabular-nums">{formatPrice(p.price)}</span>
                       </div>
                       <div className="mt-1 flex items-center gap-2">
-                        <span className="text-[10px] font-semibold text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
-                          {p.blouseAvailability === "with_only"
-                            ? "✂️ With Attached Blouse Only"
-                            : p.blouseAvailability === "without_only"
-                            ? "🧵 Extra Blouse Piece Only"
-                            : "✂️ Both Options Available"}
-                        </span>
+                        {p.blouseAvailability && p.blouseAvailability !== "none" && (
+                          <span className="text-[10px] font-semibold text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
+                            {p.blouseAvailability === "with_only"
+                              ? "✂️ With Attached Blouse Only"
+                              : p.blouseAvailability === "without_only"
+                              ? "🧵 Extra Blouse Piece Only"
+                              : "✂️ Both Options Available"}
+                          </span>
+                        )}
                         {p.withoutBlouseDiscount && p.withoutBlouseDiscount > 0 ? (
                           <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">
                             -₹{p.withoutBlouseDiscount} Without Blouse

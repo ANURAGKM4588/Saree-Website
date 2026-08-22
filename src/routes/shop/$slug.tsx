@@ -242,15 +242,17 @@ function Product() {
               {status === "coming_soon" ? "Coming Soon" : saree.name}
             </h1>
             
-            <div className="mt-2.5 flex items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/10 border border-amber-500/25 px-3 py-1 text-[11px] font-semibold text-amber-950 shadow-2xs">
-                {blouseAvailability === "with_only"
-                  ? "✂️ With Attached Blouse Only"
-                  : blouseAvailability === "without_only"
-                  ? "🧵 Extra Blouse Piece Only"
-                  : "✂️ Both Attached & Extra Blouse Options Available"}
-              </span>
-            </div>
+            {blouseAvailability && blouseAvailability !== "none" && (
+              <div className="mt-2.5 flex items-center gap-2">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/10 border border-amber-500/25 px-3 py-1 text-[11px] font-semibold text-amber-950 shadow-2xs">
+                  {blouseAvailability === "with_only"
+                    ? "✂️ With Attached Blouse Only"
+                    : blouseAvailability === "without_only"
+                    ? "🧵 Extra Blouse Piece Only"
+                    : "✂️ Both Attached & Extra Blouse Options Available"}
+                </span>
+              </div>
+            )}
             {status !== "coming_soon" && (
               (() => {
                 const originalMrp =
