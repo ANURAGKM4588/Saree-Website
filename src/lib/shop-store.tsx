@@ -264,7 +264,26 @@ export function ShopStoreProvider({ children }: { children: ReactNode }) {
   const updateProduct = useCallback((slug: string, fields: Partial<ExtendedSaree>) => {
     setProducts((prev) => prev.map((p) => (p.slug === slug ? { ...p, ...fields } : p)));
     if (isSupabaseConfigured) {
-      supabase.from("products").update(fields).eq("slug", slug).then();
+      const dbPayload: Record<string, any> = {};
+      if (fields.name !== undefined) dbPayload.name = fields.name;
+      if (fields.weave !== undefined) dbPayload.weave = fields.weave;
+      if (fields.colour !== undefined) dbPayload.colour = fields.colour;
+      if (fields.price !== undefined) dbPayload.price = fields.price;
+      if (fields.originalPrice !== undefined) dbPayload.original_price = fields.originalPrice;
+      if (fields.status !== undefined) dbPayload.status = fields.status;
+      if (fields.stockQty !== undefined) dbPayload.stock_qty = fields.stockQty;
+      if (fields.image !== undefined) dbPayload.image = fields.image;
+      if (fields.views !== undefined) dbPayload.views = fields.views;
+      if (fields.blurb !== undefined) dbPayload.blurb = fields.blurb;
+      if (fields.fabric !== undefined) dbPayload.fabric = fields.fabric;
+      if (fields.blouse !== undefined) dbPayload.blouse = fields.blouse;
+      if (fields.care !== undefined) dbPayload.care = fields.care;
+      if (fields.blouseAvailability !== undefined) dbPayload.blouse_availability = fields.blouseAvailability;
+      if (fields.withoutBlouseDiscount !== undefined) dbPayload.without_blouse_discount = fields.withoutBlouseDiscount;
+
+      supabase.from("products").update(dbPayload).eq("slug", slug).then(({ error }) => {
+        if (error) console.warn("Supabase update error:", error.message);
+      });
     }
   }, []);
 
