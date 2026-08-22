@@ -26,7 +26,7 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   const { products } = useShopStore();
-  const list = products;
+  const list = products || [];
   const featured = list[0];
 
   return (

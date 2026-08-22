@@ -52,12 +52,13 @@ export const Route = createFileRoute("/shop/")({
 function Shop() {
   const { weave } = Route.useSearch();
   const { products } = useShopStore();
+  const activeProducts = products || [];
 
   const activeWeaves = Array.from(
-    new Set(products.map((p) => p.weave?.trim()).filter(Boolean) as string[])
+    new Set(activeProducts.map((p) => p.weave?.trim()).filter(Boolean) as string[])
   );
 
-  const list = weave ? products.filter((s) => s.weave === weave) : products;
+  const list = weave ? activeProducts.filter((s) => s.weave === weave) : activeProducts;
 
   const pill =
     "rounded-full px-5 py-2 text-[10px] uppercase tracking-[0.2em] transition-colors border font-semibold";
