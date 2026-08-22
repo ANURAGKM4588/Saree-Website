@@ -26,6 +26,11 @@ const views = (flat: string, model: string, detail: string): SareeView[] => [
   { url: detail, label: "Weave detail" },
 ];
 
+import hero1 from "@/assets/hero-1.jpg";
+import hero2 from "@/assets/hero-2.jpg";
+import hero3 from "@/assets/hero-3.jpg";
+import heroBanner from "@/assets/hero-banner.jpg";
+
 export const sarees: Saree[] = [
   {
     slug: "mulmul-cotton-handblock-drape",
@@ -34,8 +39,8 @@ export const sarees: Saree[] = [
     colour: "Pastel Pink & Cream",
     price: 3499,
     originalPrice: 4500,
-    image: "/logo/About us.png",
-    views: [{ url: "/logo/About us.png", label: "Full drape" }],
+    image: hero1,
+    views: [{ url: hero1, label: "Full drape" }],
     blurb: "Soft, breathable pure Mulmul cotton handblock printed saree crafted by master artisans.",
     fabric: "100% Pure Breathable Mulmul Cotton",
     blouse: "Unstitched matching blouse piece included",
@@ -50,8 +55,8 @@ export const sarees: Saree[] = [
     colour: "Emerald & Gold Zari",
     price: 2999,
     originalPrice: 3999,
-    image: "/logo/About us.png",
-    views: [{ url: "/logo/About us.png", label: "Full drape" }],
+    image: hero2,
+    views: [{ url: hero2, label: "Full drape" }],
     blurb: "Authentic hand-dyed Madurai Sungudi cotton saree with traditional zari border.",
     fabric: "Pure Handloom Sungudi Cotton",
     blouse: "Attached blouse piece included",
@@ -66,8 +71,8 @@ export const sarees: Saree[] = [
     colour: "Deep Crimson & Gold",
     price: 14999,
     originalPrice: 18500,
-    image: "/logo/About us.png",
-    views: [{ url: "/logo/About us.png", label: "Full drape" }],
+    image: hero3,
+    views: [{ url: hero3, label: "Full drape" }],
     blurb: "Heirloom Kanjivaram pure silk saree woven with real gold zari borders and korvai weave.",
     fabric: "Pure Kanchipuram Mulberry Silk",
     blouse: "Rich brocade unstitched blouse piece included",
@@ -82,8 +87,8 @@ export const sarees: Saree[] = [
     colour: "Midnight Blue & Silver",
     price: 12499,
     originalPrice: 15999,
-    image: "/logo/About us.png",
-    views: [{ url: "/logo/About us.png", label: "Full drape" }],
+    image: heroBanner,
+    views: [{ url: heroBanner, label: "Full drape" }],
     blurb: "Exquisite handwoven Banarasi katan silk saree featuring intricate kadwa zari weaving.",
     fabric: "Pure Banarasi Katan Silk",
     blouse: "Matching silk blouse piece included",

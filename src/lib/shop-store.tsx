@@ -77,7 +77,7 @@ type ShopStoreContextType = {
   resetStore: () => void;
 };
 
-const PRODUCTS_KEY = "kadha_admin_products_v12";
+const PRODUCTS_KEY = "kadha_admin_products_v15";
 const ORDERS_KEY = "kadha_admin_orders_v3";
 const NOTIFY_KEY = "kadha_admin_notify_v3";
 

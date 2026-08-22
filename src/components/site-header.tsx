@@ -41,7 +41,7 @@ export function SiteHeader() {
       </div>
 
       {/* Main E-Commerce Navigation Bar */}
-      <header className="border-b border-border bg-background/95 backdrop-blur shadow-xs">
+      <header className="border-b border-border bg-background shadow-xs relative z-50">
         <div className="mx-auto flex h-[72px] max-w-[1400px] items-center justify-between px-5 lg:px-8">
           {/* Brand Logo */}
           <Link to="/" className="flex min-w-0 items-center">
