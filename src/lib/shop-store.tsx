@@ -77,7 +77,7 @@ type ShopStoreContextType = {
   resetStore: () => void;
 };
 
-const PRODUCTS_KEY = "kadha_admin_products_v20";
+const PRODUCTS_KEY = "kadha_admin_products_v25";
 const ORDERS_KEY = "kadha_admin_orders_v3";
 const NOTIFY_KEY = "kadha_admin_notify_v3";
 
@@ -94,7 +94,7 @@ const initialNotifyRequests: NotifyRequest[] = [];
 
 const ShopStoreContext = createContext<ShopStoreContextType | null>(null);
 
-function sanitizeProducts(prods: ExtendedSaree[]): ExtendedSaree[] {
+function sanitizeProducts(prods: any[]): ExtendedSaree[] {
   if (!Array.isArray(prods) || prods.length === 0) return initialProducts;
   return prods.map((p) => {
     const cleanImage = p.image || "/logo/Favicon.png";
@@ -104,9 +104,24 @@ function sanitizeProducts(prods: ExtendedSaree[]): ExtendedSaree[] {
         : [{ url: cleanImage, label: "Cover Page Image" }];
 
     return {
-      ...p,
+      slug: p.slug,
+      name: p.name,
+      weave: p.weave,
+      colour: p.colour,
+      price: Number(p.price) || 0,
+      originalPrice: p.original_price ? Number(p.original_price) : p.originalPrice ? Number(p.originalPrice) : undefined,
+      status: p.status || "in_stock",
+      stockQty: p.stock_qty ?? p.stockQty ?? 1,
+      cartAddsCount: p.cart_adds_count ?? p.cartAddsCount ?? 0,
       image: cleanImage,
       views: updatedViews,
+      blurb: p.blurb || "",
+      fabric: p.fabric || "",
+      blouse: p.blouse || "",
+      care: p.care || "",
+      blouseAvailability: p.blouse_availability || p.blouseAvailability || "both",
+      withoutBlouseDiscount: p.without_blouse_discount ?? p.withoutBlouseDiscount ?? 0,
+      publishedAt: p.published_at || p.publishedAt,
     };
   });
 }
@@ -139,7 +154,7 @@ function sanitizeOrders(dbOrders: any[]): Order[] {
       date: o.date ? String(o.date) : new Date().toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" }),
       status: (o.status as OrderStatus) || "Pending",
       paymentId: o.payment_id || o.paymentId || undefined,
-      paymentStatus: o.payment_status || o.paymentStatus || undefined,
+      paymentStatus: o.payment_status || o.paymentId || undefined,
     };
   });
 }
@@ -205,17 +220,8 @@ export function ShopStoreProvider({ children }: { children: ReactNode }) {
     async function syncSupabaseData() {
       try {
         const { data: dbProducts, error: dbErr } = await supabase.from("products").select("*");
-        if (!dbErr && dbProducts && dbProducts.length > 0) {
-          const cleanDb = sanitizeProducts(dbProducts);
-          setProducts((prev) => {
-            const map = new Map<string, ExtendedSaree>();
-            prev.forEach((p) => map.set(p.slug, p));
-            cleanDb.forEach((p) => {
-              const existing = map.get(p.slug);
-              map.set(p.slug, existing ? { ...existing, ...p } : p);
-            });
-            return Array.from(map.values());
-          });
+        if (!dbErr && Array.isArray(dbProducts) && dbProducts.length > 0) {
+          setProducts(sanitizeProducts(dbProducts));
         }
         const { data: dbOrders } = await supabase.from("orders").select("*");
         if (dbOrders && dbOrders.length > 0) {
