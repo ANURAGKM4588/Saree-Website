@@ -47,5 +47,15 @@ const htmlContent = `<!DOCTYPE html>
 fs.writeFileSync(path.join(outputPublic, "index.html"), htmlContent);
 fs.writeFileSync(path.join(outputPublic, "404.html"), htmlContent);
 fs.writeFileSync(path.join(outputPublic, "CNAME"), "kadha.shop\n");
+fs.writeFileSync(path.join(outputPublic, ".nojekyll"), "");
 
-console.log("Successfully generated index.html, 404.html, and CNAME in .output/public");
+const distPublic = path.resolve("dist");
+if (!fs.existsSync(distPublic)) {
+  fs.mkdirSync(distPublic, { recursive: true });
+}
+fs.writeFileSync(path.join(distPublic, "index.html"), htmlContent);
+fs.writeFileSync(path.join(distPublic, "404.html"), htmlContent);
+fs.writeFileSync(path.join(distPublic, "CNAME"), "kadha.shop\n");
+fs.writeFileSync(path.join(distPublic, ".nojekyll"), "");
+
+console.log("Successfully generated index.html, 404.html, CNAME, and .nojekyll in .output/public and dist");
