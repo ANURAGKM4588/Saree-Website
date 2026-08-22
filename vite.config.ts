@@ -12,7 +12,12 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: ".output/public",
+    outDir: "dist",
     emptyOutDir: true,
+  },
+  server: {
+    watch: {
+      ignored: ["**/public/**"],
+    },
   },
 });

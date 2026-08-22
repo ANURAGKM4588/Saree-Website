@@ -1,6 +1,13 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useLocation } from "@tanstack/react-router";
 
 export function SiteFooter() {
+  const location = useLocation();
+
+  // Hide site footer on Admin panel
+  if (location.pathname.startsWith("/admin")) {
+    return null;
+  }
+
   return (
     <footer className="mt-24 bg-brand-soft text-primary-foreground">
       <div className="mx-auto max-w-[1400px] px-5 py-16 lg:px-8">
@@ -8,7 +15,7 @@ export function SiteFooter() {
           <div>
             <img
               src="/logo/BRAND IDENTITY white.png"
-              alt="Kadha Atelier"
+              alt="Kadha Sarees"
               width={160}
               height={50}
               loading="lazy"
@@ -36,11 +43,16 @@ export function SiteFooter() {
           </nav>
           <div className="flex flex-col gap-3 text-sm text-primary-foreground/75">
             <p className="font-display text-lg text-primary-foreground">Concierge</p>
-            <a href="mailto:hello@kadha.in" className="hover:text-gold">
-              hello@kadha.in
+            <a href="mailto:kadha.shop@gmail.com" className="hover:text-gold">
+              kadha.shop@gmail.com
             </a>
-            <a href="tel:+919000000000" className="hover:text-gold">
-              +91 90000 00000
+            <a
+              href="https://wa.me/918156938843"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-gold"
+            >
+              +91 8156938843 (WhatsApp)
             </a>
             <p>Mon–Sat, 10am–7pm IST</p>
           </div>

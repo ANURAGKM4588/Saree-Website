@@ -12,9 +12,11 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { CartProvider } from "../lib/cart";
+import { ShopStoreProvider } from "../lib/shop-store";
+import { AuthProvider } from "../lib/auth";
 import { SiteHeader } from "../components/site-header";
 import { SiteFooter } from "../components/site-footer";
-import { PageLoader } from "../components/page-loader";
+import { FloatingBagWidget } from "../components/floating-bag-widget";
 
 function NotFoundComponent() {
   return (
@@ -81,7 +83,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Kadha — Handwoven Sarees" },
+      { title: "Kadha Sarees" },
       {
         name: "description",
         content: "Kadha: a small, considered collection of handwoven sarees. The story begins here.",
@@ -128,34 +130,36 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
-      <head>
-        <HeadContent />
-      </head>
-      <body>
-        {children}
-        <Scripts />
-      </body>
-    </html>
+    <>
+      {children}
+      <Scripts />
+    </>
   );
 }
 
+const fallbackQueryClient = new QueryClient();
+
 function RootComponent() {
-  const { queryClient } = Route.useRouteContext();
+  const routeContext = Route.useRouteContext();
+  const queryClient = routeContext?.queryClient || fallbackQueryClient;
 
   return (
     <QueryClientProvider client={queryClient}>
-      <CartProvider>
-        <PageLoader />
-        <div className="flex min-h-screen flex-col font-sans">
-          <SiteHeader />
-          <main className="flex-1">
-            {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-            <Outlet />
-          </main>
-          <SiteFooter />
-        </div>
-      </CartProvider>
+      <AuthProvider>
+        <ShopStoreProvider>
+          <CartProvider>
+            <div className="flex min-h-screen flex-col font-sans">
+              <SiteHeader />
+              <main className="flex-1">
+                {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+                <Outlet />
+              </main>
+              <SiteFooter />
+              <FloatingBagWidget />
+            </div>
+          </CartProvider>
+        </ShopStoreProvider>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }

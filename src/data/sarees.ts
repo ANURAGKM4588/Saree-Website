@@ -1,17 +1,22 @@
 export type SareeView = { url: string; label: string };
 
+export type BlouseAvailability = "both" | "with_only" | "without_only" | "none";
+
 export type Saree = {
   slug: string;
   name: string;
   weave: string;
   colour: string;
   price: number;
+  originalPrice?: number;
   image: string;
   views: SareeView[];
   blurb: string;
   fabric: string;
   blouse: string;
   care: string;
+  blouseAvailability?: BlouseAvailability;
+  withoutBlouseDiscount?: number;
 };
 
 const views = (flat: string, model: string, detail: string): SareeView[] => [
@@ -20,167 +25,169 @@ const views = (flat: string, model: string, detail: string): SareeView[] => [
   { url: detail, label: "Weave detail" },
 ];
 
+import hero1 from "@/assets/hero-1.jpg";
+import hero2 from "@/assets/hero-2.jpg";
+import hero3 from "@/assets/hero-3.jpg";
+import heroBanner from "@/assets/hero-banner.jpg";
+import weaver from "@/assets/weaver.jpg";
+
 export const sarees: Saree[] = [
   {
-    slug: "turmeric-zari-brocade",
-    name: "Turmeric Zari Brocade",
-    weave: "Kanjivaram",
-    colour: "Turmeric",
-    price: 6200,
-    image: "/Product/turmeric-zari-brocade.png",
-    views: views(
-      "/Product/turmeric-zari-brocade.png",
-      "/Product/turmeric-zari-brocade-model.png",
-      "/Product/turmeric-zari-brocade-detail.png"
-    ),
-    blurb:
-      "Turmeric silk cotton with a deep wine pallu carried by a wide floral zari brocade border.",
-    fabric: "Handwoven silk cotton with half-fine zari",
-    blouse: "0.8m unstitched blouse piece included",
-    care: "Dry clean only. Store wrapped in muslin.",
+    slug: "beige-ikat-mulmul-saree",
+    name: "Beige Ikat Mulmul Saree",
+    weave: "Mulmul Cotton",
+    colour: "Beige",
+    price: 2999,
+    originalPrice: 3499,
+    image: "/Product/Beige%20Ikat%20Mulmul%20Saree.png",
+    views: [{ url: "/Product/Beige%20Ikat%20Mulmul%20Saree.png", label: "Full drape" }],
+    blurb: "Handwoven Beige Ikat Mulmul Cotton Saree.",
+    fabric: "Pure Mulmul Cotton",
+    blouse: "Unstitched blouse piece included",
+    care: "Gentle hand wash or dry clean.",
+    blouseAvailability: "both",
+    withoutBlouseDiscount: 300,
   },
   {
-    slug: "amber-peacock-silk-cotton",
-    name: "Amber Peacock Silk Cotton",
-    weave: "Kanjivaram",
-    colour: "Amber",
-    price: 5600,
-    image: "/Product/amber-peacock-silk-cotton.png",
-    views: views(
-      "/Product/amber-peacock-silk-cotton.png",
-      "/Product/amber-peacock-silk-cotton-model.png",
-      "/Product/amber-peacock-silk-cotton-detail.png"
-    ),
-    blurb: "Amber checks with a wine border of annam and peacock motifs woven in gold.",
-    fabric: "Handwoven silk cotton, korvai border",
-    blouse: "0.8m unstitched blouse piece included",
-    care: "Dry clean recommended.",
+    slug: "coffee-brown-sungudi-cotton-saree",
+    name: "Coffee Brown Sungudi Cotton Saree",
+    weave: "Sungudi Cotton",
+    colour: "Coffee Brown",
+    price: 3199,
+    originalPrice: 3699,
+    image: "/Product/Coffee%20Brown%20Sungudi%20Cotton%20Saree.png",
+    views: [{ url: "/Product/Coffee%20Brown%20Sungudi%20Cotton%20Saree.png", label: "Full drape" }],
+    blurb: "Handwoven Coffee Brown Sungudi Cotton Saree.",
+    fabric: "Pure Sungudi Cotton",
+    blouse: "Unstitched blouse piece included",
+    care: "Gentle hand wash or dry clean.",
+    blouseAvailability: "both",
+    withoutBlouseDiscount: 300,
   },
   {
-    slug: "mustard-kanchi-cotton",
-    name: "Mustard Kanchi Cotton",
-    weave: "Kanjivaram",
-    colour: "Mustard",
-    price: 4800,
-    image: "/Product/mustard-kanchi-cotton.png",
-    views: views(
-      "/Product/mustard-kanchi-cotton.png",
-      "/Product/mustard-kanchi-cotton-model.png",
-      "/Product/mustard-kanchi-cotton-detail.png"
-    ),
-    blurb: "Bright mustard zari checks finished with a wine paisley pallu — festive but wearable.",
-    fabric: "Handwoven cotton with zari checks",
-    blouse: "0.8m unstitched blouse piece included",
-    care: "Dry clean for the first wash.",
+    slug: "multicolor-mulmul-cotton-saree",
+    name: "Multicolor Mulmul Cotton Saree",
+    weave: "Mulmul Cotton",
+    colour: "Multicolor",
+    price: 2899,
+    originalPrice: 3399,
+    image: "/Product/Multicolor%20Mulmul%20Cotton%20Saree.png",
+    views: [{ url: "/Product/Multicolor%20Mulmul%20Cotton%20Saree.png", label: "Full drape" }],
+    blurb: "Vibrant Multicolor Mulmul Cotton Saree.",
+    fabric: "Pure Mulmul Cotton",
+    blouse: "Unstitched blouse piece included",
+    care: "Gentle hand wash or dry clean.",
+    blouseAvailability: "both",
+    withoutBlouseDiscount: 300,
   },
   {
-    slug: "coffee-peacock-chettinad",
-    name: "Coffee Peacock Chettinad",
-    weave: "Chettinad",
-    colour: "Coffee",
-    price: 5200,
-    image: "/Product/coffee-peacock-chettinad.png",
-    views: views(
-      "/Product/coffee-peacock-chettinad.png",
-      "/Product/coffee-peacock-chettinad-model.png",
-      "/Product/coffee-peacock-chettinad-detail.png"
-    ),
-    blurb: "Deep coffee body with gold windowpane checks and a temple peacock border.",
-    fabric: "Chettinad handloom cotton",
-    blouse: "0.8m unstitched blouse piece included",
-    care: "Gentle hand wash, separately.",
+    slug: "mustard-yellow-sungudi-cotton-saree",
+    name: "Mustard Yellow Sungudi Cotton Saree",
+    weave: "Sungudi Cotton",
+    colour: "Mustard Yellow",
+    price: 3299,
+    originalPrice: 3799,
+    image: "/Product/Mustard%20Yellow%20Sungudi%20Cotton%20Saree.png",
+    views: [{ url: "/Product/Mustard%20Yellow%20Sungudi%20Cotton%20Saree.png", label: "Full drape" }],
+    blurb: "Traditional Mustard Yellow Sungudi Cotton Saree.",
+    fabric: "Pure Sungudi Cotton",
+    blouse: "Unstitched blouse piece included",
+    care: "Gentle hand wash or dry clean.",
+    blouseAvailability: "both",
+    withoutBlouseDiscount: 300,
   },
   {
-    slug: "kumkum-chettinad-cotton",
-    name: "Kumkum Chettinad Cotton",
-    weave: "Chettinad",
+    slug: "orange-sungudi-cotton-saree",
+    name: "Orange Sungudi Cotton Saree",
+    weave: "Sungudi Cotton",
+    colour: "Orange",
+    price: 3199,
+    originalPrice: 3699,
+    image: "/Product/Orange%20Sungudi%20Cotton%20Saree.png",
+    views: [{ url: "/Product/Orange%20Sungudi%20Cotton%20Saree.png", label: "Full drape" }],
+    blurb: "Handwoven Orange Sungudi Cotton Saree.",
+    fabric: "Pure Sungudi Cotton",
+    blouse: "Unstitched blouse piece included",
+    care: "Gentle hand wash or dry clean.",
+    blouseAvailability: "both",
+    withoutBlouseDiscount: 300,
+  },
+  {
+    slug: "red-sungudi-saree",
+    name: "Red Sungudi Saree",
+    weave: "Sungudi Cotton",
     colour: "Red",
-    price: 3400,
-    image: "/Product/kumkum-chettinad-cotton.png",
-    views: views(
-      "/Product/kumkum-chettinad-cotton.png",
-      "/Product/kumkum-chettinad-cotton-model.png",
-      "/Product/kumkum-chettinad-cotton-detail.png"
-    ),
-    blurb: "Kumkum red with fine gold checks and a black pallu of woven annam birds.",
-    fabric: "Chettinad handloom cotton",
-    blouse: "0.8m unstitched blouse piece included",
-    care: "Hand wash cold. Line dry in shade.",
+    price: 3399,
+    originalPrice: 3899,
+    image: "/Product/Red%20Sungudi%20Saree.png",
+    views: [{ url: "/Product/Red%20Sungudi%20Saree.png", label: "Full drape" }],
+    blurb: "Classic Red Sungudi Cotton Saree.",
+    fabric: "Pure Sungudi Cotton",
+    blouse: "Unstitched blouse piece included",
+    care: "Gentle hand wash or dry clean.",
+    blouseAvailability: "both",
+    withoutBlouseDiscount: 300,
   },
   {
-    slug: "ivory-ikat-handloom",
-    name: "Ivory Ikat Handloom",
-    weave: "Ikat",
-    colour: "Ivory",
-    price: 2900,
-    image: "/Product/ivory-ikat-handloom.png",
-    views: views(
-      "/Product/ivory-ikat-handloom.png",
-      "/Product/ivory-ikat-handloom-model.png",
-      "/Product/ivory-ikat-handloom-detail.png"
-    ),
-    blurb: "Fine striped ivory cotton with a coffee ikat panel and hand-knotted tassels.",
-    fabric: "Handwoven cotton, natural dye ikat",
-    blouse: "Blouse piece not included",
-    care: "Machine wash cold, separately.",
+    slug: "white-ikat-mulmul-saree",
+    name: "White Ikat Mulmul Saree",
+    weave: "Mulmul Cotton",
+    colour: "White",
+    price: 2999,
+    originalPrice: 3499,
+    image: "/Product/White%20Ikat%20Mulmul%20Saree.png",
+    views: [{ url: "/Product/White%20Ikat%20Mulmul%20Saree.png", label: "Full drape" }],
+    blurb: "Ethereal White Ikat Mulmul Cotton Saree.",
+    fabric: "Pure Mulmul Cotton",
+    blouse: "Unstitched blouse piece included",
+    care: "Gentle hand wash or dry clean.",
+    blouseAvailability: "both",
+    withoutBlouseDiscount: 300,
   },
   {
-    slug: "olive-ikat-handloom",
-    name: "Olive Ikat Handloom",
-    weave: "Ikat",
-    colour: "Olive",
-    price: 3100,
-    image: "/Product/olive-ikat-handloom.png",
-    views: views(
-      "/Product/olive-ikat-handloom.png",
-      "/Product/ivory-ikat-handloom-model.png",
-      "/Product/olive-ikat-handloom.png"
-    ),
-    blurb: "Pale olive pleats meeting a dark ikat panel, edged with black and ivory tassels.",
-    fabric: "Handwoven cotton, natural dye ikat",
-    blouse: "Blouse piece not included",
-    care: "Machine wash cold, separately.",
-  },
-  {
-    slug: "sunrise-stripe-cotton",
-    name: "Sunrise Stripe Cotton",
-    weave: "Cotton",
-    colour: "Yellow",
-    price: 2200,
-    image: "/Product/sunrise-stripe-cotton.png",
-    views: views(
-      "/Product/sunrise-stripe-cotton.png",
-      "/Product/mustard-kanchi-cotton-model.png",
-      "/Product/sunrise-stripe-cotton.png"
-    ),
-    blurb: "Broad yellow and peacock-blue stripes in soft daily-wear cotton, tassel finished.",
-    fabric: "Handspun, handwoven cotton",
-    blouse: "Blouse piece not included",
-    care: "Machine wash cold, separately.",
-  },
-  {
-    slug: "rainbow-check-cotton",
-    name: "Rainbow Check Cotton",
-    weave: "Cotton",
-    colour: "Multicolour",
-    price: 2600,
-    image: "/Product/rainbow-check-cotton.png",
-    views: views(
-      "/Product/rainbow-check-cotton.png",
-      "/Product/kumkum-chettinad-cotton-model.png",
-      "/Product/rainbow-check-cotton.png"
-    ),
-    blurb:
-      "A full spectrum of hand-dyed checks in featherlight cotton, finished with pom-pom tassels.",
-    fabric: "Handspun, handwoven cotton with textured jacquard checks",
-    blouse: "Blouse piece not included",
-    care: "Machine wash cold, separately.",
+    slug: "yellow-teal-mulmul-cotton-saree",
+    name: "Yellow Teal Mulmul Cotton Saree",
+    weave: "Mulmul Cotton",
+    colour: "Yellow & Teal",
+    price: 3099,
+    originalPrice: 3599,
+    image: "/Product/Yellow%20Teal%20Mulmul%20Cotton%20Saree.png",
+    views: [{ url: "/Product/Yellow%20Teal%20Mulmul%20Cotton%20Saree.png", label: "Full drape" }],
+    blurb: "Elegant Yellow and Teal Mulmul Cotton Saree.",
+    fabric: "Pure Mulmul Cotton",
+    blouse: "Unstitched blouse piece included",
+    care: "Gentle hand wash or dry clean.",
+    blouseAvailability: "both",
+    withoutBlouseDiscount: 300,
   },
 ];
 
-export const weaves = ["Kanjivaram", "Chettinad", "Ikat", "Cotton"];
+export const weaves = [
+  "Mulmul Cotton",
+  "Sungudi Cotton",
+  "Kanjivaram",
+  "Banarasi",
+  "Chanderi",
+  "Chettinad",
+  "Ikat",
+  "Cotton",
+];
 
-export const getSaree = (slug: string) => sarees.find((s) => s.slug === slug);
+export const getSaree = (slug: string): Saree | undefined => {
+  if (typeof window !== "undefined") {
+    try {
+      for (let i = 35; i >= 1; i--) {
+        const raw = localStorage.getItem(`kadha_admin_products_v${i}`);
+        if (raw) {
+          const stored: Saree[] = JSON.parse(raw);
+          const match = stored.find((s) => s.slug === slug);
+          if (match) return match;
+        }
+      }
+    } catch {}
+  }
+  return sarees.find((s) => s.slug === slug);
+};
 
 export const formatPrice = (paise: number) =>
   new Intl.NumberFormat("en-IN", {

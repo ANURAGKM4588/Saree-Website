@@ -8,18 +8,18 @@ import {
   type ReactNode,
 } from "react";
 
-export type CartLine = { slug: string; qty: number };
+export type CartLine = { slug: string; qty: number; blouseOption?: "with" | "without" };
 
 type CartValue = {
   lines: CartLine[];
   count: number;
-  add: (slug: string, qty?: number) => void;
-  setQty: (slug: string, qty: number) => void;
-  remove: (slug: string) => void;
+  add: (slug: string, qty?: number, blouseOption?: "with" | "without") => void;
+  setQty: (slug: string, qty: number, blouseOption?: "with" | "without") => void;
+  remove: (slug: string, blouseOption?: "with" | "without") => void;
   clear: () => void;
 };
 
-const KEY = "kadha-bag-v1";
+const KEY = "kadha-bag-v2";
 const CartContext = createContext<CartValue | null>(null);
 
 export function CartProvider({ children }: { children: ReactNode }) {
@@ -42,24 +42,30 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }, [lines]);
 
-  const add = useCallback((slug: string, qty = 1) => {
+  const add = useCallback((slug: string, qty = 1, blouseOption: "with" | "without" = "with") => {
     setLines((prev) => {
-      const found = prev.find((l) => l.slug === slug);
-      if (found) return prev.map((l) => (l.slug === slug ? { ...l, qty: l.qty + qty } : l));
-      return [...prev, { slug, qty }];
+      const found = prev.find((l) => l.slug === slug && (l.blouseOption || "with") === blouseOption);
+      if (found) {
+        return prev.map((l) =>
+          l.slug === slug && (l.blouseOption || "with") === blouseOption ? { ...l, qty: l.qty + qty } : l
+        );
+      }
+      return [...prev, { slug, qty, blouseOption }];
     });
   }, []);
 
-  const setQty = useCallback((slug: string, qty: number) => {
+  const setQty = useCallback((slug: string, qty: number, blouseOption: "with" | "without" = "with") => {
     setLines((prev) =>
       qty <= 0
-        ? prev.filter((l) => l.slug !== slug)
-        : prev.map((l) => (l.slug === slug ? { ...l, qty } : l)),
+        ? prev.filter((l) => !(l.slug === slug && (l.blouseOption || "with") === blouseOption))
+        : prev.map((l) =>
+            l.slug === slug && (l.blouseOption || "with") === blouseOption ? { ...l, qty } : l
+          )
     );
   }, []);
 
-  const remove = useCallback((slug: string) => {
-    setLines((prev) => prev.filter((l) => l.slug !== slug));
+  const remove = useCallback((slug: string, blouseOption: "with" | "without" = "with") => {
+    setLines((prev) => prev.filter((l) => !(l.slug === slug && (l.blouseOption || "with") === blouseOption)));
   }, []);
 
   const clear = useCallback(() => setLines([]), []);
@@ -73,11 +79,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
       remove,
       clear,
     }),
-    [lines, add, setQty, remove, clear],
+    [lines, add, setQty, remove, clear]
   );
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }
+
 
 export function useCart() {
   const ctx = useContext(CartContext);

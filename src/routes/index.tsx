@@ -1,19 +1,20 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { HeroCarousel } from "@/components/hero-carousel";
+import { HeroSectionOption6 } from "@/components/hero-section-option6";
 import weaver from "@/assets/weaver.jpg";
 import { SareeCard } from "@/components/saree-card";
 import { sarees, weaves } from "@/data/sarees";
+import { useShopStore } from "@/lib/shop-store";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Kadha — Handwoven Sarees, Quietly Made" },
+      { title: "Kadha Sarees" },
       {
         name: "description",
         content:
           "Kadha offers a small, considered collection of handwoven Kanjivaram, Banarasi, Chanderi and linen sarees. Simple to browse, simple to book.",
       },
-      { property: "og:title", content: "Kadha — Handwoven Sarees, Quietly Made" },
+      { property: "og:title", content: "Kadha Sarees" },
       {
         property: "og:description",
         content: "A small, considered collection of handwoven sarees. The story begins here.",
@@ -24,41 +25,13 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  const featured = sarees[0]!;
-  const rest = sarees.slice(1);
+  const { products } = useShopStore();
+  const list = products || [];
+  const featured = list[0];
 
   return (
     <div className="pb-4">
-      <HeroCarousel />
-
-      {/* Piece of the week */}
-      <section className="mx-auto max-w-[1400px] px-5 pt-6 lg:px-8">
-        <Link
-          to="/shop/$slug"
-          params={{ slug: featured.slug }}
-          className="glass-panel flex items-center gap-4 rounded-3xl p-4 transition-transform hover:-translate-y-1 sm:w-fit"
-        >
-          <img
-            src={featured.image}
-            alt={featured.name}
-            width={912}
-            height={1200}
-            loading="lazy"
-            className="h-16 w-14 shrink-0 rounded-2xl object-cover"
-          />
-          <div className="min-w-0">
-            <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-brand">
-              Piece of the week
-            </p>
-            <p className="truncate font-display text-lg font-medium text-brand-soft">
-              {featured.name}
-            </p>
-          </div>
-          <span className="ml-auto shrink-0 rounded-full bg-ink px-4 py-2 text-xs text-primary-foreground">
-            View
-          </span>
-        </Link>
-      </section>
+      <HeroSectionOption6 />
 
       {/* Marquee */}
       <section className="mt-14 overflow-hidden bg-ink py-4">
@@ -83,29 +56,7 @@ function Index() {
         </div>
       </section>
 
-      {/* Weave pills */}
-      <section className="mx-auto max-w-[1400px] px-5 pt-16 lg:px-8">
-        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-end gap-4">
-          <div className="min-w-0">
-            <p className="text-xs font-medium uppercase tracking-[0.2em] text-brand">Shop by weave</p>
-            <h2 className="mt-3 font-display text-3xl font-semibold tracking-tight text-brand-soft sm:text-4xl">
-              Find your drape
-            </h2>
-          </div>
-        </div>
-        <div className="mt-7 flex flex-wrap gap-3">
-          {weaves.map((weave) => (
-            <Link
-              key={weave}
-              to="/shop"
-              search={{ weave }}
-              className="rounded-full border border-border bg-card px-6 py-3 text-sm text-brand-soft transition-colors hover:border-ink hover:bg-ink hover:text-primary-foreground"
-            >
-              {weave}
-            </Link>
-          ))}
-        </div>
-      </section>
+
 
       {/* Collection rail */}
       <section className="mx-auto max-w-[1400px] px-5 pt-16 lg:px-8">
@@ -123,11 +74,19 @@ function Index() {
             All sarees →
           </Link>
         </div>
-        <div className="mt-8 grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-3">
-          {[featured, ...rest].map((saree) => (
-            <SareeCard key={saree.slug} saree={saree} />
-          ))}
-        </div>
+
+        {list.length > 0 ? (
+          <div className="mt-8 grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-3">
+            {list.map((saree) => (
+              <SareeCard key={saree.slug} saree={saree} />
+            ))}
+          </div>
+        ) : (
+          <div className="mt-8 rounded-3xl border border-dashed border-border bg-card p-12 text-center">
+            <p className="font-display text-xl font-semibold text-brand-soft">New Collection Launching Soon ✨</p>
+            <p className="mt-2 text-xs text-muted-foreground">Our weavers are crafting new handloom sarees. Check back shortly!</p>
+          </div>
+        )}
       </section>
 
       {/* Story */}
@@ -142,12 +101,6 @@ function Index() {
               loading="lazy"
               className="aspect-[4/3] w-full rounded-[2rem] object-cover"
             />
-            <div className="absolute -bottom-6 -right-2 hidden rounded-3xl bg-ink px-7 py-6 text-primary-foreground sm:block">
-              <p className="font-display text-3xl font-semibold tracking-tight text-gold">
-                Since 1998
-              </p>
-              <p className="mt-1 text-xs text-primary-foreground/70">Three generations</p>
-            </div>
           </div>
           <div>
             <p className="text-xs font-medium uppercase tracking-[0.2em] text-brand">
