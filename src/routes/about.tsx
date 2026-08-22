@@ -37,19 +37,13 @@ function About() {
 
         <div className="mx-auto h-0.5 w-24 bg-gold/60 my-4" />
 
-        <p className="text-base sm:text-xl leading-relaxed text-muted-foreground font-normal max-w-3xl mx-auto">
+        <p className="text-base sm:text-lg sm:leading-relaxed text-muted-foreground font-normal max-w-3xl mx-auto">
           Kadha was born out of a shared passion and an unbreakable bond between two close friends. We always believed that the beauty of Indian tradition lies in its authenticity. Growing up, we watched the women around us drape stories of grace, strength, and joy through their sarees.
         </p>
 
-        {/* Featured Quote Box */}
-        <div className="mt-8 mx-auto max-w-2xl rounded-2xl bg-cream/60 p-6 sm:p-8 border border-gold/40 shadow-xs relative">
-          <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gold px-4 py-0.5 text-[9px] font-bold uppercase tracking-widest text-brand-soft rounded-full">
-            Our Shared Dream
-          </div>
-          <p className="font-display text-lg sm:text-2xl text-brand-soft italic leading-relaxed pt-2">
-            "We wanted to create something meaningful together—a place where tradition meets uncompromised quality. That shared dream became Kadha."
-          </p>
-        </div>
+        <p className="text-base sm:text-lg sm:leading-relaxed text-brand-soft font-medium italic max-w-3xl mx-auto pt-2">
+          We wanted to create something meaningful together—a place where tradition meets uncompromised quality. That shared dream became Kadha.
+        </p>
       </div>
 
       {/* 2. ASYMMETRIC IMAGE & EDITORIAL PROMISE LIST */}
