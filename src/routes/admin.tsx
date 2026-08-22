@@ -1935,9 +1935,9 @@ function AddProductModal({
           </div>
 
           {/* RIGHT COLUMN: DETAILS FORM FIELDS */}
-          <div className="md:col-span-7 space-y-4">
+          <div className="md:col-span-7 space-y-3.5">
             <div>
-              <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-semibold">
+              <label className="block text-[10px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-bold">
                 Saree Title / Name *
               </label>
               <input
@@ -1946,20 +1946,20 @@ function AddProductModal({
                 placeholder="e.g. Royal Emerald Kanjivaram Brocade"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 outline-none focus:border-gold font-medium"
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2 text-xs text-slate-900 placeholder-slate-400 outline-none focus:border-gold font-medium"
               />
             </div>
 
             {/* Stock Status & Price */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-semibold">
+                <label className="block text-[10px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-bold">
                   Stock Status *
                 </label>
                 <select
                   value={status}
                   onChange={(e) => setStatus(e.target.value as ProductStatus)}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 outline-none focus:border-gold cursor-pointer font-medium"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2 text-xs text-slate-900 outline-none focus:border-gold cursor-pointer font-medium"
                 >
                   <option value="in_stock">In Stock (Live on Store)</option>
                   <option value="out_of_stock">Out of Stock (Request Alert)</option>
@@ -1968,63 +1968,58 @@ function AddProductModal({
               </div>
 
               <div>
-                <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-semibold">
+                <label className="block text-[10px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-bold">
                   Price (INR ₹) *
                 </label>
                 <input
                   type="number"
                   required
                   min={1}
+                  placeholder="e.g. 4500"
                   value={price}
                   onChange={(e) => setPrice(e.target.value === "" ? "" : Number(e.target.value))}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 outline-none focus:border-gold font-medium"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2 text-xs text-slate-900 outline-none focus:border-gold font-medium"
                 />
               </div>
             </div>
 
             {/* Weave & Colour */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-semibold">
+                <label className="block text-[10px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-bold">
                   Weave Type
                 </label>
                 <input
                   type="text"
-                  placeholder="e.g. Kanjivaram, Banarasi, Sungudi..."
+                  placeholder="e.g. Kanjivaram, Banarasi..."
                   value={weave}
                   onChange={(e) => setWeave(e.target.value)}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 outline-none focus:border-gold font-medium"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2 text-xs text-slate-900 placeholder-slate-400 outline-none focus:border-gold font-medium"
                 />
               </div>
 
-
               <div>
-                <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-semibold">
+                <label className="block text-[10px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-bold">
                   Primary Colour
                 </label>
                 <input
                   type="text"
+                  placeholder="e.g. Emerald Green, Gold..."
                   value={colour}
                   onChange={(e) => setColour(e.target.value)}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 outline-none focus:border-gold font-medium"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2 text-xs text-slate-900 placeholder-slate-400 outline-none focus:border-gold font-medium"
                 />
               </div>
             </div>
 
-            {/* Blouse Option Configuration Checklist */}
-            <div className="space-y-3 bg-slate-50/80 p-4 rounded-2xl border border-slate-200">
-              <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-800 font-bold">
-                Blouse Piece Options Checklist *
+            {/* Blouse Options Checklist */}
+            <div className="bg-slate-50/80 p-3 rounded-xl border border-slate-200 space-y-2">
+              <label className="block text-[10px] uppercase tracking-[0.18em] text-slate-800 font-bold">
+                Blouse Options Checklist *
               </label>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <label
-                  className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all ${
-                    blouseAvailability === "both" || blouseAvailability === "with_only"
-                      ? "border-gold bg-gold/10 text-slate-900 shadow-2xs font-semibold"
-                      : "border-slate-200 bg-white text-slate-500 hover:border-slate-300"
-                  }`}
-                >
+              <div className="flex flex-wrap items-center gap-4">
+                <label className="inline-flex items-center gap-2 text-xs font-semibold text-slate-800 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={blouseAvailability === "both" || blouseAvailability === "with_only"}
@@ -2039,19 +2034,10 @@ function AddProductModal({
                     }}
                     className="h-4 w-4 accent-amber-600 rounded border-slate-300"
                   />
-                  <div>
-                    <p className="text-xs font-bold text-slate-800">✂️ With Attached Blouse</p>
-                    <p className="text-[10px] text-slate-500 font-normal">Saree comes with attached blouse fabric</p>
-                  </div>
+                  <span>✂️ With Attached Blouse</span>
                 </label>
 
-                <label
-                  className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all ${
-                    blouseAvailability === "both" || blouseAvailability === "without_only"
-                      ? "border-gold bg-gold/10 text-slate-900 shadow-2xs font-semibold"
-                      : "border-slate-200 bg-white text-slate-500 hover:border-slate-300"
-                  }`}
-                >
+                <label className="inline-flex items-center gap-2 text-xs font-semibold text-slate-800 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={blouseAvailability === "both" || blouseAvailability === "without_only"}
@@ -2066,59 +2052,51 @@ function AddProductModal({
                     }}
                     className="h-4 w-4 accent-amber-600 rounded border-slate-300"
                   />
-                  <div>
-                    <p className="text-xs font-bold text-slate-800">🧵 Extra Blouse Piece</p>
-                    <p className="text-[10px] text-slate-500 font-normal">Includes extra unstitched blouse piece</p>
-                  </div>
+                  <span>🧵 Extra Blouse Piece</span>
                 </label>
-
               </div>
 
               {(blouseAvailability === "both" || blouseAvailability === "without_only") && (
-                <div className="pt-2 border-t border-slate-200/60 animate-in fade-in">
-                  <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-700 mb-1 font-semibold">
-                    Without Blouse Discount (₹)
-                  </label>
+                <div className="pt-2 border-t border-slate-200/60 flex items-center gap-2">
+                  <span className="text-[10px] uppercase tracking-[0.16em] text-slate-600 font-bold shrink-0">Discount (₹):</span>
                   <input
                     type="number"
                     min={0}
-                    placeholder="e.g. 500 (Amount deducted from price when bought without blouse)"
+                    placeholder="e.g. 500 (Deducted when bought without blouse)"
                     value={withoutBlouseDiscount}
                     onChange={(e) => setWithoutBlouseDiscount(e.target.value === "" ? "" : Number(e.target.value))}
-                    className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-900 outline-none focus:border-gold font-medium"
+                    className="flex-1 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs text-slate-900 outline-none focus:border-gold font-medium"
                   />
                 </div>
               )}
             </div>
 
-
-            {/* Story Blurb */}
+            {/* Short Story / Craft Blurb (Single Line Input) */}
             <div>
-              <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-semibold">
-                Short Story / Craft Blurb
+              <label className="block text-[10px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-bold">
+                Short Craft Description / Blurb
               </label>
-              <textarea
-                rows={3}
+              <input
+                type="text"
                 value={blurb}
                 onChange={(e) => setBlurb(e.target.value)}
-                placeholder="Handcrafted masterpiece woven with rich heritage craftsmanship..."
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 outline-none focus:border-gold font-medium resize-none"
+                placeholder="e.g. Handcrafted masterpiece woven with rich heritage zari craftsmanship."
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2 text-xs text-slate-900 placeholder-slate-400 outline-none focus:border-gold font-medium"
               />
             </div>
 
-
             {/* Action Bar */}
-            <div className="pt-4 flex justify-end items-center gap-3 border-t border-slate-100">
+            <div className="pt-3 flex justify-end items-center gap-2 border-t border-slate-100">
               <button
                 type="button"
                 onClick={onClose}
-                className="rounded-full px-5 py-2.5 text-xs font-medium text-slate-500 hover:bg-slate-100 cursor-pointer transition-colors whitespace-nowrap"
+                className="rounded-full px-4 py-2 text-xs font-medium text-slate-500 hover:bg-slate-100 cursor-pointer transition-colors whitespace-nowrap"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="rounded-full bg-brand px-8 py-2.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-white hover:bg-brand-soft shadow-md cursor-pointer transition-transform active:scale-95 font-bold whitespace-nowrap"
+                className="rounded-full bg-brand px-6 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-white hover:bg-brand-soft shadow-md cursor-pointer transition-transform active:scale-95 font-bold whitespace-nowrap"
               >
                 Publish Saree Product
               </button>
@@ -2440,29 +2418,30 @@ function EditProductModal({
           </div>
 
           {/* RIGHT COLUMN: DETAILS FORM FIELDS */}
-          <div className="md:col-span-7 space-y-4">
+          <div className="md:col-span-7 space-y-3.5">
             <div>
-              <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-semibold">
+              <label className="block text-[10px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-bold">
                 Saree Title / Name *
               </label>
               <input
                 type="text"
                 required
+                placeholder="e.g. Royal Emerald Kanjivaram Brocade"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 outline-none focus:border-gold font-medium"
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2 text-xs text-slate-900 placeholder-slate-400 outline-none focus:border-gold font-medium"
               />
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-semibold">
+                <label className="block text-[10px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-bold">
                   Stock Status *
                 </label>
                 <select
                   value={status}
                   onChange={(e) => setStatus(e.target.value as ProductStatus)}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 outline-none focus:border-gold cursor-pointer font-medium"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2 text-xs text-slate-900 outline-none focus:border-gold cursor-pointer font-medium"
                 >
                   <option value="in_stock">In Stock (Available)</option>
                   <option value="out_of_stock">Out of Stock (Request Notify)</option>
@@ -2471,62 +2450,57 @@ function EditProductModal({
               </div>
 
               <div>
-                <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-semibold">
+                <label className="block text-[10px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-bold">
                   Price (INR ₹) *
                 </label>
                 <input
                   type="number"
                   required
                   min={1}
+                  placeholder="e.g. 4500"
                   value={price}
                   onChange={(e) => setPrice(e.target.value === "" ? "" : Number(e.target.value))}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 outline-none focus:border-gold font-medium"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2 text-xs text-slate-900 outline-none focus:border-gold font-medium"
                 />
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-semibold">
+                <label className="block text-[10px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-bold">
                   Weave Type
                 </label>
                 <input
                   type="text"
-                  placeholder="e.g. Kanjivaram, Banarasi, Sungudi..."
+                  placeholder="e.g. Kanjivaram, Banarasi..."
                   value={weave}
                   onChange={(e) => setWeave(e.target.value)}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 outline-none focus:border-gold font-medium"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2 text-xs text-slate-900 placeholder-slate-400 outline-none focus:border-gold font-medium"
                 />
               </div>
 
-
               <div>
-                <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-semibold">
+                <label className="block text-[10px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-bold">
                   Primary Colour
                 </label>
                 <input
                   type="text"
+                  placeholder="e.g. Emerald Green, Gold..."
                   value={colour}
                   onChange={(e) => setColour(e.target.value)}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 outline-none focus:border-gold font-medium"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2 text-xs text-slate-900 placeholder-slate-400 outline-none focus:border-gold font-medium"
                 />
               </div>
             </div>
 
-            {/* Blouse Option Configuration Checklist */}
-            <div className="space-y-3 bg-slate-50/80 p-4 rounded-2xl border border-slate-200">
-              <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-800 font-bold">
-                Blouse Piece Options Checklist *
+            {/* Blouse Options Checklist */}
+            <div className="bg-slate-50/80 p-3 rounded-xl border border-slate-200 space-y-2">
+              <label className="block text-[10px] uppercase tracking-[0.18em] text-slate-800 font-bold">
+                Blouse Options Checklist *
               </label>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <label
-                  className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all ${
-                    blouseAvailability === "both" || blouseAvailability === "with_only"
-                      ? "border-gold bg-gold/10 text-slate-900 shadow-2xs font-semibold"
-                      : "border-slate-200 bg-white text-slate-500 hover:border-slate-300"
-                  }`}
-                >
+              <div className="flex flex-wrap items-center gap-4">
+                <label className="inline-flex items-center gap-2 text-xs font-semibold text-slate-800 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={blouseAvailability === "both" || blouseAvailability === "with_only"}
@@ -2541,19 +2515,10 @@ function EditProductModal({
                     }}
                     className="h-4 w-4 accent-amber-600 rounded border-slate-300"
                   />
-                  <div>
-                    <p className="text-xs font-bold text-slate-800">✂️ With Attached Blouse</p>
-                    <p className="text-[10px] text-slate-500 font-normal">Saree comes with attached blouse fabric</p>
-                  </div>
+                  <span>✂️ With Attached Blouse</span>
                 </label>
 
-                <label
-                  className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all ${
-                    blouseAvailability === "both" || blouseAvailability === "without_only"
-                      ? "border-gold bg-gold/10 text-slate-900 shadow-2xs font-semibold"
-                      : "border-slate-200 bg-white text-slate-500 hover:border-slate-300"
-                  }`}
-                >
+                <label className="inline-flex items-center gap-2 text-xs font-semibold text-slate-800 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={blouseAvailability === "both" || blouseAvailability === "without_only"}
@@ -2568,56 +2533,50 @@ function EditProductModal({
                     }}
                     className="h-4 w-4 accent-amber-600 rounded border-slate-300"
                   />
-                  <div>
-                    <p className="text-xs font-bold text-slate-800">🧵 Extra Blouse Piece</p>
-                    <p className="text-[10px] text-slate-500 font-normal">Includes extra unstitched blouse piece</p>
-                  </div>
+                  <span>🧵 Extra Blouse Piece</span>
                 </label>
-
               </div>
 
               {(blouseAvailability === "both" || blouseAvailability === "without_only") && (
-                <div className="pt-2 border-t border-slate-200/60 animate-in fade-in">
-                  <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-700 mb-1 font-semibold">
-                    Without Blouse Discount (₹)
-                  </label>
+                <div className="pt-2 border-t border-slate-200/60 flex items-center gap-2">
+                  <span className="text-[10px] uppercase tracking-[0.16em] text-slate-600 font-bold shrink-0">Discount (₹):</span>
                   <input
                     type="number"
                     min={0}
-                    placeholder="e.g. 500 (Amount deducted from price when bought without blouse)"
+                    placeholder="e.g. 500 (Deducted when bought without blouse)"
                     value={withoutBlouseDiscount}
                     onChange={(e) => setWithoutBlouseDiscount(e.target.value === "" ? "" : Number(e.target.value))}
-                    className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-900 outline-none focus:border-gold font-medium"
+                    className="flex-1 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs text-slate-900 outline-none focus:border-gold font-medium"
                   />
                 </div>
               )}
             </div>
 
-
+            {/* Short Story / Craft Blurb (Single Line Input) */}
             <div>
-              <label className="block text-[11px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-semibold">
-                Short Story / Craft Blurb
+              <label className="block text-[10px] uppercase tracking-[0.18em] text-slate-600 mb-1 font-bold">
+                Short Craft Description / Blurb
               </label>
-              <textarea
-                rows={3}
+              <input
+                type="text"
                 value={blurb}
                 onChange={(e) => setBlurb(e.target.value)}
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 outline-none focus:border-gold font-medium resize-none"
+                placeholder="e.g. Handcrafted masterpiece woven with rich heritage zari craftsmanship."
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2 text-xs text-slate-900 placeholder-slate-400 outline-none focus:border-gold font-medium"
               />
             </div>
 
-
-            <div className="pt-4 flex justify-end items-center gap-3 border-t border-slate-100">
+            <div className="pt-3 flex justify-end items-center gap-2 border-t border-slate-100">
               <button
                 type="button"
                 onClick={onClose}
-                className="rounded-full px-5 py-2.5 text-xs font-medium text-slate-500 hover:bg-slate-100 cursor-pointer transition-colors whitespace-nowrap"
+                className="rounded-full px-4 py-2 text-xs font-medium text-slate-500 hover:bg-slate-100 cursor-pointer transition-colors whitespace-nowrap"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="rounded-full bg-brand px-8 py-2.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-white hover:bg-brand-soft shadow-md cursor-pointer transition-transform active:scale-95 font-bold whitespace-nowrap"
+                className="rounded-full bg-brand px-6 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-white hover:bg-brand-soft shadow-md cursor-pointer transition-transform active:scale-95 font-bold whitespace-nowrap"
               >
                 Save Changes
               </button>
