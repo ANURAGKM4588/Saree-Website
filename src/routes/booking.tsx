@@ -465,16 +465,16 @@ function Booking() {
                   <img
                     src={item.saree.image}
                     alt={item.saree.name}
-                    width={60}
-                    height={80}
-                    className="h-16 w-12 rounded-xl object-cover bg-secondary border border-border shrink-0"
+                    width={64}
+                    height={84}
+                    className="h-20 w-16 rounded-2xl object-cover bg-secondary border border-border/80 shadow-2xs shrink-0"
                   />
                   <div className="flex-1 min-w-0">
                     <p className="font-display text-sm font-semibold truncate text-foreground">{item.saree.name}</p>
-                    <div className="flex items-center gap-2 mt-0.5">
-                      <span className="text-xs text-muted-foreground">Qty: {item.qty} × {formatPrice(itemPrice)}</span>
-                      <span className="text-[9px] font-semibold text-brand-soft bg-gold/10 border border-gold/30 px-1.5 py-0.5 rounded-md">
-                        {item.blouseOption === "without" ? "🧵 Extra Blouse Piece" : "✂️ With Attached Blouse"}
+                    <div className="flex items-center gap-2 mt-1 flex-wrap">
+                      <span className="text-xs text-muted-foreground font-medium">Qty: {item.qty} × {formatPrice(itemPrice)}</span>
+                      <span className="text-[10px] font-semibold text-brand-soft bg-gold/15 border border-gold/40 px-2 py-0.5 rounded-full">
+                        {item.blouseOption === "without" ? "✂️ Without Blouse" : "🧵 With Attached Blouse"}
                       </span>
                     </div>
                   </div>

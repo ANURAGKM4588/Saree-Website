@@ -64,7 +64,7 @@ function Bag() {
                     width={912}
                     height={1200}
                     loading="lazy"
-                    className="h-32 w-24 shrink-0 rounded-lg bg-secondary object-cover"
+                    className="h-32 w-24 shrink-0 rounded-2xl bg-secondary object-cover border border-border/80 shadow-2xs"
                   />
                   <div className="flex flex-1 flex-col justify-between">
                     <div className="flex justify-between gap-4">

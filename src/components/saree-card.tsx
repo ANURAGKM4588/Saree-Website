@@ -103,11 +103,6 @@ export function SareeCard({ saree, tall = false }: { saree: Saree; tall?: boolea
           <span className="glass-panel rounded-full px-2.5 py-0.5 sm:px-3 sm:py-1 text-[9px] sm:text-[10px] font-medium uppercase tracking-[0.16em] text-brand-soft whitespace-nowrap">
             {saree.weave}
           </span>
-          {discountPercent > 0 && status === "in_stock" && (
-            <span className="rounded-full bg-emerald-700 px-2.5 py-0.5 sm:px-3 sm:py-1 text-[8px] sm:text-[9px] font-extrabold uppercase tracking-[0.14em] text-white shadow-md whitespace-nowrap">
-              {discountPercent}% OFF
-            </span>
-          )}
           {status === "out_of_stock" && (
             <span className="rounded-full bg-destructive/90 px-2.5 py-0.5 sm:px-3 sm:py-1 text-[8px] sm:text-[9px] font-semibold uppercase tracking-[0.16em] text-destructive-foreground shadow-sm whitespace-nowrap">
               Out of Stock

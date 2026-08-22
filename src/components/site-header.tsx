@@ -65,21 +65,9 @@ export function SiteHeader() {
               <UserIcon className="h-4 w-4 text-gold" />
               <span>{user ? user.name.split(" ")[0] : "Sign In"}</span>
             </Link>
-
-            <Link
-              id="header-bag-btn"
-              to="/bag"
-              className="inline-flex shrink-0 items-center gap-2.5 rounded-full bg-brand px-5 py-2.5 text-[11px] uppercase tracking-[0.2em] font-semibold text-primary-foreground transition-all duration-300 hover:bg-brand-soft whitespace-nowrap shadow-md cursor-pointer transform-gpu"
-            >
-              <ShoppingBag className="h-4 w-4" />
-              <span>Bag</span>
-              <span className="grid h-5 min-w-5 place-items-center rounded-full bg-gold px-1 text-[10px] font-bold text-brand-soft">
-                {count}
-              </span>
-            </Link>
           </div>
 
-          {/* Mobile Right Bar: User + Shopping Bag + Mobile Menu Toggle */}
+          {/* Mobile Right Bar: User Account + Mobile Menu Toggle */}
           <div className="flex items-center gap-2 sm:hidden">
             <Link
               to={user ? "/account" : "/login"}
@@ -87,20 +75,6 @@ export function SiteHeader() {
               aria-label="User Account"
             >
               <UserIcon className="h-5 w-5 text-gold" />
-            </Link>
-
-            <Link
-              id="header-bag-btn-mobile"
-              to="/bag"
-              className="relative inline-flex items-center justify-center rounded-full bg-brand/10 p-2 text-brand hover:bg-brand/20 transition-all duration-300 transform-gpu"
-              aria-label="Shopping Bag"
-            >
-              <ShoppingBag className="h-5 w-5" />
-              {count > 0 && (
-                <span className="absolute -top-1 -right-1 grid h-4 min-w-4 place-items-center rounded-full bg-gold px-1 text-[9px] font-bold text-brand-soft shadow-xs">
-                  {count}
-                </span>
-              )}
             </Link>
 
             <button

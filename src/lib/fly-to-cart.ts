@@ -1,15 +1,18 @@
 export function triggerFlyToCartAnimation(sourceImgElement: HTMLElement | null) {
   if (!sourceImgElement || typeof window === "undefined") return;
 
-  // Find target bag element (desktop or mobile)
-  const isMobile = window.innerWidth < 640;
-  const targetId = isMobile ? "header-bag-btn-mobile" : "header-bag-btn";
-  const targetBagElement = document.getElementById(targetId) || document.getElementById("header-bag-btn");
-
-  if (!targetBagElement) return;
+  // Find target bottom-right floating bag button
+  const targetBagElement = document.getElementById("floating-bag-btn");
 
   const sourceRect = sourceImgElement.getBoundingClientRect();
-  const targetRect = targetBagElement.getBoundingClientRect();
+  const targetRect = targetBagElement
+    ? targetBagElement.getBoundingClientRect()
+    : {
+        left: window.innerWidth - 130,
+        top: window.innerHeight - 70,
+        width: 110,
+        height: 48,
+      };
 
   // Create a floating clone of the product image card
   const clone = sourceImgElement.cloneNode(true) as HTMLElement;

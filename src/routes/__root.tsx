@@ -16,6 +16,7 @@ import { ShopStoreProvider } from "../lib/shop-store";
 import { AuthProvider } from "../lib/auth";
 import { SiteHeader } from "../components/site-header";
 import { SiteFooter } from "../components/site-footer";
+import { FloatingBagWidget } from "../components/floating-bag-widget";
 
 function NotFoundComponent() {
   return (
@@ -154,6 +155,7 @@ function RootComponent() {
                 <Outlet />
               </main>
               <SiteFooter />
+              <FloatingBagWidget />
             </div>
           </CartProvider>
         </ShopStoreProvider>
