@@ -50,13 +50,13 @@ export function HeroSectionOption6() {
           className="absolute inset-0 h-full w-full object-cover object-center grayscale brightness-[0.70] contrast-[1.15] transition-transform duration-[10000ms] ease-out group-hover:scale-105"
         />
 
-        {/* REVEAL LAYER: FULL-COLOR IMAGE WITH DYNAMIC FEATHERED MOUSE CURSOR LENS */}
+        {/* REVEAL LAYER: FULL-COLOR IMAGE WITH DYNAMIC FEATHERED MOUSE CURSOR LENS (340px WIDE) */}
         <div
           className="absolute inset-0 pointer-events-none transition-opacity duration-500 ease-out"
           style={{
             opacity: isHovered ? 1 : 0,
-            WebkitMaskImage: `radial-gradient(circle 180px at ${mousePos.x}px ${mousePos.y}px, black 0%, black 35%, transparent 100%)`,
-            maskImage: `radial-gradient(circle 180px at ${mousePos.x}px ${mousePos.y}px, black 0%, black 35%, transparent 100%)`,
+            WebkitMaskImage: `radial-gradient(circle 340px at ${mousePos.x}px ${mousePos.y}px, black 0%, black 45%, transparent 100%)`,
+            maskImage: `radial-gradient(circle 340px at ${mousePos.x}px ${mousePos.y}px, black 0%, black 45%, transparent 100%)`,
           }}
         >
           <img
