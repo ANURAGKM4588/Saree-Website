@@ -26,41 +26,43 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   const { products } = useShopStore();
-  const list = products.length > 0 ? products : sarees;
-  const featured = list[0]!;
+  const list = products;
+  const featured = list[0];
 
   return (
     <div className="pb-4">
       <HeroCarousel />
 
       {/* Piece of the week */}
-      <section className="mx-auto max-w-[1400px] px-5 pt-6 lg:px-8">
-        <Link
-          to="/shop/$slug"
-          params={{ slug: featured.slug }}
-          className="glass-panel flex items-center gap-4 rounded-3xl p-4 transition-transform hover:-translate-y-1 sm:w-fit"
-        >
-          <img
-            src={featured.image}
-            alt={featured.name}
-            width={912}
-            height={1200}
-            loading="lazy"
-            className="h-16 w-14 shrink-0 rounded-2xl object-cover"
-          />
-          <div className="min-w-0">
-            <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-brand">
-              Piece of the week
-            </p>
-            <p className="truncate font-display text-lg font-medium text-brand-soft">
-              {featured.name}
-            </p>
-          </div>
-          <span className="ml-auto shrink-0 rounded-full bg-ink px-4 py-2 text-xs text-primary-foreground">
-            View
-          </span>
-        </Link>
-      </section>
+      {featured && (
+        <section className="mx-auto max-w-[1400px] px-5 pt-6 lg:px-8">
+          <Link
+            to="/shop/$slug"
+            params={{ slug: featured.slug }}
+            className="glass-panel flex items-center gap-4 rounded-3xl p-4 transition-transform hover:-translate-y-1 sm:w-fit"
+          >
+            <img
+              src={featured.image}
+              alt={featured.name}
+              width={912}
+              height={1200}
+              loading="lazy"
+              className="h-16 w-14 shrink-0 rounded-2xl object-cover"
+            />
+            <div className="min-w-0">
+              <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-brand">
+                Piece of the week
+              </p>
+              <p className="truncate font-display text-lg font-medium text-brand-soft">
+                {featured.name}
+              </p>
+            </div>
+            <span className="ml-auto shrink-0 rounded-full bg-ink px-4 py-2 text-xs text-primary-foreground">
+              View
+            </span>
+          </Link>
+        </section>
+      )}
 
       {/* Marquee */}
       <section className="mt-14 overflow-hidden bg-ink py-4">
@@ -125,11 +127,25 @@ function Index() {
             All sarees →
           </Link>
         </div>
-        <div className="mt-8 grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-3">
-          {list.map((saree) => (
-            <SareeCard key={saree.slug} saree={saree} />
-          ))}
-        </div>
+
+        {list.length > 0 ? (
+          <div className="mt-8 grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-3">
+            {list.map((saree) => (
+              <SareeCard key={saree.slug} saree={saree} />
+            ))}
+          </div>
+        ) : (
+          <div className="mt-8 rounded-3xl border border-dashed border-border bg-card p-12 text-center">
+            <p className="font-display text-xl font-medium text-brand-soft">No sarees in stock list yet</p>
+            <p className="mt-2 text-xs text-muted-foreground">Add products manually in the Admin Panel to display them here.</p>
+            <Link
+              to="/admin"
+              className="mt-5 inline-block rounded-full bg-brand px-6 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-primary-foreground hover:bg-brand-soft transition-colors shadow-md"
+            >
+              Go to Admin Panel →
+            </Link>
+          </div>
+        )}
       </section>
 
       {/* Story */}

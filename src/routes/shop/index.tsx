@@ -105,17 +105,22 @@ function Shop() {
         <h2 className="mt-14 text-center font-display text-2xl text-brand-soft">
           {weave ? `${weave} sarees` : "Every saree in the collection"}
         </h2>
-        <div className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {list.map((saree) => (
-          <SareeCard key={saree.slug} saree={saree} />
-        ))}
-        </div>
-
-      {list.length === 0 && (
-        <p className="mt-12 text-sm text-muted-foreground">
-          Nothing on the loom in this weave right now.
-        </p>
-      )}
+        {list.length > 0 ? (
+          <div className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {list.map((saree) => (
+              <SareeCard key={saree.slug} saree={saree} />
+            ))}
+          </div>
+        ) : (
+          <div className="mt-12 rounded-3xl border border-dashed border-border bg-card p-12 text-center">
+            <p className="font-display text-xl font-medium text-brand-soft">
+              {weave ? `No ${weave} sarees available` : "No sarees in stock list yet"}
+            </p>
+            <p className="mt-2 text-xs text-muted-foreground">
+              {weave ? "Try selecting 'All' or browse another weave." : "Add products manually from the Admin Panel to display them in the catalog."}
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );

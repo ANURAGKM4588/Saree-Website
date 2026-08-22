@@ -109,7 +109,7 @@ function Product() {
   const current: SareeView =
     gallery[Math.min(active, gallery.length - 1)] ?? { url: saree.image, label: "Full drape" };
 
-  const related = sarees.filter((s) => s.slug !== saree.slug).slice(0, 3);
+  const related = products.filter((s) => s.slug !== saree.slug).slice(0, 3);
 
   const handleAddToCart = () => {
     triggerFlyToCartAnimation(mainImgRef.current);

@@ -77,19 +77,11 @@ type ShopStoreContextType = {
   resetStore: () => void;
 };
 
-const PRODUCTS_KEY = "kadha_admin_products_v8";
+const PRODUCTS_KEY = "kadha_admin_products_v9";
 const ORDERS_KEY = "kadha_admin_orders_v2";
 const NOTIFY_KEY = "kadha_admin_notify_v2";
 
-const initialProducts: ExtendedSaree[] = defaultSarees.map((saree, idx) => {
-  return {
-    ...saree,
-    status: "in_stock" as ProductStatus,
-    stockQty: 1,
-    cartAddsCount: Math.floor(Math.random() * 20) + 5,
-    publishedAt: new Date(Date.now() - (idx + 1) * 86400000 * 3).toISOString().split("T")[0],
-  };
-});
+const initialProducts: ExtendedSaree[] = [];
 
 const initialOrders: Order[] = [];
 
@@ -98,9 +90,9 @@ const initialNotifyRequests: NotifyRequest[] = [];
 const ShopStoreContext = createContext<ShopStoreContextType | null>(null);
 
 function sanitizeProducts(prods: ExtendedSaree[]): ExtendedSaree[] {
-  if (!Array.isArray(prods) || prods.length === 0) return initialProducts;
+  if (!Array.isArray(prods)) return initialProducts;
   return prods.map((p) => {
-    const cleanImage = p.image || "/Product/turmeric-zari-brocade.png";
+    const cleanImage = p.image || "/logo/Favicon.png";
     const updatedViews =
       Array.isArray(p.views) && p.views.length > 0
         ? p.views
