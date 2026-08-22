@@ -113,11 +113,11 @@ function Shop() {
           </div>
         ) : (
           <div className="mt-12 rounded-3xl border border-dashed border-border bg-card p-12 text-center">
-            <p className="font-display text-xl font-medium text-brand-soft">
-              {weave ? `No ${weave} sarees available` : "No sarees in stock list yet"}
+            <p className="font-display text-xl font-semibold text-brand-soft">
+              {weave ? `No ${weave} sarees available right now` : "New Collection Launching Soon ✨"}
             </p>
             <p className="mt-2 text-xs text-muted-foreground">
-              {weave ? "Try selecting 'All' or browse another weave." : "Add products manually from the Admin Panel to display them in the catalog."}
+              {weave ? "Try selecting 'All' or browse another weave category." : "Our weavers are crafting new handloom sarees. Check back shortly!"}
             </p>
           </div>
         )}

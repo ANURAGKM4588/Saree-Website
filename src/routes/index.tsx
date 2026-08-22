@@ -136,14 +136,8 @@ function Index() {
           </div>
         ) : (
           <div className="mt-8 rounded-3xl border border-dashed border-border bg-card p-12 text-center">
-            <p className="font-display text-xl font-medium text-brand-soft">No sarees in stock list yet</p>
-            <p className="mt-2 text-xs text-muted-foreground">Add products manually in the Admin Panel to display them here.</p>
-            <Link
-              to="/admin"
-              className="mt-5 inline-block rounded-full bg-brand px-6 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-primary-foreground hover:bg-brand-soft transition-colors shadow-md"
-            >
-              Go to Admin Panel →
-            </Link>
+            <p className="font-display text-xl font-semibold text-brand-soft">New Collection Launching Soon ✨</p>
+            <p className="mt-2 text-xs text-muted-foreground">Our weavers are crafting new handloom sarees. Check back shortly!</p>
           </div>
         )}
       </section>
