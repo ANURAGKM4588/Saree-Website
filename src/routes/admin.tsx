@@ -1617,17 +1617,17 @@ function AddProductModal({
 }) {
   const [name, setName] = useState("");
   const [weave, setWeave] = useState("Kanjivaram");
-  const [colour, setColour] = useState("Gold");
-  const [price, setPrice] = useState<number | "">(4500);
+  const [colour, setColour] = useState("");
+  const [price, setPrice] = useState<number | "">("");
   const [status, setStatus] = useState<ProductStatus>("in_stock");
 
   // Cover Page & Gallery State
-  const [image, setImage] = useState("/Product/turmeric-zari-brocade.png");
+  const [image, setImage] = useState("");
 
-  const [blurb, setBlurb] = useState("Handcrafted masterpiece woven with rich heritage craftsmanship.");
-  const [fabric, setFabric] = useState("Handwoven pure silk cotton");
-  const [blouse, setBlouse] = useState("0.8m unstitched blouse piece included");
-  const [care, setCare] = useState("Dry clean recommended for first wash.");
+  const [blurb, setBlurb] = useState("");
+  const [fabric, setFabric] = useState("");
+  const [blouse, setBlouse] = useState("");
+  const [care, setCare] = useState("");
 
   // Additional Images State
   const [views, setViews] = useState<{ url: string; label: string }[]>([]);
@@ -1642,15 +1642,15 @@ function AddProductModal({
       document.body.style.overflow = "hidden";
       setName("");
       setWeave("Kanjivaram");
-      setColour("Gold");
-      setPrice(4500);
+      setColour("");
+      setPrice("");
       setStatus("in_stock");
-      setImage("/Product/turmeric-zari-brocade.png");
-      setViews([{ url: "/Product/turmeric-zari-brocade.png", label: "Cover Page Image" }]);
-      setBlurb("Handcrafted masterpiece woven with rich heritage craftsmanship.");
-      setFabric("Handwoven pure silk cotton");
-      setBlouse("0.8m unstitched blouse piece included");
-      setCare("Dry clean recommended for first wash.");
+      setImage("");
+      setViews([]);
+      setBlurb("");
+      setFabric("");
+      setBlouse("");
+      setCare("");
       setBlouseAvailability("both");
       setWithoutBlouseDiscount(0);
       setErrorMessage(null);
@@ -1725,8 +1725,8 @@ function AddProductModal({
     const targetUrl = views[indexToDelete]?.url;
     const updated = views.filter((_, i) => i !== indexToDelete);
     setViews(updated);
-    if (targetUrl === image && updated.length > 0) {
-      setImage(updated[0].url);
+    if (targetUrl === image) {
+      setImage(updated.length > 0 ? updated[0].url : "");
     }
   };
 
@@ -1745,6 +1745,12 @@ function AddProductModal({
       return;
     }
 
+    const imageUrl = image || (views.length > 0 ? views[0].url : "");
+    if (!imageUrl) {
+      setErrorMessage("Please upload a cover photo for the saree product.");
+      return;
+    }
+
     let slug = name
       .toLowerCase()
       .trim()
@@ -1755,21 +1761,20 @@ function AddProductModal({
       slug = `${slug}-${Date.now().toString().slice(-4)}`;
     }
 
-    const imageUrl = image || (views.length > 0 ? views[0].url : "/Product/turmeric-zari-brocade.png");
     const finalViews = views.length > 0 ? views : [{ url: imageUrl, label: "Cover Page Image" }];
 
     onAddProduct({
       slug,
       name: name.trim(),
       weave,
-      colour: colour.trim() || "Gold",
+      colour: colour.trim() || "Multi",
       price: numPrice,
       status,
       stockQty: status === "in_stock" ? 1 : 0,
       image: imageUrl,
       views: finalViews,
-      blurb: blurb.trim() || "Handcrafted saree.",
-      fabric: fabric.trim() || "Handwoven silk cotton",
+      blurb: blurb.trim() || "Handcrafted handwoven saree.",
+      fabric: fabric.trim() || "Handwoven pure fabric",
       blouse: blouse.trim() || "Blouse piece included",
       care: care.trim() || "Dry clean recommended for first wash.",
       blouseAvailability,
@@ -1824,25 +1829,36 @@ function AddProductModal({
                 </span>
               </div>
 
-              {/* Cover Image Preview */}
-              <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl border-2 border-gold/50 bg-slate-100 shadow-xs group">
-                <img src={image} alt="Cover Page" className="h-full w-full object-cover" />
-                <span className="absolute top-2 left-2 rounded-full bg-gold px-2.5 py-1 text-[10px] font-bold text-brand-soft shadow-xs">
-                  ★ Cover Page Image
-                </span>
-                {isCompressing && (
-                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center text-white text-xs font-semibold">
-                    Processing Image...
-                  </div>
-                )}
-              </div>
+              {/* Cover Image Preview or Dropzone */}
+              {image ? (
+                <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl border-2 border-gold/50 bg-slate-100 shadow-xs group">
+                  <img src={image} alt="Cover Page" className="h-full w-full object-cover" />
+                  <span className="absolute top-2 left-2 rounded-full bg-gold px-2.5 py-1 text-[10px] font-bold text-brand-soft shadow-xs">
+                    ★ Cover Page Image
+                  </span>
+                  {isCompressing && (
+                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center text-white text-xs font-semibold">
+                      Processing Image...
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <label className="relative flex aspect-[4/3] w-full flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 hover:bg-slate-100/80 cursor-pointer p-4 text-center transition-colors">
+                  <UploadCloud className="h-8 w-8 text-gold mb-2" />
+                  <span className="text-xs font-semibold text-slate-700">No cover image uploaded</span>
+                  <span className="text-[10px] text-slate-400 mt-0.5">Click to browse & upload saree cover photo</span>
+                  <input type="file" accept="image/*" onChange={handleCoverFileUpload} className="hidden" />
+                </label>
+              )}
 
-              {/* Cover Image File Upload */}
-              <label className="w-full rounded-xl border border-gold/40 bg-gold/10 hover:bg-gold/20 py-2.5 px-4 flex items-center justify-center gap-2 cursor-pointer text-xs font-bold text-brand-soft transition-colors shadow-2xs whitespace-nowrap">
-                <UploadCloud className="h-4 w-4 text-gold shrink-0" />
-                <span className="whitespace-nowrap">Upload Cover Photo</span>
-                <input type="file" accept="image/*" onChange={handleCoverFileUpload} className="hidden" />
-              </label>
+              {/* Cover Image File Upload button */}
+              {image && (
+                <label className="w-full rounded-xl border border-gold/40 bg-gold/10 hover:bg-gold/20 py-2.5 px-4 flex items-center justify-center gap-2 cursor-pointer text-xs font-bold text-brand-soft transition-colors shadow-2xs whitespace-nowrap">
+                  <UploadCloud className="h-4 w-4 text-gold shrink-0" />
+                  <span className="whitespace-nowrap">Change Cover Photo</span>
+                  <input type="file" accept="image/*" onChange={handleCoverFileUpload} className="hidden" />
+                </label>
+              )}
             </div>
 
             {/* SECTION 2: ADDITIONAL IMAGES SECTION */}
