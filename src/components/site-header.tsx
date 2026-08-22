@@ -30,12 +30,12 @@ export function SiteHeader() {
           <span>Complimentary Insured Delivery Across Kerala & India</span>
           <span className="hidden sm:inline text-gold">·</span>
           <a
-            href="https://wa.me/918075676393"
+            href="https://wa.me/918156938843"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-gold transition-colors inline-flex items-center gap-1 font-semibold"
           >
-            <MessageSquare className="h-3 w-3 text-emerald-400" /> WhatsApp Direct Order: +91 8075676393
+            <MessageSquare className="h-3 w-3 text-emerald-400" /> WhatsApp Direct Order: +91 8156938843
           </a>
         </div>
       </div>

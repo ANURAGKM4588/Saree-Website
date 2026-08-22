@@ -206,7 +206,7 @@ export function generateOrderEmailHtml(order: Order, customConfig?: EmailTemplat
                 Sent officially from <strong>${cfg.senderName}</strong> (&lt;<a href="mailto:${cfg.senderEmail}" style="color: #064e3b; text-decoration: underline;">${cfg.senderEmail}</a>&gt;)
               </p>
               <p style="margin: 4px 0 0 0; font-size: 11px; color: #9ca3af;">
-                Kadha Sarees Studio · Kerala, India · WhatsApp Support: +91 8075676393
+                Kadha Sarees Studio · Kerala, India · WhatsApp Support: +91 8156938843
               </p>
               <p style="margin: 4px 0 0 0; font-size: 10px; color: #9ca3af;">
                 This is an automated transactional booking notification sent directly to ${order.email}.

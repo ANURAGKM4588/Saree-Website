@@ -411,13 +411,13 @@ function Product() {
 
             {/* Direct WhatsApp Order Link */}
             <a
-              href={`https://wa.me/918075676393?text=${encodeURIComponent(`Hi Kadha Sarees, I would like to order "${saree.name}" (${formatPrice(saree.price)}).`)}`}
+              href={`https://wa.me/918156938843?text=${encodeURIComponent(`Hi Kadha Sarees, I would like to order "${saree.name}" (${formatPrice(saree.price)}).`)}`}
               target="_blank"
               rel="noopener noreferrer"
               className="flex w-full items-center justify-center gap-2 rounded-full border border-emerald-600/30 bg-emerald-500/10 py-3.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-emerald-800 transition-colors hover:bg-emerald-500/20 shadow-2xs whitespace-nowrap"
             >
               <MessageSquare className="h-4 w-4 text-emerald-600" />
-              DM on WhatsApp to Order (+91 8075676393)
+              DM on WhatsApp to Order (+91 8156938843)
             </a>
           </div>
 
@@ -482,7 +482,7 @@ function Product() {
             <div className="pt-2 border-t border-border/40">
               <p className="text-[11px] text-muted-foreground flex items-center gap-1.5">
                 <MessageSquare className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
-                <span>WhatsApp support: <a href="https://wa.me/918075676393" target="_blank" rel="noopener noreferrer" className="text-emerald-700 underline font-semibold">+91 8075676393</a></span>
+                <span>WhatsApp support: <a href="https://wa.me/918156938843" target="_blank" rel="noopener noreferrer" className="text-emerald-700 underline font-semibold">+91 8156938843</a></span>
               </p>
             </div>
           </div>
