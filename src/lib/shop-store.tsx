@@ -77,9 +77,9 @@ type ShopStoreContextType = {
   resetStore: () => void;
 };
 
-const PRODUCTS_KEY = "kadha_admin_products_v10";
-const ORDERS_KEY = "kadha_admin_orders_v2";
-const NOTIFY_KEY = "kadha_admin_notify_v2";
+const PRODUCTS_KEY = "kadha_admin_products_v12";
+const ORDERS_KEY = "kadha_admin_orders_v3";
+const NOTIFY_KEY = "kadha_admin_notify_v3";
 
 const initialProducts: ExtendedSaree[] = defaultSarees.map((s) => ({
   ...s,
@@ -95,7 +95,7 @@ const initialNotifyRequests: NotifyRequest[] = [];
 const ShopStoreContext = createContext<ShopStoreContextType | null>(null);
 
 function sanitizeProducts(prods: ExtendedSaree[]): ExtendedSaree[] {
-  if (!Array.isArray(prods)) return initialProducts;
+  if (!Array.isArray(prods) || prods.length === 0) return initialProducts;
   return prods.map((p) => {
     const cleanImage = p.image || "/logo/Favicon.png";
     const updatedViews =
@@ -148,13 +148,11 @@ export function ShopStoreProvider({ children }: { children: ReactNode }) {
   const [products, setProducts] = useState<ExtendedSaree[]>(() => {
     if (typeof window === "undefined") return initialProducts;
     try {
-      for (let i = 25; i >= 1; i--) {
-        const raw = localStorage.getItem(`kadha_admin_products_v${i}`);
-        if (raw) {
-          const parsed = JSON.parse(raw);
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            return sanitizeProducts(parsed);
-          }
+      const raw = localStorage.getItem(PRODUCTS_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return sanitizeProducts(parsed);
         }
       }
     } catch {}
