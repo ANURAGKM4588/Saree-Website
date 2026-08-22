@@ -33,37 +33,6 @@ function Index() {
     <div className="pb-4">
       <HeroSectionOption6 />
 
-      {/* Piece of the week */}
-      {featured && (
-        <section className="mx-auto max-w-[1400px] px-5 pt-6 lg:px-8">
-          <Link
-            to="/shop/$slug"
-            params={{ slug: featured.slug }}
-            className="glass-panel flex items-center gap-4 rounded-3xl p-4 transition-transform hover:-translate-y-1 sm:w-fit"
-          >
-            <img
-              src={featured.image}
-              alt={featured.name}
-              width={912}
-              height={1200}
-              loading="lazy"
-              className="h-16 w-14 shrink-0 rounded-2xl object-cover"
-            />
-            <div className="min-w-0">
-              <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-brand">
-                Piece of the week
-              </p>
-              <p className="truncate font-display text-lg font-medium text-brand-soft">
-                {featured.status === "coming_soon" ? "Coming Soon" : featured.name}
-              </p>
-            </div>
-            <span className="ml-auto shrink-0 rounded-full bg-ink px-4 py-2 text-xs text-primary-foreground">
-              View
-            </span>
-          </Link>
-        </section>
-      )}
-
       {/* Marquee */}
       <section className="mt-14 overflow-hidden bg-ink py-4">
         <div className="marquee-track flex w-max gap-10 whitespace-nowrap text-sm text-primary-foreground/85">
