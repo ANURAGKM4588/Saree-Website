@@ -1,38 +1,89 @@
+import { useState, useRef } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, Sparkles } from "lucide-react";
 
 export function HeroSectionOption6() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [mousePos, setMousePos] = useState({ x: -600, y: -600 });
+  const [isHovered, setIsHovered] = useState(false);
+  const ticking = useRef(false);
+
+  // 120 FPS cursor tracking with requestAnimationFrame
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    if (!ticking.current) {
+      window.requestAnimationFrame(() => {
+        setMousePos({ x, y });
+        ticking.current = false;
+      });
+      ticking.current = true;
+    }
+  };
+
+  const handleMouseEnter = () => setIsHovered(true);
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    setMousePos({ x: -600, y: -600 });
+  };
+
   return (
     <section className="relative w-full overflow-hidden bg-slate-950">
-      {/* FULL BLEED EDGE-TO-EDGE FILLED HERO CONTAINER */}
-      <div className="relative w-full min-h-[560px] sm:min-h-[640px] lg:min-h-[720px] group">
-        
-        {/* HERO BACKGROUND IMAGE FROM public/herosection/Herosection.png */}
+      {/* FULL BLEED EDGE-TO-EDGE FILLED HERO CONTAINER WITH INTERACTIVE SPOTLIGHT LENS */}
+      <div
+        ref={containerRef}
+        onMouseMove={handleMouseMove}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        className="relative w-full min-h-[560px] sm:min-h-[640px] lg:min-h-[720px] group cursor-crosshair select-none"
+      >
+        {/* BASE LAYER: BLACK & WHITE / GRAYSCALE HERO IMAGE */}
         <img
           src="/herosection/Herosection.png"
           alt="Kadha Handwoven Sarees Collection"
           width={1920}
           height={1080}
           loading="eager"
-          className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-[10000ms] ease-out group-hover:scale-105"
+          className="absolute inset-0 h-full w-full object-cover object-center grayscale brightness-[0.70] contrast-[1.15] transition-transform duration-[10000ms] ease-out group-hover:scale-105"
         />
 
+        {/* REVEAL LAYER: FULL-COLOR IMAGE WITH DYNAMIC FEATHERED MOUSE CURSOR LENS */}
+        <div
+          className="absolute inset-0 pointer-events-none transition-opacity duration-500 ease-out"
+          style={{
+            opacity: isHovered ? 1 : 0,
+            WebkitMaskImage: `radial-gradient(circle 180px at ${mousePos.x}px ${mousePos.y}px, black 0%, black 35%, transparent 100%)`,
+            maskImage: `radial-gradient(circle 180px at ${mousePos.x}px ${mousePos.y}px, black 0%, black 35%, transparent 100%)`,
+          }}
+        >
+          <img
+            src="/herosection/Herosection.png"
+            alt="Kadha Handwoven Sarees Collection (Color Reveal)"
+            width={1920}
+            height={1080}
+            className="h-full w-full object-cover object-center transition-transform duration-[10000ms] ease-out group-hover:scale-105"
+          />
+        </div>
+
         {/* ELEGANT MINIMAL GRADIENT OVERLAY FOR PERFECT READABILITY */}
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-950/85 via-slate-950/50 to-slate-950/20" />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-slate-950/30" />
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-950/85 via-slate-950/50 to-slate-950/20 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-slate-950/30 pointer-events-none" />
 
         {/* ALL-WHITE ELEGANT & MINIMAL TEXT OVERLAY ON IMAGE */}
-        <div className="relative z-10 mx-auto max-w-[1400px] flex h-full min-h-[560px] sm:min-h-[640px] lg:min-h-[720px] flex-col justify-between p-6 sm:p-12 lg:p-16">
+        <div className="relative z-10 mx-auto max-w-[1400px] flex h-full min-h-[560px] sm:min-h-[640px] lg:min-h-[720px] flex-col justify-between p-6 sm:p-12 lg:p-16 pointer-events-none">
           
           {/* TOP BAR */}
-          <div className="flex items-center justify-end pt-2 sm:pt-4">
+          <div className="flex items-center justify-end pt-2 sm:pt-4 pointer-events-auto">
             <div className="hidden sm:inline-flex items-center gap-1.5 font-sans text-xs font-semibold uppercase tracking-[0.2em] text-white/90">
               <Sparkles className="h-3.5 w-3.5 text-white" /> Insured Free Kerala Delivery
             </div>
           </div>
 
-          {/* MAIN HERO HEADLINE & COPY (ALL WHITE CORMORANT GARAMOND SERIF TYPOGRAPHY) */}
-          <div className="my-auto max-w-3xl space-y-6 pt-10 pb-6">
+          {/* MAIN HERO HEADLINE & COPY (ALL WHITE UNIFIED SPACE GROTESK MINIMAL SANS-SERIF) */}
+          <div className="my-auto max-w-3xl space-y-6 pt-10 pb-6 pointer-events-auto">
             <h1 className="font-display text-4xl font-semibold leading-[1.05] tracking-[-0.04em] text-white sm:text-6xl lg:text-7xl drop-shadow-[0_4px_24px_rgba(0,0,0,0.4)]">
               Timeless Weaves,
               <br />
@@ -63,7 +114,7 @@ export function HeroSectionOption6() {
           </div>
 
           {/* BOTTOM MINIMAL FOOTER STRIP ON IMAGE */}
-          <div className="flex flex-wrap items-center justify-between gap-4 border-t border-white/20 pt-6 pb-2 text-xs text-white/80 font-light">
+          <div className="flex flex-wrap items-center justify-between gap-4 border-t border-white/20 pt-6 pb-2 text-xs text-white/80 font-light pointer-events-auto">
             <div className="flex items-center gap-6">
               <span>🌿 100% Pitloom Handwoven</span>
               <span>•</span>
