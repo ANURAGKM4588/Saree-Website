@@ -46,11 +46,16 @@ export function SiteFooter() {
           </nav>
           <div className="flex flex-col gap-3 text-sm text-primary-foreground/75">
             <p className="font-display text-lg text-primary-foreground">Concierge</p>
-            <a href="mailto:hello@kadha.in" className="hover:text-gold">
-              hello@kadha.in
+            <a href="mailto:kadha.shop@gmail.com" className="hover:text-gold">
+              kadha.shop@gmail.com
             </a>
-            <a href="tel:+919000000000" className="hover:text-gold">
-              +91 90000 00000
+            <a
+              href="https://wa.me/918156938843"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-gold"
+            >
+              +91 8156938843 (WhatsApp)
             </a>
             <p>Mon–Sat, 10am–7pm IST</p>
           </div>
