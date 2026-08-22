@@ -439,9 +439,9 @@ function Booking() {
             <button
               type="submit"
               disabled={isProcessingPayment}
-              className="w-full sm:w-auto rounded-full bg-brand px-10 py-3.5 text-[11px] uppercase tracking-[0.22em] font-semibold text-primary-foreground transition-colors hover:bg-brand-soft shadow-md cursor-pointer whitespace-nowrap"
+              className="w-full rounded-full bg-brand px-12 py-4 text-xs font-bold uppercase tracking-[0.22em] text-primary-foreground transition-all hover:bg-brand-soft hover:shadow-lg active:scale-[0.99] cursor-pointer whitespace-nowrap shadow-md flex items-center justify-center gap-2"
             >
-              {isProcessingPayment ? "Opening Razorpay Gateway..." : "Book Now →"}
+              {isProcessingPayment ? "Opening Payment Gateway..." : "Order Now →"}
             </button>
             <p className="mt-3 text-xs leading-relaxed text-muted-foreground flex items-center gap-1.5">
               <Lock className="h-3.5 w-3.5 text-emerald-700 shrink-0" />
