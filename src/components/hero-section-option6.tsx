@@ -40,23 +40,23 @@ export function HeroSectionOption6() {
         onMouseLeave={handleMouseLeave}
         className="relative w-full min-h-[560px] sm:min-h-[640px] lg:min-h-[720px] group cursor-default select-none"
       >
-        {/* BASE LAYER: BLACK & WHITE / GRAYSCALE HERO IMAGE */}
+        {/* BASE LAYER: CUSTOM BLACK & WHITE HERO IMAGE */}
         <img
-          src="/herosection/Herosection.png"
+          src="/herosection/Herosection-bw.png"
           alt="Kadha Handwoven Sarees Collection"
           width={1920}
           height={1080}
           loading="eager"
-          className="absolute inset-0 h-full w-full object-cover object-center grayscale brightness-[0.70] contrast-[1.15] transition-transform duration-[10000ms] ease-out group-hover:scale-105"
+          className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-[10000ms] ease-out group-hover:scale-105"
         />
 
-        {/* REVEAL LAYER: FULL-COLOR IMAGE WITH DYNAMIC FEATHERED MOUSE CURSOR LENS (340px WIDE) */}
+        {/* REVEAL LAYER: FULL-COLOR IMAGE WITH DYNAMIC FEATHERED MOUSE CURSOR LENS (450px WIDE) */}
         <div
           className="absolute inset-0 pointer-events-none transition-opacity duration-500 ease-out"
           style={{
             opacity: isHovered ? 1 : 0,
-            WebkitMaskImage: `radial-gradient(circle 340px at ${mousePos.x}px ${mousePos.y}px, black 0%, black 45%, transparent 100%)`,
-            maskImage: `radial-gradient(circle 340px at ${mousePos.x}px ${mousePos.y}px, black 0%, black 45%, transparent 100%)`,
+            WebkitMaskImage: `radial-gradient(circle 450px at ${mousePos.x}px ${mousePos.y}px, black 0%, black 40%, transparent 100%)`,
+            maskImage: `radial-gradient(circle 450px at ${mousePos.x}px ${mousePos.y}px, black 0%, black 40%, transparent 100%)`,
           }}
         >
           <img
@@ -105,10 +105,10 @@ export function HeroSectionOption6() {
               </Link>
 
               <Link
-                to="/booking"
+                to="/about"
                 className="inline-flex items-center justify-center gap-2 rounded-full border border-white/40 bg-white/10 px-8 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-white backdrop-blur-md hover:bg-white/25 transition-all cursor-pointer"
               >
-                Reserve Saree
+                Our Story
               </Link>
             </div>
           </div>
