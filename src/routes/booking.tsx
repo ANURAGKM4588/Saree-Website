@@ -259,8 +259,8 @@ function Booking() {
       </div>
       <div className="ornament-rule mt-4 w-32" />
 
-      <div className="mt-12 grid gap-16 lg:grid-cols-[1.1fr_0.9fr]">
-        <form className="space-y-7" onSubmit={handleSubmit}>
+      <div className="mt-12 flex flex-col lg:grid gap-12 lg:gap-16 lg:grid-cols-[1.1fr_0.9fr]">
+        <form className="space-y-7 order-2 lg:order-1" onSubmit={handleSubmit}>
           <div>
             <label className={label} htmlFor="name">
               Full name *
@@ -451,7 +451,7 @@ function Booking() {
         </form>
 
         {/* Order Summary Sidebar */}
-        <div className="rounded-3xl border border-border bg-card p-6 sm:p-8 space-y-6 h-fit shadow-xs">
+        <div className="rounded-3xl border border-border bg-card p-6 sm:p-8 space-y-6 h-fit shadow-xs order-1 lg:order-2">
           <h2 className="font-display text-xl text-brand-soft border-b border-border pb-4">
             Booking Summary ({items.length} Saree{items.length > 1 ? "s" : ""})
           </h2>
