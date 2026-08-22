@@ -1,6 +1,6 @@
 export type SareeView = { url: string; label: string };
 
-export type BlouseAvailability = "both" | "with_only" | "without_only";
+export type BlouseAvailability = "both" | "with_only" | "without_only" | "none";
 
 export type Saree = {
   slug: string;

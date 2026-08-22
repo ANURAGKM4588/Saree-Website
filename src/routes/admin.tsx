@@ -1634,7 +1634,8 @@ function AddProductModal({
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isCompressing, setIsCompressing] = useState(false);
-  const [blouseAvailability, setBlouseAvailability] = useState<BlouseAvailability>("both");
+  const [hasAttachedBlouse, setHasAttachedBlouse] = useState(false);
+  const [hasExtraBlouse, setHasExtraBlouse] = useState(false);
   const [withoutBlouseDiscount, setWithoutBlouseDiscount] = useState<number | "">(0);
 
   useEffect(() => {
@@ -1651,7 +1652,8 @@ function AddProductModal({
       setFabric("");
       setBlouse("");
       setCare("");
-      setBlouseAvailability("both");
+      setHasAttachedBlouse(false);
+      setHasExtraBlouse(false);
       setWithoutBlouseDiscount(0);
       setErrorMessage(null);
       setIsCompressing(false);
@@ -1763,6 +1765,15 @@ function AddProductModal({
 
     const finalViews = views.length > 0 ? views : [{ url: imageUrl, label: "Cover Page Image" }];
 
+    const derivedBlouseAvailability: BlouseAvailability =
+      hasAttachedBlouse && hasExtraBlouse
+        ? "both"
+        : hasAttachedBlouse
+        ? "with_only"
+        : hasExtraBlouse
+        ? "without_only"
+        : "none";
+
     onAddProduct({
       slug,
       name: name.trim(),
@@ -1777,7 +1788,7 @@ function AddProductModal({
       fabric: fabric.trim() || "Handwoven pure fabric",
       blouse: blouse.trim() || "Blouse piece included",
       care: care.trim() || "Dry clean recommended for first wash.",
-      blouseAvailability,
+      blouseAvailability: derivedBlouseAvailability,
       withoutBlouseDiscount: Number(withoutBlouseDiscount) || 0,
     });
 
@@ -2015,23 +2026,15 @@ function AddProductModal({
             {/* Blouse Options Checklist */}
             <div className="bg-slate-50/80 p-3 rounded-xl border border-slate-200 space-y-2">
               <label className="block text-[10px] uppercase tracking-[0.18em] text-slate-800 font-bold">
-                Blouse Options Checklist *
+                Blouse Options Checklist
               </label>
 
               <div className="flex flex-wrap items-center gap-4">
                 <label className="inline-flex items-center gap-2 text-xs font-semibold text-slate-800 cursor-pointer">
                   <input
                     type="checkbox"
-                    checked={blouseAvailability === "both" || blouseAvailability === "with_only"}
-                    onChange={(e) => {
-                      const isChecked = e.target.checked;
-                      const hasWithout = blouseAvailability === "both" || blouseAvailability === "without_only";
-                      if (isChecked) {
-                        setBlouseAvailability(hasWithout ? "both" : "with_only");
-                      } else {
-                        setBlouseAvailability(hasWithout ? "without_only" : "with_only");
-                      }
-                    }}
+                    checked={hasAttachedBlouse}
+                    onChange={(e) => setHasAttachedBlouse(e.target.checked)}
                     className="h-4 w-4 accent-amber-600 rounded border-slate-300"
                   />
                   <span>✂️ With Attached Blouse</span>
@@ -2040,23 +2043,15 @@ function AddProductModal({
                 <label className="inline-flex items-center gap-2 text-xs font-semibold text-slate-800 cursor-pointer">
                   <input
                     type="checkbox"
-                    checked={blouseAvailability === "both" || blouseAvailability === "without_only"}
-                    onChange={(e) => {
-                      const isChecked = e.target.checked;
-                      const hasWith = blouseAvailability === "both" || blouseAvailability === "with_only";
-                      if (isChecked) {
-                        setBlouseAvailability(hasWith ? "both" : "without_only");
-                      } else {
-                        setBlouseAvailability(hasWith ? "with_only" : "without_only");
-                      }
-                    }}
+                    checked={hasExtraBlouse}
+                    onChange={(e) => setHasExtraBlouse(e.target.checked)}
                     className="h-4 w-4 accent-amber-600 rounded border-slate-300"
                   />
                   <span>🧵 Extra Blouse Piece</span>
                 </label>
               </div>
 
-              {(blouseAvailability === "both" || blouseAvailability === "without_only") && (
+              {hasExtraBlouse && (
                 <div className="pt-2 border-t border-slate-200/60 flex items-center gap-2">
                   <span className="text-[10px] uppercase tracking-[0.16em] text-slate-600 font-bold shrink-0">Discount (₹):</span>
                   <input
@@ -2139,7 +2134,8 @@ function EditProductModal({
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isCompressing, setIsCompressing] = useState(false);
-  const [blouseAvailability, setBlouseAvailability] = useState<BlouseAvailability>("both");
+  const [hasAttachedBlouse, setHasAttachedBlouse] = useState(false);
+  const [hasExtraBlouse, setHasExtraBlouse] = useState(false);
   const [withoutBlouseDiscount, setWithoutBlouseDiscount] = useState<number | "">(0);
 
   useEffect(() => {
@@ -2155,7 +2151,8 @@ function EditProductModal({
       setFabric(product.fabric);
       setBlouse(product.blouse);
       setCare(product.care);
-      setBlouseAvailability(product.blouseAvailability || "both");
+      setHasAttachedBlouse(product.blouseAvailability === "both" || product.blouseAvailability === "with_only");
+      setHasExtraBlouse(product.blouseAvailability === "both" || product.blouseAvailability === "without_only");
       setWithoutBlouseDiscount(product.withoutBlouseDiscount || 0);
       const initialViews =
         product.views && product.views.length > 0
@@ -2174,7 +2171,6 @@ function EditProductModal({
   }, [product]);
 
   if (!product) return null;
-
 
   // Upload Cover Page Image Handler
   const handleCoverFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -2258,6 +2254,15 @@ function EditProductModal({
     const imageUrl = image || (views.length > 0 ? views[0].url : product.image);
     const finalViews = views.length > 0 ? views : [{ url: imageUrl, label: "Cover Page Image" }];
 
+    const derivedBlouseAvailability: BlouseAvailability =
+      hasAttachedBlouse && hasExtraBlouse
+        ? "both"
+        : hasAttachedBlouse
+        ? "with_only"
+        : hasExtraBlouse
+        ? "without_only"
+        : "none";
+
     onUpdateProduct(product.slug, {
       name: name.trim(),
       weave,
@@ -2271,7 +2276,7 @@ function EditProductModal({
       fabric: fabric.trim(),
       blouse: blouse.trim(),
       care: care.trim(),
-      blouseAvailability,
+      blouseAvailability: derivedBlouseAvailability,
       withoutBlouseDiscount: Number(withoutBlouseDiscount) || 0,
     });
 
@@ -2496,23 +2501,15 @@ function EditProductModal({
             {/* Blouse Options Checklist */}
             <div className="bg-slate-50/80 p-3 rounded-xl border border-slate-200 space-y-2">
               <label className="block text-[10px] uppercase tracking-[0.18em] text-slate-800 font-bold">
-                Blouse Options Checklist *
+                Blouse Options Checklist
               </label>
 
               <div className="flex flex-wrap items-center gap-4">
                 <label className="inline-flex items-center gap-2 text-xs font-semibold text-slate-800 cursor-pointer">
                   <input
                     type="checkbox"
-                    checked={blouseAvailability === "both" || blouseAvailability === "with_only"}
-                    onChange={(e) => {
-                      const isChecked = e.target.checked;
-                      const hasWithout = blouseAvailability === "both" || blouseAvailability === "without_only";
-                      if (isChecked) {
-                        setBlouseAvailability(hasWithout ? "both" : "with_only");
-                      } else {
-                        setBlouseAvailability(hasWithout ? "without_only" : "with_only");
-                      }
-                    }}
+                    checked={hasAttachedBlouse}
+                    onChange={(e) => setHasAttachedBlouse(e.target.checked)}
                     className="h-4 w-4 accent-amber-600 rounded border-slate-300"
                   />
                   <span>✂️ With Attached Blouse</span>
@@ -2521,23 +2518,15 @@ function EditProductModal({
                 <label className="inline-flex items-center gap-2 text-xs font-semibold text-slate-800 cursor-pointer">
                   <input
                     type="checkbox"
-                    checked={blouseAvailability === "both" || blouseAvailability === "without_only"}
-                    onChange={(e) => {
-                      const isChecked = e.target.checked;
-                      const hasWith = blouseAvailability === "both" || blouseAvailability === "with_only";
-                      if (isChecked) {
-                        setBlouseAvailability(hasWith ? "both" : "without_only");
-                      } else {
-                        setBlouseAvailability(hasWith ? "with_only" : "without_only");
-                      }
-                    }}
+                    checked={hasExtraBlouse}
+                    onChange={(e) => setHasExtraBlouse(e.target.checked)}
                     className="h-4 w-4 accent-amber-600 rounded border-slate-300"
                   />
                   <span>🧵 Extra Blouse Piece</span>
                 </label>
               </div>
 
-              {(blouseAvailability === "both" || blouseAvailability === "without_only") && (
+              {hasExtraBlouse && (
                 <div className="pt-2 border-t border-slate-200/60 flex items-center gap-2">
                   <span className="text-[10px] uppercase tracking-[0.16em] text-slate-600 font-bold shrink-0">Discount (₹):</span>
                   <input
