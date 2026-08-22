@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate, useLocation } from "@tanstack/react-router";
 import { useCart } from "@/lib/cart";
 import { useShopStore } from "@/lib/shop-store";
@@ -17,8 +17,35 @@ export function FloatingBagWidget() {
   const { products } = useShopStore();
   const { lines, count, setQty, remove } = useCart();
   const [isOpen, setIsOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const lastScrollY = useRef(0);
   const location = useLocation();
   const navigate = useNavigate();
+
+  // Scroll direction listener: slide out down when scrolling down, slide in when scrolling up
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY > 100) {
+        if (currentScrollY > lastScrollY.current + 6) {
+          // Scrolling DOWN: Slide button out to bottom
+          setIsVisible(false);
+        } else if (currentScrollY < lastScrollY.current - 6) {
+          // Scrolling UP: Slide button back into view
+          setIsVisible(true);
+        }
+      } else {
+        // Near top of page: Always visible
+        setIsVisible(true);
+      }
+
+      lastScrollY.current = currentScrollY;
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // Resolve cart lines to products with computed prices
   const items = lines.flatMap((line) => {
@@ -49,7 +76,11 @@ export function FloatingBagWidget() {
   return (
     <aside
       aria-label="Floating Shopping Bag"
-      className="fixed bottom-5 right-4 sm:bottom-6 sm:right-6 z-50 flex flex-col items-end pointer-events-auto"
+      className={`fixed bottom-5 right-4 sm:bottom-6 sm:right-6 z-50 flex flex-col items-end transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+        isVisible || isOpen
+          ? "translate-y-0 opacity-100 pointer-events-auto"
+          : "translate-y-28 opacity-0 pointer-events-none"
+      }`}
     >
       {/* EXPANDED DYNAMIC BAG PANEL (Light Theme Vertical Shape Popup) */}
       {isOpen && (
