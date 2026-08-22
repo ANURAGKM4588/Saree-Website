@@ -185,7 +185,7 @@ function Product() {
               alt={`${saree.name} — ${saree.weave} saree, ${current.label.toLowerCase()}`}
               width={912}
               height={1200}
-              className="h-full w-full object-cover"
+              className="h-full w-full object-cover object-center"
             />
             {status === "in_stock" && (
               <span className="absolute left-5 top-5 rounded-full bg-background/90 px-4 py-1.5 text-[10px] uppercase tracking-[0.22em] text-brand-soft gold-frame font-medium">
@@ -238,7 +238,9 @@ function Product() {
         <div className="flex flex-col gap-6">
           <div>
             <p className="text-[11px] uppercase tracking-[0.24em] text-gold font-bold">{saree.weave}</p>
-            <h1 className="mt-2 font-display text-3xl sm:text-4xl leading-tight text-brand-soft">{saree.name}</h1>
+            <h1 className="mt-2 font-display text-3xl sm:text-4xl leading-tight text-brand-soft">
+              {status === "coming_soon" ? "Coming Soon" : saree.name}
+            </h1>
             
             <div className="mt-2.5 flex items-center gap-2">
               <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/10 border border-amber-500/25 px-3 py-1 text-[11px] font-semibold text-amber-950 shadow-2xs">
@@ -249,35 +251,37 @@ function Product() {
                   : "✂️ Both Attached & Extra Blouse Options Available"}
               </span>
             </div>
-            {(() => {
-              const originalMrp =
-                saree.originalPrice && saree.originalPrice > currentPrice
-                  ? saree.originalPrice
-                  : Math.round(currentPrice * 1.25);
-              const discountPercent = Math.round(((originalMrp - currentPrice) / originalMrp) * 100);
-              return (
-                <div className="mt-4 flex flex-wrap items-baseline gap-2.5">
-                  <p className="font-display text-3xl sm:text-4xl tabular-nums font-extrabold text-emerald-800">
-                    {formatPrice(currentPrice)}
-                  </p>
-                  {originalMrp > currentPrice && (
-                    <span className="text-base sm:text-lg text-slate-400 line-through font-sans tabular-nums font-normal">
-                      {formatPrice(originalMrp)}
-                    </span>
-                  )}
-                  {discountPercent > 0 && (
-                    <span className="rounded-full bg-emerald-700 px-3 py-1 text-xs font-extrabold text-white shadow-xs">
-                      {discountPercent}% OFF
-                    </span>
-                  )}
-                  {selectedBlouseOption === "without" && withoutBlouseDiscount > 0 && (
-                    <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
-                      ✂️ {formatPrice(withoutBlouseDiscount)} Discount Applied
-                    </span>
-                  )}
-                </div>
-              );
-            })()}
+            {status !== "coming_soon" && (
+              (() => {
+                const originalMrp =
+                  saree.originalPrice && saree.originalPrice > currentPrice
+                    ? saree.originalPrice
+                    : Math.round(currentPrice * 1.25);
+                const discountPercent = Math.round(((originalMrp - currentPrice) / originalMrp) * 100);
+                return (
+                  <div className="mt-4 flex flex-wrap items-baseline gap-2.5">
+                    <p className="font-display text-3xl sm:text-4xl tabular-nums font-extrabold text-emerald-800">
+                      {formatPrice(currentPrice)}
+                    </p>
+                    {originalMrp > currentPrice && (
+                      <span className="text-base sm:text-lg text-slate-400 line-through font-sans tabular-nums font-normal">
+                        {formatPrice(originalMrp)}
+                      </span>
+                    )}
+                    {discountPercent > 0 && (
+                      <span className="rounded-full bg-emerald-700 px-3 py-1 text-xs font-extrabold text-white shadow-xs">
+                        {discountPercent}% OFF
+                      </span>
+                    )}
+                    {selectedBlouseOption === "without" && withoutBlouseDiscount > 0 && (
+                      <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+                        ✂️ {formatPrice(withoutBlouseDiscount)} Discount Applied
+                      </span>
+                    )}
+                  </div>
+                );
+              })()
+            )}
             <p className="mt-1 text-[11px] text-muted-foreground">
               Inclusive of taxes · Free shipping inside Kerala
             </p>

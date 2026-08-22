@@ -85,8 +85,8 @@ export function SareeCard({ saree, tall = false }: { saree: Saree; tall?: boolea
         setCurrentViewIndex(0);
       }}
     >
-      <div className="relative overflow-hidden rounded-3xl bg-secondary">
-        <Link to="/shop/$slug" params={{ slug: saree.slug }} className="block">
+      <div className={`relative w-full overflow-hidden rounded-3xl bg-secondary shadow-xs ${tall ? "aspect-[4/5]" : "aspect-[3/4]"}`}>
+        <Link to="/shop/$slug" params={{ slug: saree.slug }} className="block h-full w-full">
           <img
             ref={imgRef}
             src={currentImage}
@@ -94,9 +94,7 @@ export function SareeCard({ saree, tall = false }: { saree: Saree; tall?: boolea
             width={912}
             height={1200}
             loading="lazy"
-            className={`w-full object-cover transition-all duration-300 ${
-              tall ? "aspect-[4/5]" : "aspect-[3/4]"
-            }`}
+            className="h-full w-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105"
           />
         </Link>
         
@@ -190,27 +188,29 @@ export function SareeCard({ saree, tall = false }: { saree: Saree; tall?: boolea
       <div className="flex flex-1 flex-col px-1 pt-3">
         <Link to="/shop/$slug" params={{ slug: saree.slug }} className="hover:underline">
           <h3 className="font-display text-sm sm:text-base font-semibold leading-tight text-slate-900 line-clamp-2">
-            {saree.name}
+            {status === "coming_soon" ? "Coming Soon" : saree.name}
           </h3>
         </Link>
         <p className="mt-0.5 text-[11px] sm:text-xs text-slate-500 truncate">{saree.colour} · Handwoven</p>
 
         {/* PRICING & OFFER BLOCK */}
-        <div className="mt-2 flex items-center flex-wrap gap-1.5">
-          <span className="font-display text-base sm:text-lg font-extrabold tabular-nums text-emerald-800 dark:text-emerald-400">
-            {formatPrice(saree.price)}
-          </span>
-          {originalMrp > saree.price && (
-            <span className="text-xs text-slate-400 line-through font-sans tabular-nums font-normal">
-              {formatPrice(originalMrp)}
+        {status !== "coming_soon" && (
+          <div className="mt-2 flex items-center flex-wrap gap-1.5">
+            <span className="font-display text-base sm:text-lg font-extrabold tabular-nums text-emerald-800 dark:text-emerald-400">
+              {formatPrice(saree.price)}
             </span>
-          )}
-          {discountPercent > 0 && (
-            <span className="text-[9px] font-extrabold text-emerald-800 bg-emerald-100 px-1.5 py-0.5 rounded border border-emerald-200/60">
-              {discountPercent}% OFF
-            </span>
-          )}
-        </div>
+            {originalMrp > saree.price && (
+              <span className="text-xs text-slate-400 line-through font-sans tabular-nums font-normal">
+                {formatPrice(originalMrp)}
+              </span>
+            )}
+            {discountPercent > 0 && (
+              <span className="text-[9px] font-extrabold text-emerald-800 bg-emerald-100 px-1.5 py-0.5 rounded border border-emerald-200/60">
+                {discountPercent}% OFF
+              </span>
+            )}
+          </div>
+        )}
 
         {/* BLOUSE BADGE */}
         <div className="mt-1.5 flex items-center">

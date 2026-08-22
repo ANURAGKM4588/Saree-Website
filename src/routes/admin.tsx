@@ -744,8 +744,12 @@ export function AdminPanel() {
                   className="group relative flex flex-col justify-between rounded-3xl border border-border bg-card p-5 shadow-xs hover:border-gold/50 transition-all"
                 >
                   <div>
-                    <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl bg-secondary">
-                      <img src={p.image} alt={p.name} className="h-full w-full object-cover" />
+                    <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl bg-secondary shadow-xs">
+                      <img
+                        src={p.image}
+                        alt={p.name}
+                        className="h-full w-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105"
+                      />
                       <span className="absolute left-3 top-3 glass-panel rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-brand-soft">
                         {p.weave}
                       </span>
@@ -2165,7 +2169,7 @@ function EditProductModal({
       setPrice(product.price);
       setOriginalPrice(product.originalPrice || "");
       setStatus(product.status);
-      setImage(product.image || "/Product/turmeric-zari-brocade.png");
+      setImage(product.image || "/Product/Beige%20Ikat%20Mulmul%20Saree.png");
       setBlurb(product.blurb);
       setFabric(product.fabric);
       setBlouse(product.blouse);
@@ -2176,7 +2180,7 @@ function EditProductModal({
       const initialViews =
         product.views && product.views.length > 0
           ? product.views
-          : [{ url: product.image || "/Product/turmeric-zari-brocade.png", label: "Cover Page Image" }];
+          : [{ url: product.image || "/Product/Beige%20Ikat%20Mulmul%20Saree.png", label: "Cover Page Image" }];
       setViews(initialViews);
       setErrorMessage(null);
       setIsCompressing(false);

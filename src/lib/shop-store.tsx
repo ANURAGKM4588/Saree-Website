@@ -77,7 +77,7 @@ type ShopStoreContextType = {
   resetStore: () => void;
 };
 
-const PRODUCTS_KEY = "kadha_admin_products_v25";
+const PRODUCTS_KEY = "kadha_admin_products_v40";
 const ORDERS_KEY = "kadha_admin_orders_v3";
 const NOTIFY_KEY = "kadha_admin_notify_v3";
 
@@ -99,30 +99,55 @@ function sanitizeProducts(prods: any[]): ExtendedSaree[] {
   return prods
     .filter(Boolean)
     .map((p) => {
-      const cleanImage = p.image || "/logo/Favicon.png";
-      const updatedViews =
-        Array.isArray(p.views) && p.views.length > 0
-          ? p.views
-          : [{ url: cleanImage, label: "Cover Page Image" }];
+      const defaultMatch = defaultSarees.find(
+        (ds) => ds.slug === p.slug || ds.name.toLowerCase() === String(p.name).toLowerCase()
+      );
+
+      let cleanImage = p.image;
+      if (
+        !cleanImage ||
+        cleanImage.includes("Favicon.png") ||
+        cleanImage.includes("hero-") ||
+        cleanImage.includes("turmeric") ||
+        cleanImage.includes("%2520")
+      ) {
+        cleanImage = defaultMatch?.image || "/Product/Beige%20Ikat%20Mulmul%20Saree.png";
+      }
+
+      let updatedViews = Array.isArray(p.views) && p.views.length > 0 ? p.views : null;
+      if (
+        !updatedViews ||
+        updatedViews.some(
+          (v: any) => !v.url || v.url.includes("Favicon.png") || v.url.includes("%2520")
+        )
+      ) {
+        updatedViews = defaultMatch?.views || [{ url: cleanImage, label: "Full drape" }];
+      }
 
       return {
-        slug: String(p.slug || `saree-${Math.random().toString().slice(2, 6)}`),
-        name: String(p.name || "Handwoven Saree"),
-        weave: String(p.weave || "Cotton"),
-        colour: String(p.colour || "Multi"),
-        price: Number(p.price) || 0,
-        originalPrice: p.original_price ? Number(p.original_price) : p.originalPrice ? Number(p.originalPrice) : undefined,
+        slug: String(p.slug || defaultMatch?.slug || `saree-${Math.random().toString().slice(2, 6)}`),
+        name: String(p.name || defaultMatch?.name || "Handwoven Saree"),
+        weave: String(p.weave || defaultMatch?.weave || "Mulmul Cotton"),
+        colour: String(p.colour || defaultMatch?.colour || "Multi"),
+        price: Number(p.price) || defaultMatch?.price || 2999,
+        originalPrice: p.original_price
+          ? Number(p.original_price)
+          : p.originalPrice
+          ? Number(p.originalPrice)
+          : defaultMatch?.originalPrice,
         status: p.status || "in_stock",
         stockQty: p.stock_qty ?? p.stockQty ?? 1,
         cartAddsCount: p.cart_adds_count ?? p.cartAddsCount ?? 0,
         image: cleanImage,
         views: updatedViews,
-        blurb: p.blurb || "",
-        fabric: p.fabric || "",
-        blouse: p.blouse || "",
-        care: p.care || "",
-        blouseAvailability: p.blouse_availability || p.blouseAvailability || "both",
-        withoutBlouseDiscount: p.without_blouse_discount ?? p.withoutBlouseDiscount ?? 0,
+        blurb: p.blurb || defaultMatch?.blurb || "",
+        fabric: p.fabric || defaultMatch?.fabric || "",
+        blouse: p.blouse || defaultMatch?.blouse || "",
+        care: p.care || defaultMatch?.care || "",
+        blouseAvailability:
+          p.blouse_availability || p.blouseAvailability || defaultMatch?.blouseAvailability || "both",
+        withoutBlouseDiscount:
+          p.without_blouse_discount ?? p.withoutBlouseDiscount ?? defaultMatch?.withoutBlouseDiscount ?? 300,
         publishedAt: p.published_at || p.publishedAt,
       };
     });
@@ -163,34 +188,15 @@ function sanitizeOrders(dbOrders: any[]): Order[] {
 
 function loadInitialProducts(): ExtendedSaree[] {
   if (typeof window === "undefined") return initialProducts;
-  const keysToSearch = [
-    PRODUCTS_KEY,
-    "kadha_admin_products_v25",
-    "kadha_admin_products_v20",
-    "kadha_admin_products_v15",
-    "kadha_admin_products_v12",
-    "kadha_admin_products_v9",
-    "kadha_admin_products_v8",
-    "kadha_admin_products_v7",
-    "kadha_admin_products_v6",
-    "kadha_admin_products_v5",
-    "kadha_admin_products_v4",
-    "kadha_admin_products_v3",
-    "kadha_admin_products_v2",
-    "kadha_admin_products_v1",
-  ];
-
-  for (const key of keysToSearch) {
-    try {
-      const raw = localStorage.getItem(key);
-      if (raw) {
-        const parsed = JSON.parse(raw);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          return sanitizeProducts(parsed);
-        }
+  try {
+    const raw = localStorage.getItem(PRODUCTS_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return sanitizeProducts(parsed);
       }
-    } catch { }
-  }
+    }
+  } catch { }
   return initialProducts;
 }
 
@@ -244,7 +250,36 @@ export function ShopStoreProvider({ children }: { children: ReactNode }) {
       try {
         const { data: dbProducts, error: dbErr } = await supabase.from("products").select("*");
         if (!dbErr && Array.isArray(dbProducts) && dbProducts.length > 0) {
-          setProducts(sanitizeProducts(dbProducts));
+          const newSlugs = new Set(initialProducts.map((p) => p.slug));
+          const hasNewProducts = dbProducts.some((p) => newSlugs.has(p.slug));
+          if (hasNewProducts) {
+            setProducts(sanitizeProducts(dbProducts));
+          } else {
+            await supabase.from("products").delete().neq("slug", "");
+            for (const item of initialProducts) {
+              await supabase.from("products").upsert({
+                slug: item.slug,
+                name: item.name,
+                weave: item.weave,
+                colour: item.colour,
+                price: item.price,
+                original_price: item.originalPrice,
+                status: item.status,
+                stock_qty: item.stockQty,
+                image: item.image,
+                views: item.views,
+                blurb: item.blurb,
+                fabric: item.fabric,
+                blouse: item.blouse,
+                care: item.care,
+                blouse_availability: item.blouseAvailability,
+                without_blouse_discount: item.withoutBlouseDiscount,
+                cart_adds_count: item.cartAddsCount,
+                published_at: item.publishedAt,
+              });
+            }
+            setProducts(initialProducts);
+          }
         } else if (!dbErr && Array.isArray(dbProducts) && dbProducts.length === 0) {
           const localProds = loadInitialProducts();
           if (localProds.length > 0) {

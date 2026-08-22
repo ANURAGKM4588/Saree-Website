@@ -54,7 +54,7 @@ function Index() {
                 Piece of the week
               </p>
               <p className="truncate font-display text-lg font-medium text-brand-soft">
-                {featured.name}
+                {featured.status === "coming_soon" ? "Coming Soon" : featured.name}
               </p>
             </div>
             <span className="ml-auto shrink-0 rounded-full bg-ink px-4 py-2 text-xs text-primary-foreground">
